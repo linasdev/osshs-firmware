@@ -1,0 +1,6 @@
+build/
+
+*-firmware/modm/
+
+*.dblite
+*.log
