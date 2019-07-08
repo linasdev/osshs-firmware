@@ -18,6 +18,8 @@ namespace prettyhome
   T
   Time::getSystemTime()
   {
+		modm::atomic::Lock lock;
+
     if constexpr (precision == Precision::Milliseconds)
       return static_cast< T >(systemTime);
 
