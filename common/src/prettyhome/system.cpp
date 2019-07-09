@@ -15,7 +15,7 @@
 namespace prettyhome
 {
 	std::vector< modules::Module* > System::modules;
-	std::unordered_map< EventSelector, std::vector< EventSubscription > > System::eventSubscriptions;
+	std::unordered_map< events::EventSelector, std::vector< events::EventSubscription > > System::eventSubscriptions;
 
 	void
 	System::initialize()
@@ -31,13 +31,13 @@ namespace prettyhome
 	}
 
 	void
-	System::subscribeEvent(EventSelector selector, EventSubscription subscription)
+	System::subscribeEvent(events::EventSelector selector, events::EventSubscription subscription)
 	{
 		eventSubscriptions[selector].push_back(subscription);
 	}
 
 	void
-	System::reportEvent(Event &event)
+	System::reportEvent(events::Event &event)
 	{
 		for(auto const &[selector, subscriptions] : eventSubscriptions)
 			if (selector.match(event))

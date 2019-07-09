@@ -13,7 +13,7 @@
 
 #include <cstdint>
 
-#include <prettyhome/event.hpp>
+#include <prettyhome/events/event.hpp>
 
 namespace prettyhome
 {
@@ -35,7 +35,7 @@ namespace prettyhome
 			subscribeEvents();
 
 			virtual void
-			handleEvent(Event &event) = 0;
+			handleEvent(events::Event &event) = 0;
 		private:
 			Module(const Module&) = delete;
 

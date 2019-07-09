@@ -8,13 +8,16 @@
  * Written by Linas Nikiperavicius <linas@linasdev.com>, 2019
  */
 
-#include <prettyhome/event.hpp>
+#include <prettyhome/events/event.hpp>
 
 namespace prettyhome
 {
-	uint16_t
-	Event::getType() const
+	namespace events
 	{
-		return type;
+		uint16_t
+		Event::getType() const
+		{
+			return type;
+		}
 	}
 }

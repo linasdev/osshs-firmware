@@ -23,8 +23,8 @@ namespace prettyhome
 		void
 		Module::subscribeEvents()
 		{
-			System::subscribeEvent(EventSelector(0xff00, static_cast< uint16_t >(getModuleTypeId()) << 8),
-				[=](Event &event) -> void
+			System::subscribeEvent(events::EventSelector(0xff00, static_cast< uint16_t >(getModuleTypeId()) << 8),
+				[=](events::Event &event) -> void
 				{
 					this->handleEvent(event);
 				}

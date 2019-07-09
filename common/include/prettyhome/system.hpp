@@ -15,7 +15,8 @@
 #include <unordered_map>
 
 #include <prettyhome/modules/module.hpp>
-#include <prettyhome/event.hpp>
+#include <prettyhome/events/event.hpp>
+#include <prettyhome/events/event_selector.hpp>
 
 namespace prettyhome
 {
@@ -29,13 +30,13 @@ namespace prettyhome
 		registerModule(modules::Module *module);
 
 		static void
-		subscribeEvent(EventSelector selector, EventSubscription subscription);
+		subscribeEvent(events::EventSelector selector, events::EventSubscription subscription);
 
 		static void
-		reportEvent(Event &event);
+		reportEvent(events::Event &event);
 	private:
 		static std::vector< modules::Module* > modules;
-		static std::unordered_map< EventSelector, std::vector< EventSubscription > > eventSubscriptions;
+		static std::unordered_map< events::EventSelector, std::vector< events::EventSubscription > > eventSubscriptions;
 	};
 }
 
