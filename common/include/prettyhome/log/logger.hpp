@@ -17,21 +17,21 @@ namespace prettyhome
 {
 	namespace log
 	{
-  	extern modm::log::Logger logger;
+		extern modm::log::Logger logger;
 	}
 }
 
 #define __FILENAME__ (__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1 : __FILE__)
 
 #define PRETTYHOME_ENABLE_LOGGER(device, behavior) \
-  modm::IODeviceWrapper< device, behavior > loggerDevice; \
-  modm::log::Logger prettyhome::log::logger(loggerDevice);
+	modm::IODeviceWrapper< device, behavior > loggerDevice; \
+	modm::log::Logger prettyhome::log::logger(loggerDevice);
 
 #define PRETTYHOME_PREFIXED_LOGGER(level) prettyhome::log::LogPrefixer::writePrefix< level, __LINE__ >(prettyhome::log::logger, __FILENAME__, __PRETTY_FUNCTION__)
 
 #define PRETTYHOME_LOG_CLEAN() \
-  if ( false ){} \
-  else prettyhome::log::logger << "\033[2J\033[H";
+	if ( false ){} \
+	else prettyhome::log::logger << "\033[2J\033[H";
 
 #define PRETTYHOME_LOG_OFF \
 	if ( true ){}	\

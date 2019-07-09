@@ -1,25 +1,25 @@
 <library>
-  <repositories>
-    <repository>
-      <path>./modm/repo.lb</path>
-    </repository>
-  </repositories>
+	<repositories>
+		<repository>
+			<path>./modm/repo.lb</path>
+		</repository>
+	</repositories>
 
-  <options>
-    <option name="modm:target">stm32f103c8t</option>
+	<options>
+		<option name="modm:target">stm32f103c8t</option>
 
 		<option name="modm:build:openocd.cfg">./openocd.cfg</option>
-    <option name="modm:build:project.name">PrettyHome</option>
-    <option name="modm:build:scons:cache_dir">$cache</option>
+		<option name="modm:build:project.name">PrettyHome</option>
+		<option name="modm:build:scons:cache_dir">$cache</option>
 
-    <option name="modm:docs:generate_module_docs">True</option>
-  </options>
+		<option name="modm:docs:generate_module_docs">True</option>
+	</options>
 
-  <modules>
+	<modules>
 		<module>modm:architecture:clock</module>
-    <module>modm:build:scons</module>
-    <module>modm:debug</module>
-    <module>modm:docs</module>
-    <module>modm:platform:core</module>
-  </modules>
+		<module>modm:build:scons</module>
+		<module>modm:debug</module>
+		<module>modm:docs</module>
+		<module>modm:platform:core</module>
+	</modules>
 </library>

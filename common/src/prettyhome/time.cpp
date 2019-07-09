@@ -13,17 +13,17 @@
 
 namespace prettyhome
 {
-  uint64_t Time::systemTime = 0;
+	uint64_t Time::systemTime = 0;
 
-  void
-  Time::initialize()
-  {
-    modm::platform::SysTickTimer::attachInterruptHandler(tick);
-  }
+	void
+	Time::initialize()
+	{
+		modm::platform::SysTickTimer::attachInterruptHandler(tick);
+	}
 
-  void
-  Time::tick()
-  {
-    systemTime++;
-  }
+	void
+	Time::tick()
+	{
+		systemTime++;
+	}
 }

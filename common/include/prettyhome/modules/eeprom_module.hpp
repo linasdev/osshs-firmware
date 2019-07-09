@@ -20,7 +20,7 @@ namespace prettyhome
 		static constexpr uint8_t EEPROM_MODULE_ID = 0x01;
 
 		class EepromModule : public Module
-	  {
+		{
 		public:
 			EepromModule();
 
@@ -29,7 +29,7 @@ namespace prettyhome
 		protected:
 			void
 			handleEvent(Event &event);
-	  };
+		};
 	}
 }
 

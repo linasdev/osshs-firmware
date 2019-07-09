@@ -12,9 +12,9 @@
 
 namespace prettyhome
 {
-  uint16_t
-  Event::getType() const
-  {
-    return type;
-  }
+	uint16_t
+	Event::getType() const
+	{
+		return type;
+	}
 }

@@ -15,28 +15,28 @@
 
 namespace prettyhome
 {
-  class Time
-  {
-  public:
-    enum class
-    Precision
-    {
-      Milliseconds,
-    	Seconds
-    };
+	class Time
+	{
+	public:
+		enum class
+		Precision
+		{
+			Milliseconds,
+			Seconds
+		};
 
-    static void
-    initialize();
+		static void
+		initialize();
 
-    template< typename T, Precision precision >
-    static T
-    getSystemTime();
-  private:
-    static uint64_t systemTime;
+		template< typename T, Precision precision >
+		static T
+		getSystemTime();
+	private:
+		static uint64_t systemTime;
 
-    static void
-    tick();
-  };
+		static void
+		tick();
+	};
 }
 
 #include <prettyhome/time_impl.hpp>

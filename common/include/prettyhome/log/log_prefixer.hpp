@@ -17,13 +17,13 @@ namespace prettyhome
 {
 	namespace log
 	{
-	  class LogPrefixer
-	  {
-	  public:
-	    template< modm::log::Level level, uint32_t line >
-	    static modm::IOStream&
-	    writePrefix(modm::IOStream &stream, const char *file, const char *function);
-	  };
+		class LogPrefixer
+		{
+		public:
+			template< modm::log::Level level, uint32_t line >
+			static modm::IOStream&
+			writePrefix(modm::IOStream &stream, const char *file, const char *function);
+		};
 	}
 }
 

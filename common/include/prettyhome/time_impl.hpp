@@ -9,21 +9,21 @@
  */
 
 #ifndef PRETTYHOME_TIME_HPP
-  #error	"Don't include this file directly, use 'time.hpp' instead!"
+	#error	"Don't include this file directly, use 'time.hpp' instead!"
 #endif
 
 namespace prettyhome
 {
-  template< typename T, Time::Precision precision >
-  T
-  Time::getSystemTime()
-  {
+	template< typename T, Time::Precision precision >
+	T
+	Time::getSystemTime()
+	{
 		modm::atomic::Lock lock;
 
-    if constexpr (precision == Precision::Milliseconds)
-      return static_cast< T >(systemTime);
+		if constexpr (precision == Precision::Milliseconds)
+			return static_cast< T >(systemTime);
 
-    if constexpr (precision == Precision::Seconds)
-      return static_cast< T >(systemTime) / 1000;
-  }
+		if constexpr (precision == Precision::Seconds)
+			return static_cast< T >(systemTime) / 1000;
+	}
 }

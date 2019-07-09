@@ -19,24 +19,24 @@
 
 namespace prettyhome
 {
-  class System
-  {
-  public:
-    static void
-    initialize();
+	class System
+	{
+	public:
+		static void
+		initialize();
 
-    static void
-    registerModule(modules::Module *module);
+		static void
+		registerModule(modules::Module *module);
 
-    static void
-    subscribeEvent(EventSelector selector, EventSubscription subscription);
+		static void
+		subscribeEvent(EventSelector selector, EventSubscription subscription);
 
-    static void
-    reportEvent(Event &event);
-  private:
-    static std::vector< modules::Module* > modules;
-    static std::unordered_map< EventSelector, std::vector< EventSubscription > > eventSubscriptions;
-  };
+		static void
+		reportEvent(Event &event);
+	private:
+		static std::vector< modules::Module* > modules;
+		static std::unordered_map< EventSelector, std::vector< EventSubscription > > eventSubscriptions;
+	};
 }
 
 #endif  // PRETTYHOME_SYSTEM_HPP

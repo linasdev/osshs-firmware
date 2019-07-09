@@ -33,7 +33,7 @@ main()
 
 	prettyhome::System::initialize();
 	prettyhome::System::registerModule(new prettyhome::modules::EepromModule());
-	
+
 	do
 	{
 	} while (true);

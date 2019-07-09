@@ -15,62 +15,62 @@
 
 namespace prettyhome
 {
-  class Event
-  {
-  public:
-    Event(uint16_t type) : type(type)
-    {
-    };
+	class Event
+	{
+	public:
+		Event(uint16_t type) : type(type)
+		{
+		};
 
-    uint16_t
-    getType() const;
-  private:
-    uint16_t type;
+		uint16_t
+		getType() const;
+	private:
+		uint16_t type;
 
 		Event(const Event&) = delete;
 
 		Event&
 		operator=(const Event&) = delete;
-  };
+	};
 
-  typedef struct EventSelector
-  {
-    uint16_t mask;
-    uint16_t identifier;
+	typedef struct EventSelector
+	{
+		uint16_t mask;
+		uint16_t identifier;
 
-    EventSelector(uint16_t mask, uint16_t identifier)
-    {
-      this->mask = mask;
-      this->identifier = identifier;
-    }
+		EventSelector(uint16_t mask, uint16_t identifier)
+		{
+			this->mask = mask;
+			this->identifier = identifier;
+		}
 
-    bool
-    match(Event &event) const
-    {
-      return (event.getType() & mask) == identifier;
-    }
+		bool
+		match(Event &event) const
+		{
+			return (event.getType() & mask) == identifier;
+		}
 
-    bool
-    operator==(const EventSelector& rhs) const
-    {
-      return mask == rhs.mask && identifier == rhs.identifier;
-    }
-  } EventSelector;
+		bool
+		operator==(const EventSelector& rhs) const
+		{
+			return mask == rhs.mask && identifier == rhs.identifier;
+		}
+	} EventSelector;
 
 	typedef std::function< void (Event&) > EventSubscription;
 }
 
 namespace std
 {
-  template<>
-  struct hash< prettyhome::EventSelector >
-  {
-    size_t
-    operator()(const prettyhome::EventSelector &eventSelector) const
-    {
-      return eventSelector.mask ^ eventSelector.identifier;
-    }
-  };
+	template<>
+	struct hash< prettyhome::EventSelector >
+	{
+		size_t
+		operator()(const prettyhome::EventSelector &eventSelector) const
+		{
+			return eventSelector.mask ^ eventSelector.identifier;
+		}
+	};
 }
 
 #endif  // PRETTYHOME_EVENT_HPP

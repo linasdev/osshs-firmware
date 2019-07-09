@@ -24,7 +24,7 @@ namespace prettyhome
 		static constexpr uint8_t BASE_MODULE_ID = 0x00;
 
 		class Module
-	  {
+		{
 		public:
 			Module();
 
@@ -43,7 +43,7 @@ namespace prettyhome
 			operator=(const Module&) = delete;
 
 			friend class prettyhome::System;
-	  };
+		};
 	}
 }
 
