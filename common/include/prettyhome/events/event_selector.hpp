@@ -11,8 +11,6 @@
 #ifndef PRETTYHOME_EVENT_SELECTOR_HPP
 #define PRETTYHOME_EVENT_SELECTOR_HPP
 
-#include <functional>
-
 namespace prettyhome
 {
 	namespace events

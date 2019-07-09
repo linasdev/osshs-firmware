@@ -30,13 +30,13 @@ namespace prettyhome
 		registerModule(modules::Module *module);
 
 		static void
-		subscribeEvent(events::EventSelector selector, events::EventSubscription subscription);
+		subscribeEvent(events::EventSelector selector, events::EventCallback subscription);
 
 		static void
 		reportEvent(events::Event &event);
 	private:
 		static std::vector< modules::Module* > modules;
-		static std::unordered_map< events::EventSelector, std::vector< events::EventSubscription > > eventSubscriptions;
+		static std::unordered_map< events::EventSelector, std::vector< events::EventCallback > > eventSubscriptions;
 	};
 }
 
