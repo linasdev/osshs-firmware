@@ -28,23 +28,23 @@ namespace prettyhome
 				FORM_CHANNEL_EVENT = 0x0000
 			};
 
-			Event(uint16_t type, uint8_t *data, size_t dataLen, EventCallback callback = nullptr, bool formChannel = false)
-				: type(type), causeId(nextCauseId++), data(data), dataLen(dataLen), callback(callback), formChannel(formChannel)
+			Event(uint16_t type, EventCallback callback = nullptr, bool formChannel = false)
+				: type(type), causeId(nextCauseId++), callback(callback), formChannel(formChannel)
 			{
 			}
 
-			Event(uint16_t type, uint16_t causeId, uint8_t *data, size_t dataLen, EventCallback callback = nullptr, bool formChannel = false)
-				: type(type), causeId(causeId), data(data), dataLen(dataLen), callback(callback), formChannel(formChannel)
+			Event(uint16_t type, uint16_t causeId, EventCallback callback = nullptr, bool formChannel = false)
+				: type(type), causeId(causeId), callback(callback), formChannel(formChannel)
 			{
 			}
 
 			Event(uint16_t type)
-				:type(type), causeId(nextCauseId++), data(nullptr), dataLen(0), callback(nullptr), formChannel(false)
+				: type(type), causeId(nextCauseId++), callback(nullptr), formChannel(false)
 			{
 			}
 
 			Event(uint16_t type, uint16_t causeId)
-				:type(type), causeId(causeId), data(nullptr), dataLen(0), callback(nullptr), formChannel(false)
+				: type(type), causeId(causeId), callback(nullptr), formChannel(false)
 			{
 			}
 
@@ -53,12 +53,6 @@ namespace prettyhome
 
 			uint16_t
 			getCauseId() const;
-
-			uint8_t*
-			getData() const;
-
-			size_t
-			getDataLen() const;
 
 			EventCallback
 			getCallback() const;
@@ -69,8 +63,6 @@ namespace prettyhome
 			uint16_t type;
 			uint16_t causeId;
 			static uint16_t nextCauseId;
-			uint8_t *data;
-			size_t dataLen;
 			EventCallback callback;
 			bool formChannel;
 

@@ -28,18 +28,6 @@ namespace prettyhome
 			return causeId;
 		}
 
-		uint8_t*
-		Event::getData() const
-		{
-			return data;
-		}
-
-		size_t
-		Event::getDataLen() const
-		{
-			return dataLen;
-		}
-
 		EventCallback
 		Event::getCallback() const
 		{
