@@ -38,16 +38,6 @@ namespace prettyhome
 			{
 			}
 
-			Event(uint16_t type)
-				: type(type), causeId(nextCauseId++), callback(nullptr), formChannel(false)
-			{
-			}
-
-			Event(uint16_t type, uint16_t causeId)
-				: type(type), causeId(causeId), callback(nullptr), formChannel(false)
-			{
-			}
-
 			uint16_t
 			getType() const;
 
