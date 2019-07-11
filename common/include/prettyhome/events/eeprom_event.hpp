@@ -12,7 +12,6 @@
 #define PRETTYHOME_EEPROM_EVENT_HPP
 
 #include <prettyhome/events/event.hpp>
-#include <prettyhome/modules/eeprom_module.hpp>
 
 namespace prettyhome
 {
@@ -20,23 +19,24 @@ namespace prettyhome
 	{
 		enum class EepromEvent
 		{
-			REQUEST_DATA_EVENT = modules::EEPROM_MODULE_ID << 8,
+			BASE_EVENT = 0x01 << 8,
+			REQUEST_DATA_EVENT,
 			DATA_READY_EVENT,
 			UPDATE_DATA_EVENT,
 			UPDATE_SUCCESS_EVENT,
 			ERROR_EVENT
 		};
-
+		
 		class EepromRequestDataEvent : public Event
 		{
 		public:
 			EepromRequestDataEvent(uint16_t address, size_t dataLen, EventCallback callback = nullptr, bool formChannel = false)
-				: Event((uint16_t) EepromEvent::REQUEST_DATA_EVENT, callback, formChannel), address(address), dataLen(dataLen)
+				: Event(static_cast< uint16_t > (EepromEvent::REQUEST_DATA_EVENT), callback, formChannel), address(address), dataLen(dataLen)
 			{
 			}
 
 			EepromRequestDataEvent(uint16_t address, size_t dataLen, uint16_t causeId, EventCallback callback = nullptr, bool formChannel = false)
-				: Event((uint16_t) EepromEvent::REQUEST_DATA_EVENT, causeId, callback, formChannel), address(address), dataLen(dataLen)
+				: Event(static_cast< uint16_t > (EepromEvent::REQUEST_DATA_EVENT), causeId, callback, formChannel), address(address), dataLen(dataLen)
 			{
 			}
 
@@ -54,12 +54,12 @@ namespace prettyhome
 		{
 		public:
 			EepromDataReadyEvent(const uint8_t *data, size_t dataLen, EventCallback callback = nullptr, bool formChannel = false)
-				: Event((uint16_t) EepromEvent::DATA_READY_EVENT, callback, formChannel), data(data), dataLen(dataLen)
+				: Event(static_cast< uint16_t > (EepromEvent::DATA_READY_EVENT), callback, formChannel), data(data), dataLen(dataLen)
 			{
 			}
 
 			EepromDataReadyEvent(const uint8_t *data, size_t dataLen, uint16_t causeId, EventCallback callback = nullptr, bool formChannel = false)
-				: Event((uint16_t) EepromEvent::DATA_READY_EVENT, causeId, callback, formChannel), data(data), dataLen(dataLen)
+				: Event(static_cast< uint16_t > (EepromEvent::DATA_READY_EVENT), causeId, callback, formChannel), data(data), dataLen(dataLen)
 			{
 			}
 
@@ -77,12 +77,12 @@ namespace prettyhome
 		{
 		public:
 			EepromUpdateDataEvent(uint16_t address, const uint8_t *data, size_t dataLen, EventCallback callback = nullptr, bool formChannel = false)
-				: Event((uint16_t) EepromEvent::UPDATE_DATA_EVENT, callback, formChannel), address(address), data(data), dataLen(dataLen)
+				: Event(static_cast< uint16_t > (EepromEvent::UPDATE_DATA_EVENT), callback, formChannel), address(address), data(data), dataLen(dataLen)
 			{
 			}
 
 			EepromUpdateDataEvent(uint16_t address, const uint8_t *data, size_t dataLen, uint16_t causeId, EventCallback callback = nullptr, bool formChannel = false)
-				: Event((uint16_t) EepromEvent::UPDATE_DATA_EVENT, causeId, callback, formChannel), address(address), data(data), dataLen(dataLen)
+				: Event(static_cast< uint16_t > (EepromEvent::UPDATE_DATA_EVENT), causeId, callback, formChannel), address(address), data(data), dataLen(dataLen)
 			{
 			}
 
@@ -104,12 +104,12 @@ namespace prettyhome
 		{
 		public:
 			EepromUpdateSuccessEvent(EventCallback callback = nullptr, bool formChannel = false)
-				: Event((uint16_t) EepromEvent::UPDATE_SUCCESS_EVENT, callback, formChannel)
+				: Event(static_cast< uint16_t > (EepromEvent::UPDATE_SUCCESS_EVENT), callback, formChannel)
 			{
 			}
 
 			EepromUpdateSuccessEvent(uint16_t causeId, EventCallback callback = nullptr, bool formChannel = false)
-				: Event((uint16_t) EepromEvent::UPDATE_SUCCESS_EVENT, causeId, callback, formChannel)
+				: Event(static_cast< uint16_t > (EepromEvent::UPDATE_SUCCESS_EVENT), causeId, callback, formChannel)
 			{
 			}
 		};
@@ -117,12 +117,12 @@ namespace prettyhome
 		class EepromErrorEvent : public Event
 		{
 			EepromErrorEvent(uint8_t errorCode, EventCallback callback = nullptr, bool formChannel = false)
-				: Event((uint16_t) EepromEvent::ERROR_EVENT, callback, formChannel), errorCode(errorCode)
+				: Event(static_cast< uint16_t > (EepromEvent::ERROR_EVENT), callback, formChannel), errorCode(errorCode)
 			{
 			}
 
 			EepromErrorEvent(uint8_t errorCode, uint16_t causeId, EventCallback callback = nullptr, bool formChannel = false)
-				: Event((uint16_t) EepromEvent::ERROR_EVENT, causeId, callback, formChannel), errorCode(errorCode)
+				: Event(static_cast< uint16_t > (EepromEvent::ERROR_EVENT), causeId, callback, formChannel), errorCode(errorCode)
 			{
 			}
 
