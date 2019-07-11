@@ -21,5 +21,6 @@
 		<module>modm:debug</module>
 		<module>modm:docs</module>
 		<module>modm:platform:core</module>
+		<module>modm:processing:protothread</module>
 	</modules>
 </library>

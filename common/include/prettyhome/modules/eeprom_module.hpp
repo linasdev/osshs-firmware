@@ -27,8 +27,8 @@ namespace prettyhome
 			uint8_t
 			getModuleTypeId() const;
 		protected:
-			void
-			handleEvent(std::shared_ptr< events::Event > event);
+			bool
+			run();
 	  };
 	}
 }

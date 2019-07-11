@@ -12,7 +12,9 @@
 #define PRETTYHOME_MODULE_HPP
 
 #include <cstdint>
+#include <queue>
 
+#include <modm/processing/protothread.hpp>
 #include <prettyhome/events/event.hpp>
 
 namespace prettyhome
@@ -23,7 +25,7 @@ namespace prettyhome
 	{
 		static constexpr uint8_t BASE_MODULE_ID = 0x00;
 
-		class Module
+		class Module : public modm::pt::Protothread
 		{
 		public:
 			Module();
@@ -34,13 +36,18 @@ namespace prettyhome
 			virtual void
 			subscribeEvents();
 
-			virtual void
-			handleEvent(std::shared_ptr< events::Event > event) = 0;
+			virtual bool
+			run() = 0;
 		private:
+			std::queue< std::shared_ptr< events::Event > > eventQueue;
+
 			Module(const Module&) = delete;
 
 			Module&
 			operator=(const Module&) = delete;
+
+			void
+			handleEvent(std::shared_ptr< events::Event > event);
 
 			friend class prettyhome::System;
 		};

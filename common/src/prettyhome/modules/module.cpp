@@ -30,5 +30,11 @@ namespace prettyhome
 				}
 			);
 		}
+
+		void
+		Module::handleEvent(std::shared_ptr< events::Event > event)
+		{
+			eventQueue.push(event);
+		}
 	}
 }

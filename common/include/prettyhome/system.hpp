@@ -35,6 +35,9 @@ namespace prettyhome
 
 		static void
 		reportEvent(std::shared_ptr< events::Event > event);
+
+		static void
+		loop();
 	private:
 		static std::vector< modules::Module* > modules;
 		static std::unordered_map< events::EventSelector, std::vector< events::EventCallback > > eventSubscriptions;
