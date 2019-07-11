@@ -35,7 +35,7 @@ namespace prettyhome
 			subscribeEvents();
 
 			virtual void
-			handleEvent(events::Event &event) = 0;
+			handleEvent(std::shared_ptr< events::Event > event) = 0;
 		private:
 			Module(const Module&) = delete;
 

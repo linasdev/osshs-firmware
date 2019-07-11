@@ -27,9 +27,9 @@ namespace prettyhome
 			}
 
 			bool
-			match(Event &event) const
+			match(uint16_t type) const
 			{
-				return (event.getType() & mask) == identifier;
+				return (type & mask) == identifier;
 			}
 
 			bool

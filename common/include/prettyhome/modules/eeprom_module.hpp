@@ -28,8 +28,8 @@ namespace prettyhome
 			getModuleTypeId() const;
 		protected:
 			void
-			handleEvent(Event &event);
-		};
+			handleEvent(std::shared_ptr< events::Event > event);
+	  };
 	}
 }
 

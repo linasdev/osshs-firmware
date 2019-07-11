@@ -12,13 +12,14 @@
 #define PRETTYHOME_EVENT_HPP
 
 #include <functional>
+#include <memory>
 
 namespace prettyhome
 {
 	namespace events
 	{
 		class Event;
-		typedef std::function< void (Event&) > EventCallback;
+		typedef std::function< void (std::shared_ptr< Event >) > EventCallback;
 
 		class Event
 		{

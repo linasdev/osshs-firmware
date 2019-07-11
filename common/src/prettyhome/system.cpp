@@ -38,9 +38,10 @@ namespace prettyhome
 
 	void
 	System::reportEvent(events::Event &event)
+	System::reportEvent(std::shared_ptr< events::Event > event)
 	{
 		for(auto const &[selector, subscriptions] : eventSubscriptions)
-			if (selector.match(event))
+			if (selector.match(event->getType()))
 				for (auto const &subscription : subscriptions)
 					subscription(event);
 	}
