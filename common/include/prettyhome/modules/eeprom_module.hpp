@@ -11,7 +11,10 @@
 #ifndef PRETTYHOME_EEPROM_MODULE_HPP
 #define PRETTYHOME_EEPROM_MODULE_HPP
 
+#include <modm/driver/storage/i2c_eeprom.hpp>
+#include <modm/processing/timer.hpp>
 #include <prettyhome/modules/module.hpp>
+#include <prettyhome/events/eeprom_event.hpp>
 
 namespace prettyhome
 {
@@ -19,18 +22,37 @@ namespace prettyhome
 	{
 		static constexpr uint8_t EEPROM_MODULE_ID = 0x01;
 
-		class EepromModule : public Module
+ 		template < typename I2cMaster >
+		class EepromModule : public Module, private modm::Resumable<2>
 		{
 		public:
-			EepromModule();
+			EepromModule(uint8_t address = 0x50)
+				: i2cEeprom(address)
+			{
+			}
 
 			uint8_t
 			getModuleTypeId() const;
 		protected:
 			bool
 			run();
+		private:
+    	modm::ShortTimeout writeCycleTimeout;
+			modm::I2cEeprom< I2cMaster > i2cEeprom;
+
+			std::shared_ptr< events::Event > currentEvent;
+			std::shared_ptr< uint8_t[] > currentData;
+			bool currentSuccess;
+
+			modm::ResumableResult<void>
+			handleRequestDataEvent(std::shared_ptr< events::EepromRequestDataEvent > event);
+
+			modm::ResumableResult<void>
+			handleUpdateDataEvent(std::shared_ptr< events::EepromUpdateDataEvent > event);
 	  };
 	}
 }
+
+#include <prettyhome/modules/eeprom_module_impl.hpp>
 
 #endif  // PRETTYHOME_EEPROM_MODULE_HPP

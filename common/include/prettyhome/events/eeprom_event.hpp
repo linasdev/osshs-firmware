@@ -26,7 +26,7 @@ namespace prettyhome
 			UPDATE_SUCCESS_EVENT,
 			ERROR_EVENT
 		};
-		
+
 		class EepromRequestDataEvent : public Event
 		{
 		public:
@@ -40,7 +40,7 @@ namespace prettyhome
 			{
 			}
 
-			uint8_t
+			uint16_t
 			getAddress() const;
 
 			size_t
@@ -53,35 +53,35 @@ namespace prettyhome
 		class EepromDataReadyEvent : public Event
 		{
 		public:
-			EepromDataReadyEvent(const uint8_t *data, size_t dataLen, EventCallback callback = nullptr, bool formChannel = false)
+			EepromDataReadyEvent(const std::shared_ptr< uint8_t[] > data, size_t dataLen, EventCallback callback = nullptr, bool formChannel = false)
 				: Event(static_cast< uint16_t > (EepromEvent::DATA_READY_EVENT), callback, formChannel), data(data), dataLen(dataLen)
 			{
 			}
 
-			EepromDataReadyEvent(const uint8_t *data, size_t dataLen, uint16_t causeId, EventCallback callback = nullptr, bool formChannel = false)
+			EepromDataReadyEvent(const std::shared_ptr< uint8_t[] > data, size_t dataLen, uint16_t causeId, EventCallback callback = nullptr, bool formChannel = false)
 				: Event(static_cast< uint16_t > (EepromEvent::DATA_READY_EVENT), causeId, callback, formChannel), data(data), dataLen(dataLen)
 			{
 			}
 
-			const uint8_t *
+			const std::shared_ptr< uint8_t[] >
 			getData() const;
 
 			size_t
 			getDataLen() const;
 		private:
-			const uint8_t *data;
+			const std::shared_ptr< uint8_t[] > data;
 			size_t dataLen;
 		};
 
 		class EepromUpdateDataEvent : public Event
 		{
 		public:
-			EepromUpdateDataEvent(uint16_t address, const uint8_t *data, size_t dataLen, EventCallback callback = nullptr, bool formChannel = false)
+			EepromUpdateDataEvent(uint16_t address, const std::shared_ptr< uint8_t[] > data, size_t dataLen, EventCallback callback = nullptr, bool formChannel = false)
 				: Event(static_cast< uint16_t > (EepromEvent::UPDATE_DATA_EVENT), callback, formChannel), address(address), data(data), dataLen(dataLen)
 			{
 			}
 
-			EepromUpdateDataEvent(uint16_t address, const uint8_t *data, size_t dataLen, uint16_t causeId, EventCallback callback = nullptr, bool formChannel = false)
+			EepromUpdateDataEvent(uint16_t address, const std::shared_ptr< uint8_t[] > data, size_t dataLen, uint16_t causeId, EventCallback callback = nullptr, bool formChannel = false)
 				: Event(static_cast< uint16_t > (EepromEvent::UPDATE_DATA_EVENT), causeId, callback, formChannel), address(address), data(data), dataLen(dataLen)
 			{
 			}
@@ -89,14 +89,14 @@ namespace prettyhome
 			uint16_t
 			getAddress() const;
 
-			const uint8_t *
+			const std::shared_ptr< uint8_t[] >
 			getData() const;
 
 			size_t
 			getDataLen() const;
 		private:
 			uint16_t address;
-			const uint8_t *data;
+			const std::shared_ptr< uint8_t[] > data;
 			size_t dataLen;
 		};
 
@@ -116,6 +116,7 @@ namespace prettyhome
 
 		class EepromErrorEvent : public Event
 		{
+		public:
 			EepromErrorEvent(uint8_t errorCode, EventCallback callback = nullptr, bool formChannel = false)
 				: Event(static_cast< uint16_t > (EepromEvent::ERROR_EVENT), callback, formChannel), errorCode(errorCode)
 			{

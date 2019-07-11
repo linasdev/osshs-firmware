@@ -14,7 +14,7 @@ namespace prettyhome
 {
 	namespace events
 	{
-		uint8_t
+		uint16_t
 		EepromRequestDataEvent::getAddress() const
 		{
 			return address;
@@ -27,7 +27,7 @@ namespace prettyhome
 		}
 
 
-		const uint8_t *
+		const std::shared_ptr< uint8_t[] >
 		EepromDataReadyEvent::getData() const
 		{
 			return data;
@@ -46,7 +46,7 @@ namespace prettyhome
 			return address;
 		}
 
-		const uint8_t *
+		const std::shared_ptr< uint8_t[] >
 		EepromUpdateDataEvent::getData() const
 		{
 			return data;

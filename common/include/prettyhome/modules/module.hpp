@@ -15,6 +15,7 @@
 #include <queue>
 
 #include <modm/processing/protothread.hpp>
+#include <modm/processing/resumable.hpp>
 #include <prettyhome/events/event.hpp>
 
 namespace prettyhome
@@ -33,14 +34,14 @@ namespace prettyhome
 			virtual uint8_t
 			getModuleTypeId() const = 0;
 		protected:
+			std::queue< std::shared_ptr< events::Event > > eventQueue;
+
 			virtual void
 			subscribeEvents();
 
 			virtual bool
 			run() = 0;
 		private:
-			std::queue< std::shared_ptr< events::Event > > eventQueue;
-
 			Module(const Module&) = delete;
 
 			Module&

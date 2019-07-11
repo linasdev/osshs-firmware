@@ -5,8 +5,9 @@
 		<option name="modm:build:build.path">../build/PrettyHome_RGBW_module</option>
 	</options>
 
-	<modules>
-		<module>modm:platform:uart:1</module>
-		<module>modm:driver:i2c.eeprom</module>
-	</modules>
+  <modules>
+    <module>modm:platform:uart:1</module>
+    <module>modm:platform:i2c:1</module>
+    <module>modm:driver:i2c.eeprom</module>
+  </modules>
 </library>
