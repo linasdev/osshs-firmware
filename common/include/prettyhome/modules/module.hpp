@@ -41,14 +41,14 @@ namespace prettyhome
 
 			virtual bool
 			run() = 0;
+
+			void
+			handleEvent(std::shared_ptr< events::Event > event);
 		private:
 			Module(const Module&) = delete;
 
 			Module&
 			operator=(const Module&) = delete;
-
-			void
-			handleEvent(std::shared_ptr< events::Event > event);
 
 			friend class prettyhome::System;
 		};

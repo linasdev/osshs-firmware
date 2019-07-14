@@ -103,8 +103,8 @@ namespace prettyhome
 		class EepromUpdateSuccessEvent : public Event
 		{
 		public:
-			: Event(static_cast< uint16_t > (EepromEvent::UPDATE_SUCCESS_EVENT), callback)
 			EepromUpdateSuccessEvent(EventCallback callback = nullptr)
+				: Event(static_cast< uint16_t > (EepromEvent::UPDATE_SUCCESS_EVENT), callback)
 			{
 			}
 
@@ -117,6 +117,12 @@ namespace prettyhome
 		class EepromErrorEvent : public Event
 		{
 		public:
+			enum
+			{
+				READ_FAILED,
+				WRITE_FAILED
+			};
+
 			EepromErrorEvent(uint8_t errorCode, EventCallback callback = nullptr)
 				: Event(static_cast< uint16_t > (EepromEvent::ERROR_EVENT), callback), errorCode(errorCode)
 			{

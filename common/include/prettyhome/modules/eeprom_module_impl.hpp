@@ -18,22 +18,22 @@ namespace prettyhome
 {
 	namespace modules
 	{
-		template < typename I2cMaster >
+		template < typename I2cMaster, uint16_t writeCycleTime >
 		uint8_t
-		EepromModule< I2cMaster >::getModuleTypeId() const
+		EepromModule< I2cMaster, writeCycleTime >::getModuleTypeId() const
 		{
 			return static_cast< uint8_t >(static_cast< uint16_t > (events::EepromEvent::BASE_EVENT) >> 8);
 		}
 
-		template < typename I2cMaster >
+		template < typename I2cMaster, uint16_t writeCycleTime >
 		bool
-		EepromModule< I2cMaster >::run()
+		EepromModule< I2cMaster, writeCycleTime >::run()
 		{
       PT_BEGIN();
 
 			do
 			{
-				PT_WAIT_UNTIL(!eventQueue.empty());
+				PT_WAIT_WHILE(eventQueue.empty());
 
 				currentEvent = eventQueue.front();
 				eventQueue.pop();
@@ -58,48 +58,36 @@ namespace prettyhome
       PT_END();
 		}
 
-		bool test(bool locked)
-		{
-			PRETTYHOME_LOG_INFO << "ASDASDASD" << locked << "\r\n";
-			return true;
-		}
-
-		bool lockeda(bool reset = false, bool set = false)
-		{
-			static volatile bool locked = false;
-			if (reset)
-				locked = false;
-			if (set)
-				locked = true;
-			return locked;
-		}
-
-		template < typename I2cMaster >
+		template < typename I2cMaster, uint16_t writeCycleTime >
 		modm::ResumableResult<void>
-		EepromModule< I2cMaster >::handleRequestDataEvent(std::shared_ptr< events::EepromRequestDataEvent > event)
+		EepromModule< I2cMaster, writeCycleTime >::handleRequestDataEvent(std::shared_ptr< events::EepromRequestDataEvent > event)
 		{
-			// static volatile bool locked = false;
 			RF_BEGIN(0);
 
 			currentData.reset(new uint8_t[event->getDataLen()]);
 
-			// RF_WAIT_WHILE(test(locked) && locked);
-			// RF_WAIT_WHILE(lockeda(false, false));
-			// lockeda(false, true);
 			RF_WAIT_UNTIL(ResourceLock< modm::platform::I2cMaster1 >::tryLock());
 			currentSuccess = RF_CALL(i2cEeprom.read(event->getAddress(), currentData.get(), event->getDataLen()));
 			ResourceLock< modm::platform::I2cMaster1 >::unlock();
-			// lockeda(true, false)
+
 			static std::shared_ptr< events::Event > responseEvent;
 
 			if (currentSuccess)
 			{
-				events::EepromDataReadyEvent *successEvent = new events::EepromDataReadyEvent(currentData, event->getDataLen(), event->getCauseId());
+				events::EepromDataReadyEvent *successEvent = new events::EepromDataReadyEvent(currentData, event->getDataLen(), event->getCauseId(),
+					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
+				{
+						this->handleEvent(event);
+				});
 				responseEvent.reset(static_cast< events::Event* > (successEvent));
 			}
 			else
 			{
-				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(0x00, event->getCauseId());
+				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(events::EepromErrorEvent::READ_FAILED, event->getCauseId(),
+					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
+				{
+						this->handleEvent(event);
+				});
 				responseEvent.reset(static_cast< events::Event* > (errorEvent));
 			}
 
@@ -117,28 +105,35 @@ namespace prettyhome
 			RF_END();
 		}
 
-		template < typename I2cMaster >
+		template < typename I2cMaster, uint16_t writeCycleTime >
 		modm::ResumableResult<void>
-		EepromModule< I2cMaster >::handleUpdateDataEvent(std::shared_ptr< events::EepromUpdateDataEvent > event)
+		EepromModule< I2cMaster, writeCycleTime >::handleUpdateDataEvent(std::shared_ptr< events::EepromUpdateDataEvent > event)
 		{
 			RF_BEGIN(1);
 
 			currentData = event->getData();
 
-			// RF_WAIT_UNTIL(ResourceLock< modm::platform::I2cMaster1 >::tryLock());
+			RF_WAIT_UNTIL(ResourceLock< modm::platform::I2cMaster1 >::tryLock());
 			currentSuccess = RF_CALL(i2cEeprom.write(event->getAddress(), currentData.get(), event->getDataLen()));
-			// ResourceLock< modm::platform::I2cMaster1 >::unlock();
 
 			static std::shared_ptr< events::Event > responseEvent;
 
 			if (currentSuccess)
 			{
-				events::EepromUpdateSuccessEvent *successEvent = new events::EepromUpdateSuccessEvent(event->getCauseId());
+				events::EepromUpdateSuccessEvent *successEvent = new events::EepromUpdateSuccessEvent(event->getCauseId(),
+					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
+				{
+						this->handleEvent(event);
+				});
 				responseEvent.reset(static_cast< events::Event* > (successEvent));
 			}
 			else
 			{
-				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(0x00, event->getCauseId());
+				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(events::EepromErrorEvent::WRITE_FAILED, event->getCauseId(),
+					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
+				{
+						this->handleEvent(event);
+				});
 				responseEvent.reset(static_cast< events::Event* > (errorEvent));
 			}
 
@@ -153,8 +148,10 @@ namespace prettyhome
 				System::reportEvent(responseEvent);
 			}
 
-			writeCycleTimeout.restart(5);
+			writeCycleTimeout.restart(writeCycleTime);
 			RF_WAIT_UNTIL(writeCycleTimeout.isExpired());
+			writeCycleTimeout.stop();
+			ResourceLock< modm::platform::I2cMaster1 >::unlock();
 
 			RF_END();
 		}
