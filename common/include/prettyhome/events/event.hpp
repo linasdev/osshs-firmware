@@ -24,18 +24,13 @@ namespace prettyhome
 		class Event
 		{
 		public:
-			enum
-			{
-				FORM_CHANNEL_EVENT = 0x0000
-			};
-
-			Event(uint16_t type, EventCallback callback = nullptr, bool formChannel = false)
-				: type(type), causeId(nextCauseId++), callback(callback), formChannel(formChannel)
+			Event(uint16_t type, EventCallback callback = nullptr)
+				: type(type), causeId(nextCauseId++), callback(callback)
 			{
 			}
 
-			Event(uint16_t type, uint16_t causeId, EventCallback callback = nullptr, bool formChannel = false)
-				: type(type), causeId(causeId), callback(callback), formChannel(formChannel)
+			Event(uint16_t type, uint16_t causeId, EventCallback callback = nullptr)
+				: type(type), causeId(causeId), callback(callback)
 			{
 			}
 
@@ -47,15 +42,11 @@ namespace prettyhome
 
 			EventCallback
 			getCallback() const;
-
-			bool
-			shouldFormChannel() const;
 		private:
+			static uint16_t nextCauseId;
 			uint16_t type;
 			uint16_t causeId;
-			static uint16_t nextCauseId;
 			EventCallback callback;
-			bool formChannel;
 
 			Event(const Event&) = delete;
 

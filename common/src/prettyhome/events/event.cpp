@@ -33,11 +33,5 @@ namespace prettyhome
 		{
 			return callback;
 		}
-
-		bool
-		Event::shouldFormChannel() const
-		{
-			return formChannel;
-		}
 	}
 }
