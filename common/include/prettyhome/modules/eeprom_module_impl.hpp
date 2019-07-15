@@ -70,20 +70,29 @@ namespace prettyhome
 
 			if (currentSuccess)
 			{
-				events::EepromDataReadyEvent *successEvent = new events::EepromDataReadyEvent(currentData, event->getDataLen(), event->getCauseId(),
+				events::EepromDataReadyEvent *successEvent = new events::EepromDataReadyEvent(
+					currentData,
+					event->getDataLen(),
+					event->getCauseId(),
 					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
-				{
-						this->handleEvent(event);
-				});
+					{
+							this->handleEvent(event);
+					}
+				);
+
 				responseEvent.reset(static_cast< events::Event* > (successEvent));
 			}
 			else
 			{
-				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(events::EepromError::READ_FAILED, event->getCauseId(),
+				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(
+					events::EepromError::READ_FAILED,
+					event->getCauseId(),
 					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
-				{
-						this->handleEvent(event);
-				});
+					{
+							this->handleEvent(event);
+					}
+				);
+
 				responseEvent.reset(static_cast< events::Event* > (errorEvent));
 			}
 
@@ -116,20 +125,27 @@ namespace prettyhome
 
 			if (currentSuccess)
 			{
-				events::EepromUpdateSuccessEvent *successEvent = new events::EepromUpdateSuccessEvent(event->getCauseId(),
+				events::EepromUpdateSuccessEvent *successEvent = new events::EepromUpdateSuccessEvent(
+					event->getCauseId(),
 					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
-				{
-						this->handleEvent(event);
-				});
+					{
+							this->handleEvent(event);
+					}
+				);
+
 				responseEvent.reset(static_cast< events::Event* > (successEvent));
 			}
 			else
 			{
-				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(events::EepromError::WRITE_FAILED, event->getCauseId(),
+				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(
+					events::EepromError::WRITE_FAILED,
+					event->getCauseId(),
 					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
-				{
-						this->handleEvent(event);
-				});
+					{
+							this->handleEvent(event);
+					}
+				);
+				
 				responseEvent.reset(static_cast< events::Event* > (errorEvent));
 			}
 
