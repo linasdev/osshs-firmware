@@ -25,8 +25,8 @@ namespace prettyhome
 			DATA_READY,
 
 			UPDATE_DATA,
-			UPDATE_SUCCESS,
 
+			UPDATE_SUCCESS,
 			ERROR
 		};
 
