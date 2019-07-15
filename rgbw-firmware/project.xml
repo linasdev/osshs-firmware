@@ -8,6 +8,6 @@
   <modules>
     <module>modm:platform:uart:1</module>
     <module>modm:platform:i2c:1</module>
-    <module>modm:driver:i2c.eeprom</module>
+    <module>modm:platform:spi:1</module>
   </modules>
 </library>
