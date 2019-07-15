@@ -14,7 +14,7 @@ namespace prettyhome
 {
 	namespace events
 	{
-		uint8_t
+		PwmStatus
 		PwmStatusReadyEvent::getStatus() const
 		{
 			return status;

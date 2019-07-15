@@ -87,20 +87,20 @@ namespace prettyhome
 		{
 		public:
 
-			PwmStatusReadyEvent(uint8_t status, EventCallback callback = nullptr)
+			PwmStatusReadyEvent(PwmStatus status, EventCallback callback = nullptr)
 				: Event(static_cast< uint16_t > (PwmEvent::STATUS_READY), callback), status(status)
 			{
 			}
 
-			PwmStatusReadyEvent(uint8_t status, uint16_t causeId, EventCallback callback = nullptr)
+			PwmStatusReadyEvent(PwmStatus status, uint16_t causeId, EventCallback callback = nullptr)
 				: Event(static_cast< uint16_t > (PwmEvent::STATUS_READY), causeId, callback), status(status)
 			{
 			}
 
-			uint8_t
+			PwmStatus
 			getStatus() const;
 		private:
-			uint8_t status;
+			PwmStatus status;
 		};
 
 		class PwmEnableEvent : public Event

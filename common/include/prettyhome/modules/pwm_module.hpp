@@ -19,7 +19,7 @@ namespace prettyhome
 {
 	namespace modules
 	{
- 		template < uint16_t CHANNELS, typename SpiMaster, typename Xlat, typename Xblank >
+ 		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
 		class PwmModule : public Module, private modm::NestedResumable<1>
 		{
 		public:
@@ -31,7 +31,7 @@ namespace prettyhome
 			bool
 			run();
 		private:
-			modm::TLC594X< CHANNELS, SpiMaster, Xlat, Xblank > tlc594x;
+			modm::TLC594X< channels, SpiMaster, Xlat, Xblank > tlc594x;
 
 			std::shared_ptr< events::Event > currentEvent;
 
