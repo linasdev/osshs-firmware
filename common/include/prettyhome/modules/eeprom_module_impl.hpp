@@ -22,7 +22,7 @@ namespace prettyhome
 		uint8_t
 		EepromModule< I2cMaster, writeCycleTime >::getModuleTypeId() const
 		{
-			return static_cast< uint8_t >(static_cast< uint16_t > (events::EepromEvent::BASE_EVENT) >> 8);
+			return static_cast< uint8_t >(static_cast< uint16_t > (events::EepromEvent::BASE) >> 8);
 		}
 
 		template < typename I2cMaster, uint16_t writeCycleTime >
@@ -38,11 +38,11 @@ namespace prettyhome
 				currentEvent = eventQueue.front();
 				eventQueue.pop();
 
-				if (currentEvent->getType() == static_cast< uint16_t >(events::EepromEvent::REQUEST_DATA_EVENT))
+				if (currentEvent->getType() == static_cast< uint16_t >(events::EepromEvent::REQUEST_DATA))
 				{
 					PT_CALL(handleRequestDataEvent(std::static_pointer_cast< events::EepromRequestDataEvent >(currentEvent)));
 				}
-				else if (currentEvent->getType() == static_cast< uint16_t >(events::EepromEvent::UPDATE_DATA_EVENT))
+				else if (currentEvent->getType() == static_cast< uint16_t >(events::EepromEvent::UPDATE_DATA))
 				{
 					PT_CALL(handleUpdateDataEvent(std::static_pointer_cast< events::EepromUpdateDataEvent >(currentEvent)));
 				}
