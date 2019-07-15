@@ -20,8 +20,6 @@ namespace prettyhome
 {
 	namespace modules
 	{
-		static constexpr uint8_t EEPROM_MODULE_ID = 0x01;
-
  		template < typename I2cMaster, uint16_t writeCycleTime = 5 >
 		class EepromModule : public Module, private modm::NestedResumable<1>
 		{
