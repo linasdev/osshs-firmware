@@ -30,6 +30,12 @@ namespace prettyhome
 			ERROR
 		};
 
+		enum class EepromError : uint8_t
+		{
+			READ_FAILED,
+			WRITE_FAILED
+		};
+
 		class EepromRequestDataEvent : public Event
 		{
 		public:
@@ -120,26 +126,20 @@ namespace prettyhome
 		class EepromErrorEvent : public Event
 		{
 		public:
-			enum : uint8_t
-			{
-				READ_FAILED,
-				WRITE_FAILED
-			};
-
-			EepromErrorEvent(uint8_t errorCode, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::ERROR), callback), errorCode(errorCode)
+			EepromErrorEvent(EepromError error, EventCallback callback = nullptr)
+				: Event(static_cast< uint16_t > (EepromEvent::ERROR), callback), error(error)
 			{
 			}
 
-			EepromErrorEvent(uint8_t errorCode, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::ERROR), causeId, callback), errorCode(errorCode)
+			EepromErrorEvent(EepromError error, uint16_t causeId, EventCallback callback = nullptr)
+				: Event(static_cast< uint16_t > (EepromEvent::ERROR), causeId, callback), error(error)
 			{
 			}
 
-			uint8_t
-			getErrorCode() const;
+			EepromError
+			getError() const;
 		private:
-			uint8_t errorCode;
+			EepromError error;
 		};
 	}
 }

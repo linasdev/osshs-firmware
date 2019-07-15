@@ -46,10 +46,6 @@ namespace prettyhome
 				{
 					PT_CALL(handleUpdateDataEvent(std::static_pointer_cast< events::EepromUpdateDataEvent >(currentEvent)));
 				}
-				else
-				{
-
-				}
 
 				currentEvent.reset();
 			}
@@ -83,7 +79,7 @@ namespace prettyhome
 			}
 			else
 			{
-				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(events::EepromErrorEvent::READ_FAILED, event->getCauseId(),
+				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(events::EepromError::READ_FAILED, event->getCauseId(),
 					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 				{
 						this->handleEvent(event);
@@ -129,7 +125,7 @@ namespace prettyhome
 			}
 			else
 			{
-				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(events::EepromErrorEvent::WRITE_FAILED, event->getCauseId(),
+				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(events::EepromError::WRITE_FAILED, event->getCauseId(),
 					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 				{
 						this->handleEvent(event);

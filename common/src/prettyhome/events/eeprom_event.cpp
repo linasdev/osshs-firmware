@@ -59,10 +59,10 @@ namespace prettyhome
 		}
 
 
-		uint8_t
-		EepromErrorEvent::getErrorCode() const
+		EepromError
+		EepromErrorEvent::getError() const
 		{
-			return errorCode;
+			return error;
 		}
 	}
 }
