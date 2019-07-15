@@ -365,13 +365,15 @@ namespace prettyhome
 					event->getValue().blue 	<= 0xfff &&
 					event->getValue().white <= 0xfff)
 			{
-				uint16_t channel = event->getChannel() * 4;
-				events::PwmRgbwValue value = event->getValue();
+				{
+					uint16_t channel = event->getChannel() * 4;
+					events::PwmRgbwValue value = event->getValue();
 
-				tlc594x.setChannel(channel + 0, value.red);
-				tlc594x.setChannel(channel + 1, value.green);
-				tlc594x.setChannel(channel + 2, value.blue);
-				tlc594x.setChannel(channel + 3, value.white);
+					tlc594x.setChannel(channel + 0, value.red);
+					tlc594x.setChannel(channel + 1, value.green);
+					tlc594x.setChannel(channel + 2, value.blue);
+					tlc594x.setChannel(channel + 3, value.white);
+				}
 
 				RF_WAIT_UNTIL(ResourceLock< SpiMaster >::tryLock());
 				RF_CALL(tlc594x.writeChannels());
