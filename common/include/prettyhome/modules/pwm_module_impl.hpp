@@ -222,7 +222,10 @@ namespace prettyhome
 			if (event->getChannel() < channels && event->getValue() <= 0xfff)
 			{
 				tlc594x.setChannel(event->getChannel(), event->getValue());
+
+				RF_WAIT_UNTIL(ResourceLock< SpiMaster >::tryLock());
 				RF_CALL(tlc594x.writeChannels());
+				ResourceLock< SpiMaster >::unlock();
 			}
 
 			static std::shared_ptr< events::Event > responseEvent;
@@ -352,7 +355,10 @@ namespace prettyhome
 				tlc594x.setChannel(event->getChannel() * 4 + 1, event->getValue().green);
 				tlc594x.setChannel(event->getChannel() * 4 + 2, event->getValue().blue);
 				tlc594x.setChannel(event->getChannel() * 4 + 3, event->getValue().white);
+
+				RF_WAIT_UNTIL(ResourceLock< SpiMaster >::tryLock());
 				RF_CALL(tlc594x.writeChannels());
+				ResourceLock< SpiMaster >::unlock();
 			}
 
 			static std::shared_ptr< events::Event > responseEvent;
