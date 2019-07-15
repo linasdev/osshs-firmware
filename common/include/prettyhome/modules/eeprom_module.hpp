@@ -23,7 +23,7 @@ namespace prettyhome
 		static constexpr uint8_t EEPROM_MODULE_ID = 0x01;
 
  		template < typename I2cMaster, uint16_t writeCycleTime = 5 >
-		class EepromModule : public Module, private modm::Resumable<2>
+		class EepromModule : public Module, private modm::NestedResumable<1>
 		{
 		public:
 			EepromModule(uint8_t address = 0x50)

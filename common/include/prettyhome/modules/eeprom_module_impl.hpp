@@ -62,7 +62,7 @@ namespace prettyhome
 		modm::ResumableResult<void>
 		EepromModule< I2cMaster, writeCycleTime >::handleRequestDataEvent(std::shared_ptr< events::EepromRequestDataEvent > event)
 		{
-			RF_BEGIN(0);
+			RF_BEGIN();
 
 			currentData.reset(new uint8_t[event->getDataLen()]);
 
@@ -109,7 +109,7 @@ namespace prettyhome
 		modm::ResumableResult<void>
 		EepromModule< I2cMaster, writeCycleTime >::handleUpdateDataEvent(std::shared_ptr< events::EepromUpdateDataEvent > event)
 		{
-			RF_BEGIN(1);
+			RF_BEGIN();
 
 			currentData = event->getData();
 
