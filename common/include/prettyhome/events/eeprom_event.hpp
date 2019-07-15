@@ -20,10 +20,13 @@ namespace prettyhome
 		enum class EepromEvent
 		{
 			BASE = 0x01 << 8,
+
 			REQUEST_DATA,
 			DATA_READY,
+
 			UPDATE_DATA,
 			UPDATE_SUCCESS,
+
 			ERROR
 		};
 
