@@ -45,20 +45,29 @@ namespace prettyhome
 		{
 			ENABLED,
 			DISABLED
-		}
+		};
 
 		enum class PwmError : uint8_t
 		{
 			CHANNEL_OUT_OF_BOUNDS,
 			VALUE_OUT_OF_BOUNDS
-		}
+		};
 
-		struct PwmRgbwValue
+		typedef struct PwmRgbwValue
 		{
 			uint16_t red;
 			uint16_t green;
 			uint16_t blue;
-		};
+			uint16_t white;
+
+			PwmRgbwValue(uint16_t red, uint16_t green, uint16_t blue, uint16_t white)
+			{
+				this->red = red;
+				this->green = green;
+				this->blue = blue;
+				this->white = white;
+			}
+		} PwmRgbwValue;
 
 		class PwmRequestStatusEvent : public Event
 		{
@@ -190,12 +199,12 @@ namespace prettyhome
 		class PwmRequestRgbwChannelEvent : public Event
 		{
 		public:
-			PwmRequestChannelEvent(uint16_t channel, EventCallback callback = nullptr)
+			PwmRequestRgbwChannelEvent(uint16_t channel, EventCallback callback = nullptr)
 				: Event(static_cast< uint16_t > (PwmEvent::REQUEST_RGBW_CHANNEL), callback), channel(channel)
 			{
 			}
 
-			PwmRequestChannelEvent(uint16_t channel, uint16_t causeId, EventCallback callback = nullptr)
+			PwmRequestRgbwChannelEvent(uint16_t channel, uint16_t causeId, EventCallback callback = nullptr)
 				: Event(static_cast< uint16_t > (PwmEvent::REQUEST_RGBW_CHANNEL), causeId, callback), channel(channel)
 			{
 			}
@@ -209,12 +218,12 @@ namespace prettyhome
 		class PwmRgbwChannelReadyEvent : public Event
 		{
 		public:
-			PwmChannelReadyEvent(uint16_t channel, PwmRgbwValue value, EventCallback callback = nullptr)
+			PwmRgbwChannelReadyEvent(uint16_t channel, PwmRgbwValue value, EventCallback callback = nullptr)
 				: Event(static_cast< uint16_t > (PwmEvent::RGBW_CHANNEL_READY), callback), channel(channel), value(value)
 			{
 			}
 
-			PwmChannelReadyEvent(uint16_t channel, PwmRgbwValue value, uint16_t causeId, EventCallback callback = nullptr)
+			PwmRgbwChannelReadyEvent(uint16_t channel, PwmRgbwValue value, uint16_t causeId, EventCallback callback = nullptr)
 				: Event(static_cast< uint16_t > (PwmEvent::RGBW_CHANNEL_READY), causeId, callback), channel(channel), value(value)
 			{
 			}
@@ -229,15 +238,15 @@ namespace prettyhome
 			PwmRgbwValue value;
 		};
 
-		class PwmRgbwUpdateChannelEvent : public Event
+		class PwmUpdateRgbwChannelEvent : public Event
 		{
 		public:
-			PwmUpdateChannelEvent(uint16_t channel, PwmRgbwValue value, EventCallback callback = nullptr)
+			PwmUpdateRgbwChannelEvent(uint16_t channel, PwmRgbwValue value, EventCallback callback = nullptr)
 				: Event(static_cast< uint16_t > (PwmEvent::UPDATE_RGBW_CHANNEL), callback), channel(channel), value(value)
 			{
 			}
 
-			PwmUpdateChannelEvent(uint16_t channel, PwmRgbwValue value, uint16_t causeId, EventCallback callback = nullptr)
+			PwmUpdateRgbwChannelEvent(uint16_t channel, PwmRgbwValue value, uint16_t causeId, EventCallback callback = nullptr)
 				: Event(static_cast< uint16_t > (PwmEvent::UPDATE_RGBW_CHANNEL), causeId, callback), channel(channel), value(value)
 			{
 			}
