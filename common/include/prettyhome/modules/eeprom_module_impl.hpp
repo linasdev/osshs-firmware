@@ -66,45 +66,47 @@ namespace prettyhome
 			currentSuccess = RF_CALL(i2cEeprom.read(event->getAddress(), currentData.get(), event->getDataLen()));
 			ResourceLock< I2cMaster >::unlock();
 
-			static std::shared_ptr< events::Event > responseEvent;
-
-			if (currentSuccess)
 			{
-				events::EepromDataReadyEvent *successEvent = new events::EepromDataReadyEvent(
-					currentData,
-					event->getDataLen(),
-					event->getCauseId(),
-					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
-					{
-							this->handleEvent(event);
-					}
-				);
+				std::shared_ptr< events::Event > responseEvent;
 
-				responseEvent.reset(static_cast< events::Event* > (successEvent));
-			}
-			else
-			{
-				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(
-					events::EepromError::READ_FAILED,
-					event->getCauseId(),
-					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
-					{
-							this->handleEvent(event);
-					}
-				);
+				if (currentSuccess)
+				{
+					events::EepromDataReadyEvent *successEvent = new events::EepromDataReadyEvent(
+						currentData,
+						event->getDataLen(),
+						event->getCauseId(),
+						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
+						{
+								this->handleEvent(event);
+						}
+					);
 
-				responseEvent.reset(static_cast< events::Event* > (errorEvent));
-			}
+					responseEvent.reset(static_cast< events::Event* > (successEvent));
+				}
+				else
+				{
+					events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(
+						events::EepromError::READ_FAILED,
+						event->getCauseId(),
+						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
+						{
+								this->handleEvent(event);
+						}
+					);
 
-			currentData.reset();
+					responseEvent.reset(static_cast< events::Event* > (errorEvent));
+				}
 
-			if (event->getCallback() != nullptr)
-			{
-				event->getCallback()(responseEvent);
-			}
-			else
-			{
-				System::reportEvent(responseEvent);
+				currentData.reset();
+
+				if (event->getCallback() != nullptr)
+				{
+					event->getCallback()(responseEvent);
+				}
+				else
+				{
+					System::reportEvent(responseEvent);
+				}
 			}
 
 			RF_END();
@@ -120,47 +122,49 @@ namespace prettyhome
 
 			RF_WAIT_UNTIL(ResourceLock< I2cMaster >::tryLock());
 			currentSuccess = RF_CALL(i2cEeprom.write(event->getAddress(), currentData.get(), event->getDataLen()));
-
-			static std::shared_ptr< events::Event > responseEvent;
-
-			if (currentSuccess)
-			{
-				events::EepromUpdateSuccessEvent *successEvent = new events::EepromUpdateSuccessEvent(
-					event->getCauseId(),
-					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
-					{
-							this->handleEvent(event);
-					}
-				);
-
-				responseEvent.reset(static_cast< events::Event* > (successEvent));
-			}
-			else
-			{
-				events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(
-					events::EepromError::WRITE_FAILED,
-					event->getCauseId(),
-					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
-					{
-							this->handleEvent(event);
-					}
-				);
-				
-				responseEvent.reset(static_cast< events::Event* > (errorEvent));
-			}
-
-			currentData.reset();
-
-			if (event->getCallback() != nullptr)
-			{
-				event->getCallback()(responseEvent);
-			}
-			else
-			{
-				System::reportEvent(responseEvent);
-			}
-
 			writeCycleTimeout.restart(writeCycleTime);
+
+			{
+				std::shared_ptr< events::Event > responseEvent;
+
+				if (currentSuccess)
+				{
+					events::EepromUpdateSuccessEvent *successEvent = new events::EepromUpdateSuccessEvent(
+						event->getCauseId(),
+						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
+						{
+								this->handleEvent(event);
+						}
+					);
+
+					responseEvent.reset(static_cast< events::Event* > (successEvent));
+				}
+				else
+				{
+					events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(
+						events::EepromError::WRITE_FAILED,
+						event->getCauseId(),
+						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
+						{
+								this->handleEvent(event);
+						}
+					);
+
+					responseEvent.reset(static_cast< events::Event* > (errorEvent));
+				}
+
+				currentData.reset();
+
+				if (event->getCallback() != nullptr)
+				{
+					event->getCallback()(responseEvent);
+				}
+				else
+				{
+					System::reportEvent(responseEvent);
+				}
+			}
+
 			RF_WAIT_UNTIL(writeCycleTimeout.isExpired());
 			writeCycleTimeout.stop();
 			ResourceLock< I2cMaster >::unlock();
