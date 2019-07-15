@@ -120,7 +120,7 @@ namespace prettyhome
 		class EepromErrorEvent : public Event
 		{
 		public:
-			enum
+			enum : uint8_t
 			{
 				READ_FAILED,
 				WRITE_FAILED
