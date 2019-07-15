@@ -66,9 +66,9 @@ namespace prettyhome
 
 			currentData.reset(new uint8_t[event->getDataLen()]);
 
-			RF_WAIT_UNTIL(ResourceLock< modm::platform::I2cMaster1 >::tryLock());
+			RF_WAIT_UNTIL(ResourceLock< I2cMaster >::tryLock());
 			currentSuccess = RF_CALL(i2cEeprom.read(event->getAddress(), currentData.get(), event->getDataLen()));
-			ResourceLock< modm::platform::I2cMaster1 >::unlock();
+			ResourceLock< I2cMaster >::unlock();
 
 			static std::shared_ptr< events::Event > responseEvent;
 
@@ -113,7 +113,7 @@ namespace prettyhome
 
 			currentData = event->getData();
 
-			RF_WAIT_UNTIL(ResourceLock< modm::platform::I2cMaster1 >::tryLock());
+			RF_WAIT_UNTIL(ResourceLock< I2cMaster >::tryLock());
 			currentSuccess = RF_CALL(i2cEeprom.write(event->getAddress(), currentData.get(), event->getDataLen()));
 
 			static std::shared_ptr< events::Event > responseEvent;
@@ -151,7 +151,7 @@ namespace prettyhome
 			writeCycleTimeout.restart(writeCycleTime);
 			RF_WAIT_UNTIL(writeCycleTimeout.isExpired());
 			writeCycleTimeout.stop();
-			ResourceLock< modm::platform::I2cMaster1 >::unlock();
+			ResourceLock< I2cMaster >::unlock();
 
 			RF_END();
 		}
