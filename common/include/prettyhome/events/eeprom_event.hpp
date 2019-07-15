@@ -17,7 +17,7 @@ namespace prettyhome
 {
 	namespace events
 	{
-		enum class EepromEvent
+		enum class EepromEvent : uint16_t
 		{
 			BASE = 0x01 << 8,
 
