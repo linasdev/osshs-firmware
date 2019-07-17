@@ -12,6 +12,7 @@
 #include <prettyhome/system.hpp>
 #include <prettyhome/modules/eeprom_module.hpp>
 #include <prettyhome/modules/pwm_module.hpp>
+#include <prettyhome/events/event_factory.hpp>
 
 #include "./board.hpp"
 
@@ -45,7 +46,7 @@ main()
 	);
 
 	prettyhome::System::registerModule(
-		new prettyhome::modules::PwmModule< 24, modm::platform::SpiMaster1, modm::platform::GpioA4, modm::platform::GpioA2 >()
+		new prettyhome::modules::PwmModule< 24, modm::platform::SpiMaster1, modm::platform::GpioA4, modm::platform::GpioA3 >()
 	);
 
 	prettyhome::System::loop();

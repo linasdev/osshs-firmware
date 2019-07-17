@@ -11,7 +11,7 @@
 #ifndef PRETTYHOME_EEPROM_EVENT_HPP
 #define PRETTYHOME_EEPROM_EVENT_HPP
 
-#include <prettyhome/events/event.hpp>
+#include <prettyhome/events/event_registrar.hpp>
 
 namespace prettyhome
 {
@@ -36,16 +36,18 @@ namespace prettyhome
 			WRITE_FAILED
 		};
 
-		class EepromRequestDataEvent : public Event
+		class EepromRequestDataEvent : public EventRegistrar<EepromRequestDataEvent>
 		{
 		public:
-			EepromRequestDataEvent(uint16_t address, size_t dataLen, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::REQUEST_DATA), callback), address(address), dataLen(dataLen)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (EepromEvent::REQUEST_DATA);
+
+			EepromRequestDataEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<EepromRequestDataEvent>(causeId, callback)
 			{
 			}
 
-			EepromRequestDataEvent(uint16_t address, size_t dataLen, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::REQUEST_DATA), causeId, callback), address(address), dataLen(dataLen)
+			EepromRequestDataEvent(uint16_t address, size_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<EepromRequestDataEvent>(causeId, callback), address(address), dataLen(dataLen)
 			{
 			}
 
@@ -59,16 +61,18 @@ namespace prettyhome
 			size_t dataLen;
 		};
 
-		class EepromDataReadyEvent : public Event
+		class EepromDataReadyEvent : public EventRegistrar<EepromDataReadyEvent>
 		{
 		public:
-			EepromDataReadyEvent(const std::shared_ptr< uint8_t[] > data, size_t dataLen, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::DATA_READY), callback), data(data), dataLen(dataLen)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (EepromEvent::DATA_READY);
+
+			EepromDataReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<EepromDataReadyEvent>(causeId, callback)
 			{
 			}
 
-			EepromDataReadyEvent(const std::shared_ptr< uint8_t[] > data, size_t dataLen, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::DATA_READY), causeId, callback), data(data), dataLen(dataLen)
+			EepromDataReadyEvent(const std::shared_ptr< uint8_t[] > data, size_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<EepromDataReadyEvent>(causeId, callback), data(data), dataLen(dataLen)
 			{
 			}
 
@@ -82,16 +86,18 @@ namespace prettyhome
 			size_t dataLen;
 		};
 
-		class EepromUpdateDataEvent : public Event
+		class EepromUpdateDataEvent : public EventRegistrar<EepromUpdateDataEvent>
 		{
 		public:
-			EepromUpdateDataEvent(uint16_t address, const std::shared_ptr< uint8_t[] > data, size_t dataLen, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::UPDATE_DATA), callback), address(address), data(data), dataLen(dataLen)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (EepromEvent::UPDATE_DATA);
+
+			EepromUpdateDataEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<EepromUpdateDataEvent>(causeId, callback)
 			{
 			}
 
-			EepromUpdateDataEvent(uint16_t address, const std::shared_ptr< uint8_t[] > data, size_t dataLen, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::UPDATE_DATA), causeId, callback), address(address), data(data), dataLen(dataLen)
+			EepromUpdateDataEvent(uint16_t address, const std::shared_ptr< uint8_t[] > data, size_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<EepromUpdateDataEvent>(causeId, callback), address(address), data(data), dataLen(dataLen)
 			{
 			}
 
@@ -109,30 +115,34 @@ namespace prettyhome
 			size_t dataLen;
 		};
 
-		class EepromUpdateSuccessEvent : public Event
+		class EepromUpdateSuccessEvent : public EventRegistrar<EepromUpdateSuccessEvent>
 		{
 		public:
-			EepromUpdateSuccessEvent(EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::UPDATE_SUCCESS), callback)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (EepromEvent::UPDATE_SUCCESS);
+
+			EepromUpdateSuccessEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<EepromUpdateSuccessEvent>(causeId, callback)
 			{
 			}
 
-			EepromUpdateSuccessEvent(uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::UPDATE_SUCCESS), causeId, callback)
+			EepromUpdateSuccessEvent(uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<EepromUpdateSuccessEvent>(causeId, callback)
 			{
 			}
 		};
 
-		class EepromErrorEvent : public Event
+		class EepromErrorEvent : public EventRegistrar<EepromErrorEvent>
 		{
 		public:
-			EepromErrorEvent(EepromError error, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::ERROR), callback), error(error)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (EepromEvent::ERROR);
+
+			EepromErrorEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<EepromErrorEvent>(causeId, callback)
 			{
 			}
 
-			EepromErrorEvent(EepromError error, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (EepromEvent::ERROR), causeId, callback), error(error)
+			EepromErrorEvent(EepromError error, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<EepromErrorEvent>(causeId, callback), error(error)
 			{
 			}
 

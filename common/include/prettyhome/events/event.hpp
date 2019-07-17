@@ -13,26 +13,22 @@
 
 #include <functional>
 #include <memory>
+#include <unordered_map>
 
 namespace prettyhome
 {
 	namespace events
 	{
 		class Event;
+
 		typedef std::function< void (std::shared_ptr< Event >) > EventCallback;
 
 		class Event
 		{
 		public:
-			Event(uint16_t type, EventCallback callback = nullptr)
-				: type(type), causeId(nextCauseId++), callback(callback)
-			{
-			}
+			static constexpr uint16_t CAUSE_ID_GENERATE = 0xffff;
 
-			Event(uint16_t type, uint16_t causeId, EventCallback callback = nullptr)
-				: type(type), causeId(causeId), callback(callback)
-			{
-			}
+			Event(uint16_t type, uint16_t causeId = CAUSE_ID_GENERATE, EventCallback callback = nullptr);
 
 			uint16_t
 			getType() const;
@@ -43,6 +39,7 @@ namespace prettyhome
 			EventCallback
 			getCallback() const;
 		private:
+			typedef std::function< std::shared_ptr< Event > (std::unique_ptr< const uint8_t[] >, uint16_t, EventCallback) > EventMaker;
 			static uint16_t nextCauseId;
 			uint16_t type;
 			uint16_t causeId;
@@ -52,6 +49,14 @@ namespace prettyhome
 
 			Event&
 			operator=(const Event&) = delete;
+
+			static std::unordered_map< uint16_t, EventMaker >&
+			eventRegister();
+
+			template< typename DerivedEvent >
+			friend class EventRegistrar;
+
+			friend class EventFactory;
 		};
 	}
 }

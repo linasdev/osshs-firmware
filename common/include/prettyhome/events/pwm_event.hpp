@@ -11,7 +11,7 @@
 #ifndef PRETTYHOME_PWM_EVENT_HPP
 #define PRETTYHOME_PWM_EVENT_HPP
 
-#include <prettyhome/events/event.hpp>
+#include <prettyhome/events/event_registrar.hpp>
 
 namespace prettyhome
 {
@@ -60,6 +60,14 @@ namespace prettyhome
 			uint16_t blue;
 			uint16_t white;
 
+			PwmRgbwValue()
+			{
+				this->red = 0xfff;
+				this->green = 0xfff;
+				this->blue = 0xfff;
+				this->white = 0xfff;
+			}
+
 			PwmRgbwValue(uint16_t red, uint16_t green, uint16_t blue, uint16_t white)
 			{
 				this->red = red;
@@ -69,31 +77,34 @@ namespace prettyhome
 			}
 		} PwmRgbwValue;
 
-		class PwmRequestStatusEvent : public Event
+		class PwmRequestStatusEvent : public EventRegistrar<PwmRequestStatusEvent>
 		{
 		public:
-			PwmRequestStatusEvent(EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::REQUEST_STATUS), callback)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::REQUEST_STATUS);
+
+			PwmRequestStatusEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmRequestStatusEvent>(causeId, callback)
 			{
 			}
 
-			PwmRequestStatusEvent(uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::REQUEST_STATUS), causeId, callback)
+			PwmRequestStatusEvent(uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmRequestStatusEvent>(causeId, callback)
 			{
 			}
 		};
 
-		class PwmStatusReadyEvent : public Event
+		class PwmStatusReadyEvent : public EventRegistrar<PwmStatusReadyEvent>
 		{
 		public:
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::STATUS_READY);
 
-			PwmStatusReadyEvent(PwmStatus status, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::STATUS_READY), callback), status(status)
+			PwmStatusReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmStatusReadyEvent>(causeId, callback)
 			{
 			}
 
-			PwmStatusReadyEvent(PwmStatus status, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::STATUS_READY), causeId, callback), status(status)
+			PwmStatusReadyEvent(PwmStatus status, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmStatusReadyEvent>(causeId, callback), status(status)
 			{
 			}
 
@@ -103,44 +114,50 @@ namespace prettyhome
 			PwmStatus status;
 		};
 
-		class PwmEnableEvent : public Event
+		class PwmEnableEvent : public EventRegistrar<PwmEnableEvent>
 		{
 		public:
-			PwmEnableEvent(EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::ENABLE), callback)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::ENABLE);
+
+			PwmEnableEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmEnableEvent>(causeId, callback)
 			{
 			}
 
-			PwmEnableEvent(uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::ENABLE), causeId, callback)
+			PwmEnableEvent(uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmEnableEvent>(causeId, callback)
 			{
 			}
 		};
 
-		class PwmDisableEvent : public Event
+		class PwmDisableEvent : public EventRegistrar<PwmDisableEvent>
 		{
 		public:
-			PwmDisableEvent(EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::DISABLE), callback)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::DISABLE);
+
+			PwmDisableEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmDisableEvent>(causeId, callback)
 			{
 			}
 
-			PwmDisableEvent(uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::DISABLE), causeId, callback)
+			PwmDisableEvent(uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmDisableEvent>(causeId, callback)
 			{
 			}
 		};
 
-		class PwmRequestChannelEvent : public Event
+		class PwmRequestChannelEvent : public EventRegistrar<PwmRequestChannelEvent>
 		{
 		public:
-			PwmRequestChannelEvent(uint16_t channel, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::REQUEST_CHANNEL), callback), channel(channel)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::REQUEST_CHANNEL);
+
+			PwmRequestChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmRequestChannelEvent>(causeId, callback)
 			{
 			}
 
-			PwmRequestChannelEvent(uint16_t channel, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::REQUEST_CHANNEL), causeId, callback), channel(channel)
+			PwmRequestChannelEvent(uint16_t channel, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmRequestChannelEvent>(causeId, callback), channel(channel)
 			{
 			}
 
@@ -150,39 +167,18 @@ namespace prettyhome
 			uint16_t channel;
 		};
 
-		class PwmChannelReadyEvent : public Event
+		class PwmChannelReadyEvent : public EventRegistrar<PwmChannelReadyEvent>
 		{
 		public:
-			PwmChannelReadyEvent(uint16_t channel, uint16_t value, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::CHANNEL_READY), callback), channel(channel), value(value)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::CHANNEL_READY);
+
+			PwmChannelReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmChannelReadyEvent>(causeId, callback)
 			{
 			}
 
-			PwmChannelReadyEvent(uint16_t channel, uint16_t value, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::CHANNEL_READY), causeId, callback), channel(channel), value(value)
-			{
-			}
-
-			uint16_t
-			getChannel() const;
-
-			uint16_t
-			getValue() const;
-		private:
-			uint16_t channel;
-			uint16_t value;
-		};
-
-		class PwmUpdateChannelEvent : public Event
-		{
-		public:
-			PwmUpdateChannelEvent(uint16_t channel, uint16_t value, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::UPDATE_CHANNEL), callback), channel(channel), value(value)
-			{
-			}
-
-			PwmUpdateChannelEvent(uint16_t channel, uint16_t value, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::UPDATE_CHANNEL), causeId, callback), channel(channel), value(value)
+			PwmChannelReadyEvent(uint16_t channel, uint16_t value, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmChannelReadyEvent>(causeId, callback), channel(channel), value(value)
 			{
 			}
 
@@ -196,16 +192,43 @@ namespace prettyhome
 			uint16_t value;
 		};
 
-		class PwmRequestRgbwChannelEvent : public Event
+		class PwmUpdateChannelEvent : public EventRegistrar<PwmUpdateChannelEvent>
 		{
 		public:
-			PwmRequestRgbwChannelEvent(uint16_t channel, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::REQUEST_RGBW_CHANNEL), callback), channel(channel)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::UPDATE_CHANNEL);
+
+			PwmUpdateChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmUpdateChannelEvent>(causeId, callback)
 			{
 			}
 
-			PwmRequestRgbwChannelEvent(uint16_t channel, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::REQUEST_RGBW_CHANNEL), causeId, callback), channel(channel)
+			PwmUpdateChannelEvent(uint16_t channel, uint16_t value, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmUpdateChannelEvent>(causeId, callback), channel(channel), value(value)
+			{
+			}
+
+			uint16_t
+			getChannel() const;
+
+			uint16_t
+			getValue() const;
+		private:
+			uint16_t channel;
+			uint16_t value;
+		};
+
+		class PwmRequestRgbwChannelEvent : public EventRegistrar<PwmRequestRgbwChannelEvent>
+		{
+		public:
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::REQUEST_RGBW_CHANNEL);
+
+			PwmRequestRgbwChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmRequestRgbwChannelEvent>(causeId, callback)
+			{
+			}
+
+			PwmRequestRgbwChannelEvent(uint16_t channel, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmRequestRgbwChannelEvent>(causeId, callback), channel(channel)
 			{
 			}
 
@@ -215,16 +238,18 @@ namespace prettyhome
 			uint16_t channel;
 		};
 
-		class PwmRgbwChannelReadyEvent : public Event
+		class PwmRgbwChannelReadyEvent : public EventRegistrar<PwmRgbwChannelReadyEvent>
 		{
 		public:
-			PwmRgbwChannelReadyEvent(uint16_t channel, PwmRgbwValue value, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::RGBW_CHANNEL_READY), callback), channel(channel), value(value)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::RGBW_CHANNEL_READY);
+
+			PwmRgbwChannelReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmRgbwChannelReadyEvent>(causeId, callback)
 			{
 			}
 
-			PwmRgbwChannelReadyEvent(uint16_t channel, PwmRgbwValue value, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::RGBW_CHANNEL_READY), causeId, callback), channel(channel), value(value)
+			PwmRgbwChannelReadyEvent(uint16_t channel, PwmRgbwValue value, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmRgbwChannelReadyEvent>(causeId, callback), channel(channel), value(value)
 			{
 			}
 
@@ -238,16 +263,18 @@ namespace prettyhome
 			PwmRgbwValue value;
 		};
 
-		class PwmUpdateRgbwChannelEvent : public Event
+		class PwmUpdateRgbwChannelEvent : public EventRegistrar<PwmUpdateRgbwChannelEvent>
 		{
 		public:
-			PwmUpdateRgbwChannelEvent(uint16_t channel, PwmRgbwValue value, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::UPDATE_RGBW_CHANNEL), callback), channel(channel), value(value)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::UPDATE_RGBW_CHANNEL);
+
+			PwmUpdateRgbwChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmUpdateRgbwChannelEvent>(causeId, callback)
 			{
 			}
 
-			PwmUpdateRgbwChannelEvent(uint16_t channel, PwmRgbwValue value, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::UPDATE_RGBW_CHANNEL), causeId, callback), channel(channel), value(value)
+			PwmUpdateRgbwChannelEvent(uint16_t channel, PwmRgbwValue value, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmUpdateRgbwChannelEvent>(causeId, callback), channel(channel), value(value)
 			{
 			}
 
@@ -261,30 +288,34 @@ namespace prettyhome
 			PwmRgbwValue value;
 		};
 
-		class PwmUpdateSuccessEvent : public Event
+		class PwmUpdateSuccessEvent : public EventRegistrar<PwmUpdateSuccessEvent>
 		{
 		public:
-			PwmUpdateSuccessEvent(EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::UPDATE_SUCCESS), callback)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::UPDATE_SUCCESS);
+
+			PwmUpdateSuccessEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmUpdateSuccessEvent>(causeId, callback)
 			{
 			}
 
-			PwmUpdateSuccessEvent(uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::UPDATE_SUCCESS), causeId, callback)
+			PwmUpdateSuccessEvent(uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmUpdateSuccessEvent>(causeId, callback)
 			{
 			}
 		};
 
-		class PwmErrorEvent : public Event
+		class PwmErrorEvent : public EventRegistrar<PwmErrorEvent>
 		{
 		public:
-			PwmErrorEvent(PwmError error, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::ERROR), callback), error(error)
+			static constexpr uint16_t TYPE = static_cast< uint16_t > (PwmEvent::ERROR);
+
+			PwmErrorEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmErrorEvent>(causeId, callback)
 			{
 			}
 
-			PwmErrorEvent(PwmError error, uint16_t causeId, EventCallback callback = nullptr)
-				: Event(static_cast< uint16_t > (PwmEvent::ERROR), causeId, callback), error(error)
+			PwmErrorEvent(PwmError error, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+				: EventRegistrar<PwmErrorEvent>(causeId, callback), error(error)
 			{
 			}
 
