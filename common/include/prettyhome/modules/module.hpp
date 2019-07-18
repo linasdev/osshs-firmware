@@ -29,7 +29,7 @@ namespace prettyhome
 		class Module : public modm::pt::Protothread
 		{
 		public:
-			Module();
+			Module() = default;
 
 			virtual uint8_t
 			getModuleTypeId() const = 0;

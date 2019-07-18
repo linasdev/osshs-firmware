@@ -16,10 +16,6 @@ namespace prettyhome
 {
 	namespace modules
 	{
-		Module::Module()
-		{
-		}
-
 		void
 		Module::subscribeEvents()
 		{
