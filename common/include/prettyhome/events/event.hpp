@@ -38,6 +38,9 @@ namespace prettyhome
 
 			EventCallback
 			getCallback() const;
+
+			virtual std::unique_ptr< const uint8_t[] >
+			serialize() const = 0;
 		private:
 			typedef std::function< std::shared_ptr< Event > (std::unique_ptr< const uint8_t[] >, uint16_t, EventCallback) > EventMaker;
 			static uint16_t nextCauseId;

@@ -46,7 +46,7 @@ namespace prettyhome
 			{
 			}
 
-			EepromRequestDataEvent(uint16_t address, size_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+			EepromRequestDataEvent(uint16_t address, uint16_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
 				: EventRegistrar<EepromRequestDataEvent>(causeId, callback), address(address), dataLen(dataLen)
 			{
 			}
@@ -54,11 +54,14 @@ namespace prettyhome
 			uint16_t
 			getAddress() const;
 
-			size_t
+			uint16_t
 			getDataLen() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			uint16_t address;
-			size_t dataLen;
+			uint16_t dataLen;
 		};
 
 		class EepromDataReadyEvent : public EventRegistrar<EepromDataReadyEvent>
@@ -71,7 +74,7 @@ namespace prettyhome
 			{
 			}
 
-			EepromDataReadyEvent(const std::shared_ptr< uint8_t[] > data, size_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+			EepromDataReadyEvent(const std::shared_ptr< uint8_t[] > data, uint16_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
 				: EventRegistrar<EepromDataReadyEvent>(causeId, callback), data(data), dataLen(dataLen)
 			{
 			}
@@ -79,11 +82,14 @@ namespace prettyhome
 			const std::shared_ptr< uint8_t[] >
 			getData() const;
 
-			size_t
+			uint16_t
 			getDataLen() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			const std::shared_ptr< uint8_t[] > data;
-			size_t dataLen;
+			uint16_t dataLen;
 		};
 
 		class EepromUpdateDataEvent : public EventRegistrar<EepromUpdateDataEvent>
@@ -96,7 +102,7 @@ namespace prettyhome
 			{
 			}
 
-			EepromUpdateDataEvent(uint16_t address, const std::shared_ptr< uint8_t[] > data, size_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+			EepromUpdateDataEvent(uint16_t address, const std::shared_ptr< uint8_t[] > data, uint16_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
 				: EventRegistrar<EepromUpdateDataEvent>(causeId, callback), address(address), data(data), dataLen(dataLen)
 			{
 			}
@@ -107,12 +113,15 @@ namespace prettyhome
 			const std::shared_ptr< uint8_t[] >
 			getData() const;
 
-			size_t
+			uint16_t
 			getDataLen() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			uint16_t address;
 			const std::shared_ptr< uint8_t[] > data;
-			size_t dataLen;
+			uint16_t dataLen;
 		};
 
 		class EepromUpdateSuccessEvent : public EventRegistrar<EepromUpdateSuccessEvent>
@@ -129,6 +138,9 @@ namespace prettyhome
 				: EventRegistrar<EepromUpdateSuccessEvent>(causeId, callback)
 			{
 			}
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		};
 
 		class EepromErrorEvent : public EventRegistrar<EepromErrorEvent>
@@ -148,6 +160,9 @@ namespace prettyhome
 
 			EepromError
 			getError() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			EepromError error;
 		};

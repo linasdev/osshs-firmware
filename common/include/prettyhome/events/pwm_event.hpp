@@ -91,6 +91,9 @@ namespace prettyhome
 				: EventRegistrar<PwmRequestStatusEvent>(causeId, callback)
 			{
 			}
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		};
 
 		class PwmStatusReadyEvent : public EventRegistrar<PwmStatusReadyEvent>
@@ -110,6 +113,9 @@ namespace prettyhome
 
 			PwmStatus
 			getStatus() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			PwmStatus status;
 		};
@@ -128,6 +134,9 @@ namespace prettyhome
 				: EventRegistrar<PwmEnableEvent>(causeId, callback)
 			{
 			}
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		};
 
 		class PwmDisableEvent : public EventRegistrar<PwmDisableEvent>
@@ -144,6 +153,9 @@ namespace prettyhome
 				: EventRegistrar<PwmDisableEvent>(causeId, callback)
 			{
 			}
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		};
 
 		class PwmRequestChannelEvent : public EventRegistrar<PwmRequestChannelEvent>
@@ -163,6 +175,9 @@ namespace prettyhome
 
 			uint16_t
 			getChannel() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			uint16_t channel;
 		};
@@ -187,6 +202,9 @@ namespace prettyhome
 
 			uint16_t
 			getValue() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			uint16_t channel;
 			uint16_t value;
@@ -212,6 +230,9 @@ namespace prettyhome
 
 			uint16_t
 			getValue() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			uint16_t channel;
 			uint16_t value;
@@ -234,6 +255,9 @@ namespace prettyhome
 
 			uint16_t
 			getChannel() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			uint16_t channel;
 		};
@@ -258,6 +282,9 @@ namespace prettyhome
 
 			PwmRgbwValue
 			getValue() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			uint16_t channel;
 			PwmRgbwValue value;
@@ -283,6 +310,9 @@ namespace prettyhome
 
 			PwmRgbwValue
 			getValue() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			uint16_t channel;
 			PwmRgbwValue value;
@@ -302,6 +332,9 @@ namespace prettyhome
 				: EventRegistrar<PwmUpdateSuccessEvent>(causeId, callback)
 			{
 			}
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		};
 
 		class PwmErrorEvent : public EventRegistrar<PwmErrorEvent>
@@ -321,6 +354,9 @@ namespace prettyhome
 
 			PwmError
 			getError() const;
+
+			std::unique_ptr< const uint8_t[] >
+			serialize() const;
 		private:
 			PwmError error;
 		};
