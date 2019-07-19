@@ -14,6 +14,13 @@ namespace prettyhome
 {
 	namespace events
 	{
+		EepromRequestDataEvent::EepromRequestDataEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<EepromRequestDataEvent>(causeId, callback)
+		{
+			address = data[4] | (data[5] << 8);
+			dataLen = data[6] | (data[7] << 8);
+		}
+
 		uint16_t
 		EepromRequestDataEvent::getAddress() const
 		{
@@ -29,7 +36,6 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		EepromRequestDataEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 8;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -47,6 +53,23 @@ namespace prettyhome
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
+
+		EepromDataReadyEvent::EepromDataReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<EepromDataReadyEvent>(causeId, callback)
+		{
+			dataLen = data[4] | (data[5] << 8);
+
+			if (6 + dataLen == (data[0] | (data[1] << 8)))
+			{
+				for (uint16_t i = 0; i < dataLen; i++)
+				{
+					this->data[i] = data[6 + i];
+				}
+			}
+			else
+			{
+			}
+		}
 
 		const std::shared_ptr< uint8_t[] >
 		EepromDataReadyEvent::getData() const
@@ -77,12 +100,30 @@ namespace prettyhome
 
 			for (uint16_t i = 0; i < dataLen; i++)
 			{
-				buffer[6 + 1] = data[i];
+				buffer[6 + i] = data[i];
 			}
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
+
+		EepromUpdateDataEvent::EepromUpdateDataEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<EepromUpdateDataEvent>(causeId, callback)
+		{
+			address = data[4] | (data[5] << 8);
+			dataLen = data[6] | (data[7] << 8);
+
+			if (8 + dataLen == (data[0] | (data[1] << 8)))
+			{
+				for (uint16_t i = 0; i < dataLen; i++)
+				{
+					this->data[i] = data[8 + i];
+				}
+			}
+			else
+			{
+			}
+		}
 
 		uint16_t
 		EepromUpdateDataEvent::getAddress() const
@@ -122,17 +163,22 @@ namespace prettyhome
 
 			for (uint16_t i = 0; i < dataLen; i++)
 			{
-				buffer[8 + 1] = data[i];
+				buffer[8 + i] = data[i];
 			}
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
+		EepromUpdateSuccessEvent::EepromUpdateSuccessEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<EepromUpdateSuccessEvent>(causeId, callback)
+		{
+			static_cast< void >(data);
+		}
+
 		std::unique_ptr< const uint8_t[] >
 		EepromUpdateSuccessEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 4;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -145,6 +191,12 @@ namespace prettyhome
 		}
 
 
+		EepromErrorEvent::EepromErrorEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<EepromErrorEvent>(causeId, callback)
+		{
+			error = static_cast< EepromError >(data[4]);
+		}
+
 		EepromError
 		EepromErrorEvent::getError() const
 		{
@@ -154,7 +206,6 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		EepromErrorEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 5;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;

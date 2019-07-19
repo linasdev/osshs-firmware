@@ -14,10 +14,15 @@ namespace prettyhome
 {
 	namespace events
 	{
+		PwmRequestStatusEvent::PwmRequestStatusEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmRequestStatusEvent>(causeId, callback)
+		{
+			static_cast< void >(data);
+		}
+
 		std::unique_ptr< const uint8_t[] >
 		PwmRequestStatusEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 4;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -30,6 +35,12 @@ namespace prettyhome
 		}
 
 
+		PwmStatusReadyEvent::PwmStatusReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmStatusReadyEvent>(causeId, callback)
+		{
+			status = static_cast< PwmStatus >(data[4]);
+		}
+
 		PwmStatus
 		PwmStatusReadyEvent::getStatus() const
 		{
@@ -39,7 +50,6 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmStatusReadyEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 5;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -54,10 +64,15 @@ namespace prettyhome
 		}
 
 
+		PwmEnableEvent::PwmEnableEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmEnableEvent>(causeId, callback)
+		{
+			static_cast< void >(data);
+		}
+
 		std::unique_ptr< const uint8_t[] >
 		PwmEnableEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 4;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -69,11 +84,16 @@ namespace prettyhome
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
+
+		PwmDisableEvent::PwmDisableEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmDisableEvent>(causeId, callback)
+		{
+			static_cast< void >(data);
+		}
 
 		std::unique_ptr< const uint8_t[] >
 		PwmDisableEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 4;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -85,6 +105,12 @@ namespace prettyhome
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
+
+		PwmRequestChannelEvent::PwmRequestChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmRequestChannelEvent>(causeId, callback)
+		{
+			channel = data[4] | (data[5] << 8);
+		}
 
 		uint16_t
 		PwmRequestChannelEvent::getChannel() const
@@ -95,7 +121,6 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmRequestChannelEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 6;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -110,6 +135,13 @@ namespace prettyhome
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
+
+		PwmChannelReadyEvent::PwmChannelReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmChannelReadyEvent>(causeId, callback)
+		{
+			channel = data[4] | (data[5] << 8);
+			value = data[6] | (data[7] << 8);
+		}
 
 		uint16_t
 		PwmChannelReadyEvent::getChannel() const
@@ -126,7 +158,6 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmChannelReadyEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 8;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -144,6 +175,13 @@ namespace prettyhome
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
+
+		PwmUpdateChannelEvent::PwmUpdateChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmUpdateChannelEvent>(causeId, callback)
+		{
+			channel = data[4] | (data[5] << 8);
+			value = data[6] | (data[7] << 8);
+		}
 
 		uint16_t
 		PwmUpdateChannelEvent::getChannel() const
@@ -160,7 +198,6 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmUpdateChannelEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 8;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -179,6 +216,12 @@ namespace prettyhome
 		}
 
 
+		PwmRequestRgbwChannelEvent::PwmRequestRgbwChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmRequestRgbwChannelEvent>(causeId, callback)
+		{
+			channel = data[4] | (data[5] << 8);
+		}
+
 		uint16_t
 		PwmRequestRgbwChannelEvent::getChannel() const
 		{
@@ -188,7 +231,6 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmRequestRgbwChannelEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 6;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -203,6 +245,16 @@ namespace prettyhome
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
+
+		PwmRgbwChannelReadyEvent::PwmRgbwChannelReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmRgbwChannelReadyEvent>(causeId, callback)
+		{
+			channel = data[4] | (data[5] << 8);
+			value.red = data[6] | (data[7] << 8);
+			value.green = data[8] | (data[9] << 8);
+			value.blue = data[10] | (data[11] << 8);
+			value.white = data[12] | (data[13] << 8);
+		}
 
 		uint16_t
 		PwmRgbwChannelReadyEvent::getChannel() const
@@ -219,7 +271,6 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmRgbwChannelReadyEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 14;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -246,6 +297,16 @@ namespace prettyhome
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
+
+		PwmUpdateRgbwChannelEvent::PwmUpdateRgbwChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmUpdateRgbwChannelEvent>(causeId, callback)
+		{
+			channel = data[4] | (data[5] << 8);
+			value.red = data[6] | (data[7] << 8);
+			value.green = data[8] | (data[9] << 8);
+			value.blue = data[10] | (data[11] << 8);
+			value.white = data[12] | (data[13] << 8);
+		}
 
 		uint16_t
 		PwmUpdateRgbwChannelEvent::getChannel() const
@@ -262,7 +323,6 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmUpdateRgbwChannelEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 14;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -290,10 +350,15 @@ namespace prettyhome
 		}
 
 
+		PwmUpdateSuccessEvent::PwmUpdateSuccessEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmUpdateSuccessEvent>(causeId, callback)
+		{
+			static_cast< void >(data);
+		}
+
 		std::unique_ptr< const uint8_t[] >
 		PwmUpdateSuccessEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 4;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -306,6 +371,12 @@ namespace prettyhome
 		}
 
 
+		PwmErrorEvent::PwmErrorEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+			: EventRegistrar<PwmErrorEvent>(causeId, callback)
+		{
+			error = static_cast< PwmError >(data[4]);
+		}
+
 		PwmError
 		PwmErrorEvent::getError() const
 		{
@@ -315,7 +386,6 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmErrorEvent::serialize() const
 		{
-			constexpr uint16_t EVENT_LENGTH = 5;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
