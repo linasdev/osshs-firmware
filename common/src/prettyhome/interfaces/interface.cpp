@@ -8,9 +8,7 @@
  * Written by Linas Nikiperavicius <linas@linasdev.com>, 2019
  */
 
-#include <prettyhome/modules/module.hpp>
-#include <prettyhome/system.hpp>
-#include <prettyhome/log/logger.hpp>
+#include <prettyhome/interfaces/interface.hpp>
 
 namespace prettyhome
 {
@@ -29,5 +27,3 @@ namespace prettyhome
 		}
 	}
 }
-
-#endif  // PRETTYHOME_INTERFACE_HPP
