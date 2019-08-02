@@ -33,6 +33,10 @@ namespace prettyhome
 	if ( false ){} \
 	else prettyhome::log::logger << "\033[2J\033[H";
 
+#define PRETTYHOME_LOGGER \
+	if ( false ){} \
+	else prettyhome::log::logger
+
 #define PRETTYHOME_LOG_OFF \
 	if ( true ){}	\
 	else PRETTYHOME_PREFIXED_LOGGER(modm::log::DISABLED)

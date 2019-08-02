@@ -7,6 +7,7 @@
 
   <modules>
     <module>modm:platform:uart:1</module>
+    <module>modm:platform:can</module>
     <module>modm:platform:i2c:1</module>
     <module>modm:platform:spi:1</module>
   </modules>
