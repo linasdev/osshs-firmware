@@ -10,6 +10,7 @@
 
 #include <prettyhome/log/logger.hpp>
 #include <prettyhome/system.hpp>
+#include <prettyhome/interfaces/can_interface.hpp>
 #include <prettyhome/modules/eeprom_module.hpp>
 #include <prettyhome/modules/pwm_module.hpp>
 #include <prettyhome/events/event_factory.hpp>
@@ -31,6 +32,9 @@ main()
 	modm::platform::Usart1::connect< modm::platform::GpioA9::Tx >();
 	modm::platform::Usart1::initialize< prettyhome::board::SystemClock, 115200_Bd >();
 
+	modm::platform::Can::connect< modm::platform::GpioA11::Rx, modm::platform::GpioA12::Tx > ();
+	modm::platform::Can::initialize< prettyhome::board::SystemClock, 50_kbps > (0);
+
 	modm::platform::I2cMaster1::connect< modm::platform::GpioB6::Scl, modm::platform::GpioB7::Sda >();
 	modm::platform::I2cMaster1::initialize< prettyhome::board::SystemClock, 360_kBd >();
 
@@ -40,6 +44,23 @@ main()
 	PRETTYHOME_LOG_CLEAN();
 
 	prettyhome::System::initialize();
+
+	prettyhome::interfaces::Interface *can = new prettyhome::interfaces::CanInterface< modm::platform::Can > ();
+	can->initialize();
+
+	std::shared_ptr< prettyhome::events::Event > event(new prettyhome::events::EepromRequestDataEvent(0x01, 0x02));
+	can->reportEvent(event);
+
+	event.reset(new prettyhome::events::EepromUpdateSuccessEvent());
+	can->reportEvent(event);
+
+	event.reset(new prettyhome::events::PwmRgbwChannelReadyEvent(0x00, prettyhome::events::PwmRgbwValue(0x01, 0x02, 0x03, 0x04)));
+	can->reportEvent(event);
+
+	do
+	{
+		can->run();
+	} while(true);
 
 	prettyhome::System::registerModule(
 		new prettyhome::modules::EepromModule< modm::platform::I2cMaster1 >()
