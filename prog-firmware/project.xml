@@ -1,0 +1,13 @@
+<library>
+	<options>
+		<option name="modm:build:scons:include_sconstruct">False</option>
+		<option name="modm:build:project.name">PrettyHome_PROG_module</option>
+		<option name="modm:build:build.path">../build/PrettyHome_PROG_module</option>
+	</options>
+
+  <modules>
+    <module>modm:platform:uart:1</module>
+    <module>modm:platform:uart:2</module>
+    <module>modm:platform:can</module>
+  </modules>
+</library>
