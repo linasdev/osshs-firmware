@@ -17,6 +17,7 @@
 #include <modm/processing/protothread.hpp>
 #include <modm/processing/resumable.hpp>
 #include <prettyhome/events/event.hpp>
+#include <prettyhome/events/event_selector.hpp>
 
 namespace prettyhome
 {
@@ -41,13 +42,16 @@ namespace prettyhome
 			void
 			reportEvent(std::shared_ptr< events::Event > event);
 		private:
-			Interface(const Module&) = delete;
+			Interface(const Interface&) = delete;
 
 			Interface&
 			operator=(const Interface&) = delete;
 
 			void
 			subscribeEvent(events::EventSelector selector, events::EventCallback subscription);
+
+			virtual void
+			initialize() = 0;
 		};
 	}
 }
