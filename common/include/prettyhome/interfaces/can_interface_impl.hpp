@@ -116,7 +116,10 @@ namespace prettyhome
 								buffer[frameId * 7 + i - 1] = frame.data[i];
 						}
 
-						std::shared_ptr< EventPacket > eventPacket(new EventPacket(std::unique_ptr< const uint8_t[] >(buffer)));
+						std::shared_ptr< EventPacket > eventPacket(new EventPacket(
+							std::unique_ptr< const uint8_t[] >(buffer),
+							&InterfaceManager::reportEvent
+						));
 						InterfaceManager::reportEventPacket(eventPacket);
 					}
 					else
@@ -127,7 +130,10 @@ namespace prettyhome
 						for (uint16_t i = 0; i < bufferLength; i++)
 							buffer[i] = frame.data[i];
 
-						std::shared_ptr< EventPacket > eventPacket(new EventPacket(std::unique_ptr< const uint8_t[] >(buffer)));
+						std::shared_ptr< EventPacket > eventPacket(new EventPacket(
+							std::unique_ptr< const uint8_t[] >(buffer),
+							&InterfaceManager::reportEvent
+						));
 						InterfaceManager::reportEventPacket(eventPacket);
 					}
 				}
@@ -146,6 +152,8 @@ namespace prettyhome
 		CanInterface< Can >::writeEventPacket(std::shared_ptr< EventPacket > eventPacket)
 		{
 			RF_BEGIN();
+
+			RF_WAIT_UNTIL(ResourceLock< Can >::tryLock());
 
 			currentBuffer = eventPacket->serialize();
 			currentBufferLength = currentBuffer[0] | (currentBuffer[1] << 8);
@@ -193,6 +201,8 @@ namespace prettyhome
 					Can::sendMessage(frame);
 				}
 			}
+
+			ResourceLock< Can >::unlock();
 
 			RF_END();
 		}

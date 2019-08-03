@@ -15,7 +15,7 @@ namespace prettyhome
 {
 	namespace interfaces
 	{
-		EventPacket::EventPacket(std::unique_ptr< const uint8_t[] > data)
+		EventPacket::EventPacket(std::unique_ptr< const uint8_t[] > data, events::EventCallback callback)
 		{
 			multiTarget = (data[2] >> 7) & 0b1;
 			command = (data[2] >> 6) & 0b1;
@@ -35,7 +35,7 @@ namespace prettyhome
 			}
 
 			uint16_t eventType = serializedEvent[2] | (serializedEvent[3] << 8);
-			event = events::EventFactory::make(eventType, std::unique_ptr< const uint8_t[] >(serializedEvent));
+			event = events::EventFactory::make(eventType, std::unique_ptr< const uint8_t[] >(serializedEvent), callback);
 		}
 
 		bool
