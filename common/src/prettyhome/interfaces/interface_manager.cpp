@@ -9,6 +9,7 @@
  */
 
  #include <prettyhome/interfaces/interface_manager.hpp>
+ #include <prettyhome/system.hpp>
 
 namespace prettyhome
 {
@@ -36,6 +37,22 @@ namespace prettyhome
 				if (interface == sourceInterface)
 					continue;
 
+				interface->reportEventPacket(eventPacket);
+			}
+
+			System::reportEvent(eventPacket->getEvent());
+		}
+
+		void
+		InterfaceManager::reportEvent(std::shared_ptr< events::Event > event)
+		{
+			std::shared_ptr< EventPacket > eventPacket(new EventPacket(
+				event,
+				0x00000000
+			));
+
+			for (Interface *interface : interfaces)
+			{
 				interface->reportEventPacket(eventPacket);
 			}
 		}

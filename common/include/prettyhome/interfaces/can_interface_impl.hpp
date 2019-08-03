@@ -43,8 +43,6 @@ namespace prettyhome
 						PT_CALL(writeEventPacket(currentEventPacket));
 
 						currentEventPacket.reset();
-
-						PT_WAIT_UNTIL(ResourceLock< Can >::tryLock());
 					}
 				}
 				while (true);

@@ -15,6 +15,7 @@
 #include <memory>
 #include <prettyhome/interfaces/interface.hpp>
 #include <prettyhome/interfaces/event_packet.hpp>
+#include <prettyhome/events/event.hpp>
 
 namespace prettyhome
 {
@@ -31,6 +32,9 @@ namespace prettyhome
 
 			static void
 			reportEventPacket(std::shared_ptr< EventPacket > eventPacket, Interface *sourceInterface = nullptr);
+
+			static void
+			reportEvent(std::shared_ptr< events::Event > event);
 
 			static void
 			run();
