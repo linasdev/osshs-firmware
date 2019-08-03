@@ -14,7 +14,6 @@ namespace prettyhome
 {
 	namespace events
 	{
-		// std::unordered_map< uint16_t, Event::EventMaker > Event::eventRegister;
 		uint16_t Event::nextCauseId = 0;
 
 		Event::Event(uint16_t type, uint16_t causeId, EventCallback callback)

@@ -41,11 +41,12 @@ namespace prettyhome
 
 			virtual std::unique_ptr< const uint8_t[] >
 			serialize() const = 0;
+		protected:
+			uint16_t causeId;
 		private:
-			typedef std::function< std::shared_ptr< Event > (std::unique_ptr< const uint8_t[] >, uint16_t, EventCallback) > EventMaker;
+			typedef std::function< std::shared_ptr< Event > (std::unique_ptr< const uint8_t[] >, EventCallback) > EventMaker;
 			static uint16_t nextCauseId;
 			uint16_t type;
-			uint16_t causeId;
 			EventCallback callback;
 
 			Event(const Event&) = delete;

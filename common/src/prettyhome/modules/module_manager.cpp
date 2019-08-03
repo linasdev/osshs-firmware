@@ -28,23 +28,13 @@ namespace prettyhome
 			module->initialize();
 		}
 
-		bool
+		void
 		ModuleManager::run()
 		{
-			PT_BEGIN();
-
-			do
+			for (modules::Module *module : modules)
 			{
-				for (modules::Module *module : modules)
-				{
-					module->run();
-				}
-
-				PT_YIELD();
+				module->run();
 			}
-			while (true);
-
-			PT_END();
 		}
 	}
 }

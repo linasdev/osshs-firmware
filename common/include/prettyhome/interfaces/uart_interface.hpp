@@ -26,13 +26,13 @@ namespace prettyhome
 			bool
 			run();
 		private:
-			std::shared_ptr< events::EventPacket > currentEventPacket;
+			std::shared_ptr< EventPacket > currentEventPacket;
 
 			void
 			initialize();
 
 			modm::ResumableResult<void>
-			transferEventPacket(std::shared_ptr< events::EventPacket > eventPacket);
+			transferEventPacket(std::shared_ptr< EventPacket > eventPacket);
 	  };
 	}
 }

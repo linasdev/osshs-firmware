@@ -13,7 +13,6 @@
 
 #include <vector>
 #include <memory>
-#include <modm/processing/protothread.hpp>
 #include <prettyhome/interfaces/interface.hpp>
 #include <prettyhome/interfaces/event_packet.hpp>
 
@@ -21,7 +20,7 @@ namespace prettyhome
 {
 	namespace interfaces
 	{
-		class InterfaceManager : public modm::pt::Protothread
+		class InterfaceManager
 		{
 		public:
 			static void
@@ -33,7 +32,7 @@ namespace prettyhome
 			static void
 			reportEventPacket(std::shared_ptr< EventPacket > eventPacket, Interface *sourceInterface = nullptr);
 
-			static bool
+			static void
 			run();
 		private:
 			static std::vector< Interface* > interfaces;

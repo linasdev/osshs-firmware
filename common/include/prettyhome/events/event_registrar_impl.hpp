@@ -23,11 +23,10 @@ namespace prettyhome
 		bool
 		EventRegistrar< DerivedEvent >::registerDerivedEvent()
 		{
-			// Event::eventRegister()[DerivedEvent::TYPE] = nullptr;
 			Event::eventRegister()[DerivedEvent::TYPE] =
-				[](std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback) -> std::shared_ptr< Event >
+				[](std::unique_ptr< const uint8_t[] > data, EventCallback callback) -> std::shared_ptr< Event >
 			{
-				return std::make_shared< DerivedEvent >(std::move(data), causeId, callback);
+				return std::make_shared< DerivedEvent >(std::move(data), callback);
 			};
 
 			return true;

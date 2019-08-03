@@ -20,10 +20,10 @@
 
 namespace prettyhome
 {
-	class System;
-
 	namespace modules
 	{
+		class ModuleManager;
+
 		static constexpr uint8_t BASE_MODULE_ID = 0x00;
 
 		class Module : public modm::pt::Protothread
@@ -50,7 +50,7 @@ namespace prettyhome
 			Module&
 			operator=(const Module&) = delete;
 
-			friend class prettyhome::System;
+			friend ModuleManager;
 		};
 	}
 }

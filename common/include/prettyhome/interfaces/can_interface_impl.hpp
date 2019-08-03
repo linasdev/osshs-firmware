@@ -15,6 +15,7 @@
 #include <modm/platform.hpp>
 #include <prettyhome/resource_lock.hpp>
 #include <prettyhome/events/event_factory.hpp>
+#include <prettyhome/interfaces/interface_manager.hpp>
 
 namespace prettyhome
 {
@@ -32,7 +33,7 @@ namespace prettyhome
 
 					if (Can::isMessageAvailable())
 					{
-						PT_CALL(readEventPacket(currentEventPacket));
+						PT_CALL(readEventPacket());
 					}
 					else
 					{
@@ -93,62 +94,48 @@ namespace prettyhome
 
 			RF_WAIT_UNTIL(ResourceLock< Can >::tryLock());
 
-			modm::can::Message frame;
-			if (Can::getMessage(frame))
 			{
-				if (frame.getIdentifier() & (0b1 << 26))
+				modm::can::Message frame;
+				if (Can::getMessage(frame))
 				{
-					uint16_t frameCount = (frame.getIdentifier() >> 8) & 0xf00;
-					frameCount |= frame.data[0];
-
-					uint16_t bufferLength = frame.data[1] | (frame.data[2] << 8);
-					uint8_t *buffer = new uint8_t[bufferLength];
-
-					for (uint16_t frameId = 0; frameId < frameCount; frameId++)
+					if (frame.getIdentifier() & (0b1 << 26))
 					{
-						if (frameId)
+						uint16_t frameCount = (frame.getIdentifier() >> 8) & 0xf00;
+						frameCount |= frame.data[0];
+
+						uint16_t bufferLength = frame.data[1] | (frame.data[2] << 8);
+						uint8_t *buffer = new uint8_t[bufferLength];
+
+						for (uint16_t frameId = 0; frameId < frameCount; frameId++)
 						{
-							while (!Can::isMessageAvailable());
-							Can::getMessage(frame);
+							if (frameId)
+							{
+								while (!Can::isMessageAvailable());
+								Can::getMessage(frame);
+							}
+
+							for (uint16_t i = 1; i < 8; i++)
+								buffer[frameId * 7 + i - 1] = frame.data[i];
 						}
 
-						for (uint16_t i = 1; i < 8; i++)
-						{
-							buffer[frameId * 7 + i - 1] = frame.data[i];
-						}
+						std::shared_ptr< EventPacket > eventPacket(new EventPacket(std::unique_ptr< const uint8_t[] >(buffer)));
+						InterfaceManager::reportEventPacket(eventPacket);
 					}
+					else
+					{
+						uint16_t bufferLength = frame.data[0] | (frame.data[1] << 8);
+						uint8_t *buffer = new uint8_t[bufferLength];
 
-					std::shared_ptr< EventPacket > eventPacket(new EventPacket(buffer,
-						[=](std::shared_ptr< EventPacket > eventPacket) -> void
-						{
-								this->reportEventPacket(eventPacket);
-						}
-					));
+						for (uint16_t i = 0; i < bufferLength; i++)
+							buffer[i] = frame.data[i];
 
-					InterfaceManager::reportEventPacket(eventPacket));
+						std::shared_ptr< EventPacket > eventPacket(new EventPacket(std::unique_ptr< const uint8_t[] >(buffer)));
+						InterfaceManager::reportEventPacket(eventPacket);
+					}
 				}
 				else
 				{
-					uint16_t bufferLength = frame.data[0] | (frame.data[1] << 8);
-					uint8_t *buffer = new uint8_t[bufferLength];
-
-					for (uint16_t i = 0; i < bufferLength; i++)
-					{
-						buffer[i] = frame.data[i];
-					}
-
-					std::shared_ptr< EventPacket > eventPacket(new EventPacket(buffer,
-						[=](std::shared_ptr< EventPacket > eventPacket) -> void
-						{
-								this->reportEventPacket(eventPacket);
-						}
-					));
-
-					InterfaceManager::reportEventPacket(eventPacket));
 				}
-			}
-			else
-			{
 			}
 
 			ResourceLock< Can >::unlock();

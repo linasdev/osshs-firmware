@@ -15,12 +15,14 @@
 #include <queue>
 #include <modm/processing/protothread.hpp>
 #include <modm/processing/resumable.hpp>
-#include <prettyhome/events/event.hpp>
+#include <prettyhome/interfaces/event_packet.hpp>
 
 namespace prettyhome
 {
 	namespace interfaces
 	{
+		class InterfaceManager;
+
 		class Interface : public modm::pt::Protothread
 		{
 		public:
@@ -41,6 +43,8 @@ namespace prettyhome
 
 			virtual void
 			initialize() = 0;
+
+			friend InterfaceManager;
 		};
 	}
 }

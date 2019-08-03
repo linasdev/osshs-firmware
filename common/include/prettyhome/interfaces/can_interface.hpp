@@ -26,7 +26,7 @@ namespace prettyhome
 			bool
 			run();
 		private:
-			std::shared_ptr< events::EventPacket > currentEventPacket;
+			std::shared_ptr< EventPacket > currentEventPacket;
 			std::unique_ptr< const uint8_t[] > currentBuffer;
 			uint16_t currentBufferLength;
 			uint16_t currentFrameCount;
@@ -42,7 +42,7 @@ namespace prettyhome
 			readEventPacket();
 
 			modm::ResumableResult< void >
-			writeEventPacket(std::shared_ptr< events::EventPacket > eventPacket);
+			writeEventPacket(std::shared_ptr< EventPacket > eventPacket);
 	  };
 	}
 }

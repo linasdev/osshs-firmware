@@ -8,7 +8,7 @@
  * Written by Linas Nikiperavicius <linas@linasdev.com>, 2019
  */
 
- #include <prettyhome/interface/interface_manager.hpp>
+ #include <prettyhome/interfaces/interface_manager.hpp>
 
 namespace prettyhome
 {
@@ -40,23 +40,13 @@ namespace prettyhome
 			}
 		}
 
-		bool
+		void
 		InterfaceManager::run()
 		{
-			PT_BEGIN();
-
-			do
+			for (Interface *interface : interfaces)
 			{
-				for (Interface *interface : interfaces)
-				{
-					interface->run();
-				}
-
-				PT_YIELD();
+				interface->run();
 			}
-			while (true);
-
-			PT_END();
 		}
 	}
 }

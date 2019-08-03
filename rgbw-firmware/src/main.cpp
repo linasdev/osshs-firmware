@@ -47,16 +47,14 @@ main()
 	prettyhome::interfaces::Interface *can = new prettyhome::interfaces::CanInterface< modm::platform::Can > ();
 	prettyhome::System::registerInterface(can);
 
-	can->initialize();
-
-	std::shared_ptr< prettyhome::events::Event > event(new prettyhome::events::EepromRequestDataEvent(0x01, 0x02));
-	can->reportEvent(event);
-
-	event.reset(new prettyhome::events::EepromUpdateSuccessEvent());
-	can->reportEvent(event);
-
-	event.reset(new prettyhome::events::PwmRgbwChannelReadyEvent(0x00, prettyhome::events::PwmRgbwValue(0x01, 0x02, 0x03, 0x04)));
-	can->reportEvent(event);
+	// std::shared_ptr< prettyhome::events::Event > event(new prettyhome::events::EepromRequestDataEvent(0x01, 0x02));
+	// can->reportEvent(event);
+	//
+	// event.reset(new prettyhome::events::EepromUpdateSuccessEvent());
+	// can->reportEvent(event);
+	//
+	// event.reset(new prettyhome::events::PwmRgbwChannelReadyEvent(0x00, prettyhome::events::PwmRgbwValue(0x01, 0x02, 0x03, 0x04)));
+	// can->reportEvent(event);
 
 	prettyhome::System::registerModule(
 		new prettyhome::modules::EepromModule< modm::platform::I2cMaster1 >()

@@ -12,19 +12,13 @@
 #define PRETTYHOME_MODULE_MANAGER_HPP
 
 #include <vector>
-#include <unordered_map>
-#include <memory>
-
-#include <modm/processing/protothread.hpp>
 #include <prettyhome/modules/module.hpp>
-#include <prettyhome/events/event.hpp>
-#include <prettyhome/events/event_selector.hpp>
 
 namespace prettyhome
 {
 	namespace modules
 	{
-		class ModuleManager : public modm::pt::Protothread
+		class ModuleManager
 		{
 		public:
 			static void
@@ -33,7 +27,7 @@ namespace prettyhome
 			static void
 			registerModule(modules::Module *module);
 
-			static bool
+			static void
 			run();
 		private:
 			static std::vector< modules::Module* > modules;

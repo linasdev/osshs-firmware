@@ -23,7 +23,7 @@ namespace prettyhome
 		public:
 			static constexpr uint32_t NULL_MAC = static_cast< uint32_t >(-1);
 
-			EventPacket(std::unique_ptr< const uint8_t[] > data, EventCallback callback = nullptr);
+			EventPacket(std::unique_ptr< const uint8_t[] > data);
 
 			EventPacket(std::shared_ptr< events::Event > event, uint32_t transmitterMac, uint32_t receiverMac = NULL_MAC, bool command = false)
 				: multiTarget(receiverMac == NULL_MAC), command(command), transmitterMac(transmitterMac), receiverMac(receiverMac), event(event)

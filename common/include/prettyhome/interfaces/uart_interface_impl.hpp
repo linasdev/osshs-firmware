@@ -50,7 +50,7 @@ namespace prettyhome
 
     template< typename Uart >
     modm::ResumableResult<void>
-    UartInterface< Uart >::transferEventPacket(std::shared_ptr< events::EventPacket > eventPacket)
+    UartInterface< Uart >::transferEventPacket(std::shared_ptr< EventPacket > eventPacket)
     {
       RF_BEGIN();
 

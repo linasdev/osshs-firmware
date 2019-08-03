@@ -8,34 +8,34 @@
  * Written by Linas Nikiperavicius <linas@linasdev.com>, 2019
  */
 
-#include <prettyhome/events/event_packet.hpp>
+#include <prettyhome/interfaces/event_packet.hpp>
 #include <prettyhome/events/event_factory.hpp>
 
 namespace prettyhome
 {
 	namespace interfaces
 	{
-		EventPacket::EventPacket(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		EventPacket::EventPacket(std::unique_ptr< const uint8_t[] > data)
 		{
-			multiTarget = (buffer[2] >> 7) & 0b1;
-			command = (buffer[2] >> 6) & 0b1;
+			multiTarget = (data[2] >> 7) & 0b1;
+			command = (data[2] >> 6) & 0b1;
 
-			transmitterMac = buffer[3] | (buffer[4] << 8) | (buffer[5] << 16) | (buffer[6] << 24);
+			transmitterMac = data[3] | (data[4] << 8) | (data[5] << 16) | (data[6] << 24);
 
-			std::unique_ptr< const uint8_t[] > serializedEvent;
+			const uint8_t *serializedEvent;
 
 			if (multiTarget)
 			{
-				serializedEvent.reset(&buffer[7]);
+				serializedEvent = &data[7];
 			}
 			else
 			{
-				transmitterMac = buffer[7] | (buffer[8] << 8) | (buffer[9] << 16) | (buffer[10] << 24);
-				serializedEvent.reset(&buffer[11]);
+				transmitterMac = data[7] | (data[8] << 8) | (data[9] << 16) | (data[10] << 24);
+				serializedEvent = &data[11];
 			}
 
 			uint16_t eventType = serializedEvent[2] | (serializedEvent[3] << 8);
-			event = events::EventFactory::make(eventType, serializedEvent, events::Event::CAUSE_ID_GENERATE, callback);
+			event = events::EventFactory::make(eventType, std::unique_ptr< const uint8_t[] >(serializedEvent));
 		}
 
 		bool
