@@ -54,6 +54,8 @@ namespace prettyhome
 			void
 			CanInterface< Can >::initialize()
 			{
+				PRETTYHOME_LOG_INFO("Initializing CAN interface.");
+
 				modm::platform::CanFilter::setFilter(
 					0,
 					modm::platform::CanFilter::FIFO0,
