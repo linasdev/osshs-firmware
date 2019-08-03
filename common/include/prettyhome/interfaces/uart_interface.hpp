@@ -32,7 +32,7 @@ namespace prettyhome
 			initialize();
 
 			modm::ResumableResult<void>
-			transferEventPacket(std::shared_ptr< EventPacket > eventPacket);
+			writeEventPacket(std::shared_ptr< EventPacket > eventPacket);
 	  };
 	}
 }

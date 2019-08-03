@@ -9,7 +9,7 @@
  */
 
 #ifndef PRETTYHOME_EVENT_REGISTRAR_HPP
-  #error	"Don't include this file directly, use 'event_registrar.hpp' instead!"
+	#error "Don't include this file directly, use 'event_registrar.hpp' instead!"
 #endif
 
 namespace prettyhome

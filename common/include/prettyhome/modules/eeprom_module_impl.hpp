@@ -9,10 +9,11 @@
  */
 
 #ifndef PRETTYHOME_EEPROM_MODULE_HPP
-  #error	"Don't include this file directly, use 'eeprom_module.hpp' instead!"
+	#error "Don't include this file directly, use 'eeprom_module.hpp' instead!"
 #endif
 
 #include <prettyhome/resource_lock.hpp>
+#include <prettyhome/log/logger.hpp>
 
 namespace prettyhome
 {
@@ -29,7 +30,7 @@ namespace prettyhome
 		bool
 		EepromModule< I2cMaster, writeCycleTime >::run()
 		{
-      PT_BEGIN();
+      		PT_BEGIN();
 
 			do
 			{
@@ -51,7 +52,7 @@ namespace prettyhome
 			}
 			while (true);
 
-      PT_END();
+      		PT_END();
 		}
 
 		template < typename I2cMaster, uint16_t writeCycleTime >
@@ -59,6 +60,11 @@ namespace prettyhome
 		EepromModule< I2cMaster, writeCycleTime >::handleRequestDataEvent(std::shared_ptr< events::EepromRequestDataEvent > event)
 		{
 			RF_BEGIN();
+
+			PRETTYHOME_LOG_DEBUG_STREAM << "Handling request data event"
+				<< "(address = " << event->getAddress()
+				<< ", data_len = " << event->getDataLen()
+				<< ").\r\n";
 
 			currentData.reset(new uint8_t[event->getDataLen()]);
 
@@ -117,6 +123,11 @@ namespace prettyhome
 		EepromModule< I2cMaster, writeCycleTime >::handleUpdateDataEvent(std::shared_ptr< events::EepromUpdateDataEvent > event)
 		{
 			RF_BEGIN();
+
+			PRETTYHOME_LOG_DEBUG_STREAM << "Handling update data event"
+				<< "(address = " << event->getAddress()
+				<< ", data_len = " << event->getDataLen()
+				<< ").\r\n";
 
 			currentData = event->getData();
 

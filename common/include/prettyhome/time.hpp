@@ -11,7 +11,7 @@
 #ifndef PRETTYHOME_TIME_HPP
 #define PRETTYHOME_TIME_HPP
 
-#include <modm/platform.hpp>
+#include <cstdint>
 
 namespace prettyhome
 {

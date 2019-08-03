@@ -11,10 +11,8 @@
 #ifndef PRETTYHOME_SYSTEM_HPP
 #define PRETTYHOME_SYSTEM_HPP
 
-#include <memory>
 #include <prettyhome/interfaces/interface.hpp>
 #include <prettyhome/modules/module.hpp>
-#include <prettyhome/events/event.hpp>
 #include <prettyhome/events/event_selector.hpp>
 
 namespace prettyhome

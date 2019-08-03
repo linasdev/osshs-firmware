@@ -19,6 +19,8 @@ namespace prettyhome
 		void
 		Module::initialize()
 		{
+			PRETTYHOME_LOG_INFO("Initializing module.");
+
 			System::subscribeEvent(events::EventSelector(0xff00, static_cast< uint16_t >(getModuleTypeId()) << 8),
 				[=](std::shared_ptr< events::Event > event) -> void
 				{
@@ -30,6 +32,8 @@ namespace prettyhome
 		void
 		Module::handleEvent(std::shared_ptr< events::Event > event)
 		{
+			PRETTYHOME_LOG_DEBUG_STREAM << "Handling event(type = " << event->getType() << ").\r\n";
+
 			eventQueue.push(event);
 		}
 	}

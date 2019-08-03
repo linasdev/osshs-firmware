@@ -11,10 +11,8 @@
 #ifndef PRETTYHOME_INTERFACE_HPP
 #define PRETTYHOME_INTERFACE_HPP
 
-#include <cstdint>
 #include <queue>
 #include <modm/processing/protothread.hpp>
-#include <modm/processing/resumable.hpp>
 #include <prettyhome/interfaces/event_packet.hpp>
 
 namespace prettyhome

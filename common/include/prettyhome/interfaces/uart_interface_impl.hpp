@@ -9,18 +9,18 @@
  */
 
 #ifndef PRETTYHOME_UART_INTERFACE_HPP
-  #error	"Don't include this file directly, use 'uart_interface.hpp' instead!"
+	#error "Don't include this file directly, use 'uart_interface.hpp' instead!"
 #endif
 
 #include <modm/platform.hpp>
 #include <prettyhome/resource_lock.hpp>
-#include <prettyhome/events/event_factory.hpp>
+#include <prettyhome/log/logger.hpp>
 
 namespace prettyhome
 {
 	namespace interfaces
 	{
-    template< typename Uart >
+    	template< typename Uart >
 		bool
 		UartInterface< Uart >::run()
 		{
@@ -33,7 +33,7 @@ namespace prettyhome
 				currentEventPacket = eventPacketQueue.front();
 				eventPacketQueue.pop();
 
-				PT_CALL(transferEventPacket(currentEventPacket));
+				PT_CALL(writeEventPacket(currentEventPacket));
 
 				currentEventPacket.reset();
 			}
@@ -42,30 +42,39 @@ namespace prettyhome
 			PT_END();
 		}
 
-    template< typename Uart >
-    void
-    UartInterface< Uart >::initialize()
-    {
-    }
+		template< typename Uart >
+		void
+		UartInterface< Uart >::initialize()
+		{
+			PRETTYHOME_LOG_INFO("Initializing UART interface.");
+		}
 
-    template< typename Uart >
-    modm::ResumableResult<void>
-    UartInterface< Uart >::transferEventPacket(std::shared_ptr< EventPacket > eventPacket)
-    {
-      RF_BEGIN();
+		template< typename Uart >
+		modm::ResumableResult<void>
+		UartInterface< Uart >::writeEventPacket(std::shared_ptr< EventPacket > eventPacket)
+		{
+			RF_BEGIN();
 
-  		RF_WAIT_UNTIL(ResourceLock< Uart >::tryLock());
+			PRETTYHOME_LOG_DEBUG_STREAM << "Writing event packet"
+				<< "(multi_target = "<< eventPacket->isMultiTarget()
+				<< ", command = " << eventPacket->isCommand()
+				<< ", transmitter_mac = " << eventPacket->getTransmitterMac()
+				<< ", receiver_mac = " << eventPacket->getTransmitterMac()
+				<< ", event_type = " << eventPacket->getEvent()->getType()
+				<< ").\r\n";
 
-      {
-        std::unique_ptr< const uint8_t[] > buffer = eventPacket->serialize();
-        uint16_t bufferLength = buffer[0] | (buffer[1] << 8);
+			RF_WAIT_UNTIL(ResourceLock< Uart >::tryLock());
 
-        Uart::writeBlocking(buffer.get(), bufferLength);
-      }
+			{
+				std::unique_ptr< const uint8_t[] > buffer = eventPacket->serialize();
+				uint16_t bufferLength = buffer[0] | (buffer[1] << 8);
 
-  		ResourceLock< Uart >::unlock();
+				Uart::writeBlocking(buffer.get(), bufferLength);
+			}
 
-      RF_END();
-    }
+			ResourceLock< Uart >::unlock();
+
+			RF_END();
+		}
 	}
 }

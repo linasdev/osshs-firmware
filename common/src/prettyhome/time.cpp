@@ -18,6 +18,8 @@ namespace prettyhome
 	void
 	Time::initialize()
 	{
+		PRETTYHOME_LOG_INFO("Initializing system time.");
+		
 		modm::platform::SysTickTimer::attachInterruptHandler(tick);
 	}
 

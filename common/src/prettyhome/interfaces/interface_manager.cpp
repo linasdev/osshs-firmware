@@ -8,8 +8,9 @@
  * Written by Linas Nikiperavicius <linas@linasdev.com>, 2019
  */
 
- #include <prettyhome/interfaces/interface_manager.hpp>
- #include <prettyhome/system.hpp>
+#include <prettyhome/interfaces/interface_manager.hpp>
+#include <prettyhome/system.hpp>
+#include <prettyhome/log/logger.hpp>
 
 namespace prettyhome
 {
@@ -20,11 +21,14 @@ namespace prettyhome
 		void
 		InterfaceManager::initialize()
 		{
+			PRETTYHOME_LOG_INFO("Initializing interface manager.");
 		}
 
 		void
 		InterfaceManager::registerInterface(Interface *interface)
 		{
+			PRETTYHOME_LOG_INFO("Registering interface.");
+
 			interfaces.push_back(interface);
 			interface->initialize();
 		}
@@ -32,6 +36,14 @@ namespace prettyhome
 		void
 		InterfaceManager::reportEventPacket(std::shared_ptr< EventPacket > eventPacket, Interface *sourceInterface)
 		{
+			PRETTYHOME_LOG_DEBUG_STREAM << "Handling event packet"
+				<< "(multi_target = "<< eventPacket->isMultiTarget()
+				<< ", command = " << eventPacket->isCommand()
+				<< ", transmitter_mac = " << eventPacket->getTransmitterMac()
+				<< ", receiver_mac = " << eventPacket->getTransmitterMac()
+				<< ", event_type = " << eventPacket->getEvent()->getType()
+				<< ").\r\n";
+
 			for (Interface *interface : interfaces)
 			{
 				if (interface == sourceInterface)
@@ -46,6 +58,8 @@ namespace prettyhome
 		void
 		InterfaceManager::reportEvent(std::shared_ptr< events::Event > event)
 		{
+			PRETTYHOME_LOG_DEBUG_STREAM << "Handling event(type = " << event->getType() << ").\r\n";
+
 			std::shared_ptr< EventPacket > eventPacket(new EventPacket(
 				event,
 				0x00000000

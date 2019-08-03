@@ -9,6 +9,7 @@
  */
 
 #include <prettyhome/modules/module_manager.hpp>
+#include <prettyhome/log/logger.hpp>
 
 namespace prettyhome
 {
@@ -19,11 +20,14 @@ namespace prettyhome
 		void
 		ModuleManager::initialize()
 		{
+			PRETTYHOME_LOG_INFO("Initializing module manager.");
 		}
 
 		void
 		ModuleManager::registerModule(modules::Module *module)
 		{
+			PRETTYHOME_LOG_INFO_STREAM << "Registering module(type = " << module->getModuleTypeId() << ").\r\n";
+
 			modules.push_back(module);
 			module->initialize();
 		}

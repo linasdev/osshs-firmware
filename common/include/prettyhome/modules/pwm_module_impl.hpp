@@ -9,10 +9,11 @@
  */
 
 #ifndef PRETTYHOME_PWM_MODULE_HPP
-  #error	"Don't include this file directly, use 'pwm_module.hpp' instead!"
+	#error "Don't include this file directly, use 'pwm_module.hpp' instead!"
 #endif
 
 #include <prettyhome/resource_lock.hpp>
+#include <prettyhome/log/logger.hpp>
 
 namespace prettyhome
 {
@@ -21,6 +22,8 @@ namespace prettyhome
  		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
 		PwmModule< channels, SpiMaster, Xlat, Xblank >::PwmModule()
 		{
+			PRETTYHOME_LOG_INFO("Initializing PWM module.");
+
 			tlc594x.initialize(0x000, -1, true, false, true);
 		}
 
@@ -35,7 +38,7 @@ namespace prettyhome
 		bool
 		PwmModule< channels, SpiMaster, Xlat, Xblank >::run()
 		{
-      PT_BEGIN();
+     		PT_BEGIN();
 
 			do
 			{
@@ -77,7 +80,7 @@ namespace prettyhome
 			}
 			while (true);
 
-      PT_END();
+      		PT_END();
 		}
 
  		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
@@ -85,6 +88,8 @@ namespace prettyhome
 		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleRequestStatusEvent(std::shared_ptr< events::PwmRequestStatusEvent > event)
 		{
 			RF_BEGIN();
+
+			PRETTYHOME_LOG_DEBUG("Handling request status event.");
 
 			{
 				std::shared_ptr< events::Event > responseEvent(static_cast< events::Event* > (new events::PwmStatusReadyEvent(
@@ -114,6 +119,8 @@ namespace prettyhome
 		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleEnableEvent(std::shared_ptr< events::PwmEnableEvent > event)
 		{
 			RF_BEGIN();
+
+			PRETTYHOME_LOG_DEBUG("Handling enable event.");
 
 			tlc594x.enable();
 
@@ -146,6 +153,8 @@ namespace prettyhome
 		{
 			RF_BEGIN();
 
+			PRETTYHOME_LOG_DEBUG("Handling disable event.");
+
 			tlc594x.disable();
 
 			{
@@ -176,6 +185,8 @@ namespace prettyhome
 		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleRequestChannelEvent(std::shared_ptr< events::PwmRequestChannelEvent > event)
 		{
 			RF_BEGIN();
+
+			PRETTYHOME_LOG_DEBUG_STREAM << "Handling request channel event(channel = " << event->getChannel() << ").\r\n";
 
 			{
 				std::shared_ptr< events::Event > responseEvent;
@@ -227,6 +238,11 @@ namespace prettyhome
 		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleUpdateChannelEvent(std::shared_ptr< events::PwmUpdateChannelEvent > event)
 		{
 			RF_BEGIN();
+
+			PRETTYHOME_LOG_DEBUG_STREAM << "Handling update channel event"
+				<< "(channel = " << event->getChannel()
+				<< ", value = " << event->getValue()
+				<< ").\r\n";
 
 			if (event->getChannel() < channels && event->getValue() <= 0xfff)
 			{
@@ -301,6 +317,8 @@ namespace prettyhome
 		{
 			RF_BEGIN();
 
+			PRETTYHOME_LOG_DEBUG_STREAM << "Handling request rgbw channel event(channel = " << event->getChannel() << ").\r\n";
+
 			{
 				std::shared_ptr< events::Event > responseEvent;
 				uint16_t channel = event->getChannel() * 4;
@@ -358,6 +376,14 @@ namespace prettyhome
 		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleUpdateRgbwChannelEvent(std::shared_ptr< events::PwmUpdateRgbwChannelEvent > event)
 		{
 			RF_BEGIN();
+
+			PRETTYHOME_LOG_DEBUG_STREAM << "Handling update rgbw channel event"
+				<< "(channel = " << event->getChannel()
+				<< ", red = " << event->getValue().red
+				<< ", green = " << event->getValue().green
+				<< ", blue = " << event->getValue().blue
+				<< ", white = " << event->getValue().white
+				<< ").\r\n";
 
 			if (event->getChannel() * 4 + 3 < channels &&
 					event->getValue().red 	<= 0xfff &&

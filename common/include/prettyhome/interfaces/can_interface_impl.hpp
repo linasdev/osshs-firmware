@@ -9,13 +9,13 @@
  */
 
 #ifndef PRETTYHOME_CAN_INTERFACE_HPP
-  #error	"Don't include this file directly, use 'can_interface.hpp' instead!"
+	#error "Don't include this file directly, use 'can_interface.hpp' instead!"
 #endif
 
 #include <modm/platform.hpp>
 #include <prettyhome/resource_lock.hpp>
-#include <prettyhome/events/event_factory.hpp>
 #include <prettyhome/interfaces/interface_manager.hpp>
+#include <prettyhome/log/logger.hpp>
 
 namespace prettyhome
 {
@@ -90,6 +90,8 @@ namespace prettyhome
 		{
 			RF_BEGIN();
 
+			PRETTYHOME_LOG_DEBUG("Reading event packet.");
+
 			RF_WAIT_UNTIL(ResourceLock< Can >::tryLock());
 
 			{
@@ -139,6 +141,7 @@ namespace prettyhome
 				}
 				else
 				{
+					PRETTYHOME_LOG_ERROR("Could not read CAN frame.");
 				}
 			}
 
@@ -152,6 +155,14 @@ namespace prettyhome
 		CanInterface< Can >::writeEventPacket(std::shared_ptr< EventPacket > eventPacket)
 		{
 			RF_BEGIN();
+
+			PRETTYHOME_LOG_DEBUG_STREAM << "Writing event packet"
+				<< "(multi_target = "<< eventPacket->isMultiTarget()
+				<< ", command = " << eventPacket->isCommand()
+				<< ", transmitter_mac = " << eventPacket->getTransmitterMac()
+				<< ", receiver_mac = " << eventPacket->getTransmitterMac()
+				<< ", event_type = " << eventPacket->getEvent()->getType()
+				<< ").\r\n";
 
 			RF_WAIT_UNTIL(ResourceLock< Can >::tryLock());
 

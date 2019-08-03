@@ -9,7 +9,7 @@
  */
 
 #ifndef PRETTYHOME_RESOURCE_LOCK_HPP
-  #error	"Don't include this file directly, use 'resource_lock.hpp' instead!"
+	#error "Don't include this file directly, use 'resource_lock.hpp' instead!"
 #endif
 
 namespace prettyhome

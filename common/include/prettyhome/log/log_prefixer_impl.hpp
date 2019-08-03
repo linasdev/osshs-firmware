@@ -9,7 +9,7 @@
  */
 
 #ifndef PRETTYHOME_LOG_PREFIXER_HPP
-	#error	"Don't include this file directly, use 'log_prefixer.hpp' instead!"
+	#error "Don't include this file directly, use 'log_prefixer.hpp' instead!"
 #endif
 
 #include <prettyhome/time.hpp>

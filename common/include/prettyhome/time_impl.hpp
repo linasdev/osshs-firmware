@@ -9,8 +9,10 @@
  */
 
 #ifndef PRETTYHOME_TIME_HPP
-	#error	"Don't include this file directly, use 'time.hpp' instead!"
+	#error "Don't include this file directly, use 'time.hpp' instead!"
 #endif
+
+#include <modm/platform.hpp>
 
 namespace prettyhome
 {
