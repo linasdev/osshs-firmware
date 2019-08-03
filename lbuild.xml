@@ -17,8 +17,8 @@
 		<module>modm:architecture:clock</module>
 		<module>modm:build:scons</module>
 		<module>modm:debug</module>
-    <module>modm:driver:i2c.eeprom</module>
-    <module>modm:driver:tlc594x</module>
+		<module>modm:driver:i2c.eeprom</module>
+		<module>modm:driver:tlc594x</module>
 		<module>modm:platform:core</module>
 		<module>modm:processing:protothread</module>
 	</modules>

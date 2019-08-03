@@ -36,6 +36,8 @@ main()
 	modm::platform::Can::connect< modm::platform::GpioA11::Rx, modm::platform::GpioA12::Tx > ();
 	modm::platform::Can::initialize< prettyhome::board::SystemClock, 50_kbps > (0);
 
+	PRETTYHOME_LOG_CLEAN();
+
 	prettyhome::System::initialize();
 
 	prettyhome::System::registerInterface(
