@@ -11,22 +11,22 @@
 #ifndef PRETTYHOME_SYSTEM_HPP
 #define PRETTYHOME_SYSTEM_HPP
 
-#include <vector>
-#include <unordered_map>
 #include <memory>
-
-#include <modm/processing/protothread.hpp>
+#include <prettyhome/interfaces/interface.hpp>
 #include <prettyhome/modules/module.hpp>
 #include <prettyhome/events/event.hpp>
 #include <prettyhome/events/event_selector.hpp>
 
 namespace prettyhome
 {
-	class System : public modm::pt::Protothread
+	class System
 	{
 	public:
 		static void
 		initialize();
+
+		static void
+		registerInterface(interfaces::Interface *interface);
 
 		static void
 		registerModule(modules::Module *module);
@@ -37,10 +37,9 @@ namespace prettyhome
 		static void
 		reportEvent(std::shared_ptr< events::Event > event);
 
-		static bool
-		run();
+		static void
+		loop();
 	private:
-		static std::vector< modules::Module* > modules;
 		static std::unordered_map< events::EventSelector, std::vector< events::EventCallback > > eventSubscriptions;
 	};
 }
