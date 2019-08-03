@@ -26,7 +26,7 @@ namespace prettyhome
 		class Event
 		{
 		public:
-			static constexpr uint16_t CAUSE_ID_GENERATE = 0xffff;
+			static constexpr uint16_t CAUSE_ID_GENERATE = static_cast< uint16_t >(-1);
 
 			Event(uint16_t type, uint16_t causeId = CAUSE_ID_GENERATE, EventCallback callback = nullptr);
 
