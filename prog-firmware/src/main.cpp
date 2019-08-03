@@ -11,6 +11,7 @@
 #include <prettyhome/log/logger.hpp>
 
 #include <prettyhome/system.hpp>
+#include <prettyhome/interfaces/interface_manager.hpp>
 #include <prettyhome/interfaces/uart_interface.hpp>
 #include <prettyhome/interfaces/can_interface.hpp>
 #include <prettyhome/modules/eeprom_module.hpp>
@@ -41,23 +42,12 @@ main()
 
 	prettyhome::System::initialize();
 
-	prettyhome::interfaces::Interface *can = new prettyhome::interfaces::CanInterface< modm::platform::Can > ();
-	can->initialize();
-
-	prettyhome::interfaces::Interface *uart = new prettyhome::interfaces::UartInterface< modm::platform::Usart2 > ();
-	uart->initialize();
-
-	can->subscribeEvent(prettyhome::events::EventSelector(0x0000, 0x0000),
-		[=](std::shared_ptr< prettyhome::events::Event > event) -> void
-		{
-			uart->reportEvent(event);
-		}
-	);
+	prettyhome::interfaces::InterfaceManager::registerInterface(new prettyhome::interfaces::CanInterface< modm::platform::Can > ());
+	prettyhome::interfaces::InterfaceManager::registerInterface(new prettyhome::interfaces::UartInterface< modm::platform::Usart2 > ());
 
 	do
 	{
-		can->run();
-		uart->run();
+		prettyhome::System::run();
 	} while(true);
 
 	return 0;

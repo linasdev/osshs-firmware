@@ -15,13 +15,14 @@
 #include <unordered_map>
 #include <memory>
 
+#include <modm/processing/protothread.hpp>
 #include <prettyhome/modules/module.hpp>
 #include <prettyhome/events/event.hpp>
 #include <prettyhome/events/event_selector.hpp>
 
 namespace prettyhome
 {
-	class System
+	class System : public modm::pt::Protothread
 	{
 	public:
 		static void
@@ -36,8 +37,8 @@ namespace prettyhome
 		static void
 		reportEvent(std::shared_ptr< events::Event > event);
 
-		static void
-		loop();
+		static bool
+		run();
 	private:
 		static std::vector< modules::Module* > modules;
 		static std::unordered_map< events::EventSelector, std::vector< events::EventCallback > > eventSubscriptions;

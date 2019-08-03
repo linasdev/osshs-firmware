@@ -10,7 +10,7 @@
 
 #include <prettyhome/system.hpp>
 #include <prettyhome/time.hpp>
-#include <prettyhome/log/logger.hpp>
+#include <prettyhome/interfaces/interface_manager.hpp>
 
 namespace prettyhome
 {
@@ -21,6 +21,8 @@ namespace prettyhome
 	System::initialize()
 	{
 		Time::initialize();
+		InterfaceManager::initialize();
+		InterfaceManager::subscribeEvent(events::EventSelector(0x0000, 0x0000));
 	}
 
 	void
@@ -45,16 +47,23 @@ namespace prettyhome
 					subscription(event);
 	}
 
-	void
-	System::loop()
+	bool
+	System::run()
 	{
+
+		PT_BEGIN();
+
 		do
 		{
 			for (modules::Module *module : modules)
 			{
 				module->run();
 			}
+
+			PT_YIELD();
 		}
 		while (true);
+
+		PT_END();
 	}
 }
