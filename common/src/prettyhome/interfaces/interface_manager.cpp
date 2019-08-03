@@ -9,14 +9,12 @@
  */
 
  #include <prettyhome/interface/interface_manager.hpp>
- #include <prettyhome/interface/system.hpp>
 
 namespace prettyhome
 {
 	namespace interfaces
 	{
 		std::vector< Interface* > InterfaceManager::interfaces;
-		std::vector< events::EventSelector > InterfaceManager::eventSubscriptions;
 
 		void
 		InterfaceManager::initialize()
@@ -28,20 +26,6 @@ namespace prettyhome
 		{
 			interfaces.push_back(interface);
 			interface->initialize();
-		}
-
-		void
-		InterfaceManager::subscribeEvent(events::EventSelector selector)
-		{
-			eventSubscriptions.push_back(selector);
-		}
-
-		void
-		InterfaceManager::reportEvent(std::shared_ptr< events::Event > event)
-		{
-			for(auto const selector : eventSubscriptions)
-				if (selector.match(event->getType()))
-					System::reportEvent(event);
 		}
 
 		bool

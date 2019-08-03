@@ -32,17 +32,10 @@ namespace prettyhome
 			static void
 			registerInterface(Interface *interface);
 
-			static void
-			subscribeEvent(events::EventSelector selector);
-
-			static void
-			reportEvent(std::shared_ptr< events::Event > event);
-
 			static bool
 			run();
 		private:
 			static std::vector< Interface* > interfaces;
-			static std::vector< events::EventSelector > eventSubscriptions;
 		};
 	}
 }
