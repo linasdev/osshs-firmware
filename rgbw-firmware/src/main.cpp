@@ -8,12 +8,11 @@
  * Written by Linas Nikiperavicius <linas@linasdev.com>, 2019
  */
 
-#include <prettyhome/log/logger.hpp>
 #include <prettyhome/system.hpp>
 #include <prettyhome/interfaces/can_interface.hpp>
 #include <prettyhome/modules/eeprom_module.hpp>
 #include <prettyhome/modules/pwm_module.hpp>
-#include <prettyhome/events/event_factory.hpp>
+#include <prettyhome/log/logger.hpp>
 
 #include "./board.hpp"
 
@@ -46,6 +45,8 @@ main()
 	prettyhome::System::initialize();
 
 	prettyhome::interfaces::Interface *can = new prettyhome::interfaces::CanInterface< modm::platform::Can > ();
+	prettyhome::System::registerInterface(can);
+
 	can->initialize();
 
 	std::shared_ptr< prettyhome::events::Event > event(new prettyhome::events::EepromRequestDataEvent(0x01, 0x02));
@@ -56,11 +57,6 @@ main()
 
 	event.reset(new prettyhome::events::PwmRgbwChannelReadyEvent(0x00, prettyhome::events::PwmRgbwValue(0x01, 0x02, 0x03, 0x04)));
 	can->reportEvent(event);
-
-	do
-	{
-		can->run();
-	} while(true);
 
 	prettyhome::System::registerModule(
 		new prettyhome::modules::EepromModule< modm::platform::I2cMaster1 >()

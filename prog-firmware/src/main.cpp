@@ -8,14 +8,10 @@
  * Written by Linas Nikiperavicius <linas@linasdev.com>, 2019
  */
 
-#include <prettyhome/log/logger.hpp>
-
 #include <prettyhome/system.hpp>
-#include <prettyhome/interfaces/interface_manager.hpp>
 #include <prettyhome/interfaces/uart_interface.hpp>
 #include <prettyhome/interfaces/can_interface.hpp>
-#include <prettyhome/modules/eeprom_module.hpp>
-#include <prettyhome/modules/pwm_module.hpp>
+#include <prettyhome/log/logger.hpp>
 
 #include "./board.hpp"
 
@@ -42,13 +38,15 @@ main()
 
 	prettyhome::System::initialize();
 
-	prettyhome::interfaces::InterfaceManager::registerInterface(new prettyhome::interfaces::CanInterface< modm::platform::Can > ());
-	prettyhome::interfaces::InterfaceManager::registerInterface(new prettyhome::interfaces::UartInterface< modm::platform::Usart2 > ());
+	prettyhome::System::registerInterface(
+		new prettyhome::interfaces::UartInterface< modm::platform::Usart2 > ()
+	);
 
-	do
-	{
-		prettyhome::System::run();
-	} while(true);
+	prettyhome::System::registerInterface(
+		new prettyhome::interfaces::CanInterface< modm::platform::Can > ()
+	);
+
+	prettyhome::System::loop();
 
 	return 0;
 }
