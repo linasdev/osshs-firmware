@@ -14,8 +14,8 @@ namespace prettyhome
 {
 	namespace events
 	{
-		PwmRequestStatusEvent::PwmRequestStatusEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmRequestStatusEvent>(causeId, callback)
+		PwmRequestStatusEvent::PwmRequestStatusEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmRequestStatusEvent>(data[4] | (data[5] << 8), callback)
 		{
 			static_cast< void >(data);
 		}
@@ -31,14 +31,17 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
+
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		PwmStatusReadyEvent::PwmStatusReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmStatusReadyEvent>(causeId, callback)
+		PwmStatusReadyEvent::PwmStatusReadyEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmStatusReadyEvent>(data[4] | (data[5] << 8), callback)
 		{
-			status = static_cast< PwmStatus >(data[4]);
+			status = static_cast< PwmStatus >(data[6]);
 		}
 
 		PwmStatus
@@ -58,14 +61,17 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = static_cast< uint8_t >(status);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
+
+			buffer[6] = static_cast< uint8_t >(status);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		PwmEnableEvent::PwmEnableEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmEnableEvent>(causeId, callback)
+		PwmEnableEvent::PwmEnableEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmEnableEvent>(data[4] | (data[5] << 8), callback)
 		{
 			static_cast< void >(data);
 		}
@@ -81,12 +87,15 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
+
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		PwmDisableEvent::PwmDisableEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmDisableEvent>(causeId, callback)
+		PwmDisableEvent::PwmDisableEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmDisableEvent>(data[4] | (data[5] << 8), callback)
 		{
 			static_cast< void >(data);
 		}
@@ -102,14 +111,17 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
+
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		PwmRequestChannelEvent::PwmRequestChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmRequestChannelEvent>(causeId, callback)
+		PwmRequestChannelEvent::PwmRequestChannelEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmRequestChannelEvent>(data[4] | (data[5] << 8), callback)
 		{
-			channel = data[4] | (data[5] << 8);
+			channel = data[6] | (data[7] << 8);
 		}
 
 		uint16_t
@@ -129,18 +141,21 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = channel & 0xff;
-			buffer[5] = (channel >> 8);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
+
+			buffer[6] = channel & 0xff;
+			buffer[7] = (channel >> 8);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		PwmChannelReadyEvent::PwmChannelReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmChannelReadyEvent>(causeId, callback)
+		PwmChannelReadyEvent::PwmChannelReadyEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmChannelReadyEvent>(data[4] | (data[5] << 8), callback)
 		{
-			channel = data[4] | (data[5] << 8);
-			value = data[6] | (data[7] << 8);
+			channel = data[6] | (data[7] << 8);
+			value = data[8] | (data[9] << 8);
 		}
 
 		uint16_t
@@ -166,21 +181,24 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = channel & 0xff;
-			buffer[5] = (channel >> 8);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
 
-			buffer[6] = value & 0xff;
-			buffer[7] = (value >> 8);
+			buffer[6] = channel & 0xff;
+			buffer[7] = (channel >> 8);
+
+			buffer[8] = value & 0xff;
+			buffer[9] = (value >> 8);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		PwmUpdateChannelEvent::PwmUpdateChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmUpdateChannelEvent>(causeId, callback)
+		PwmUpdateChannelEvent::PwmUpdateChannelEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmUpdateChannelEvent>(data[4] | (data[5] << 8), callback)
 		{
-			channel = data[4] | (data[5] << 8);
-			value = data[6] | (data[7] << 8);
+			channel = data[6] | (data[7] << 8);
+			value = data[8] | (data[9] << 8);
 		}
 
 		uint16_t
@@ -206,20 +224,23 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = channel & 0xff;
-			buffer[5] = (channel >> 8);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
 
-			buffer[6] = value & 0xff;
-			buffer[7] = (value >> 8);
+			buffer[6] = channel & 0xff;
+			buffer[7] = (channel >> 8);
+
+			buffer[8] = value & 0xff;
+			buffer[9] = (value >> 8);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		PwmRequestRgbwChannelEvent::PwmRequestRgbwChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmRequestRgbwChannelEvent>(causeId, callback)
+		PwmRequestRgbwChannelEvent::PwmRequestRgbwChannelEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmRequestRgbwChannelEvent>(data[4] | (data[5] << 8), callback)
 		{
-			channel = data[4] | (data[5] << 8);
+			channel = data[6] | (data[7] << 8);
 		}
 
 		uint16_t
@@ -239,21 +260,24 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = channel & 0xff;
-			buffer[5] = (channel >> 8);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
+
+			buffer[6] = channel & 0xff;
+			buffer[7] = (channel >> 8);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		PwmRgbwChannelReadyEvent::PwmRgbwChannelReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmRgbwChannelReadyEvent>(causeId, callback)
+		PwmRgbwChannelReadyEvent::PwmRgbwChannelReadyEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmRgbwChannelReadyEvent>(data[4] | (data[5] << 8), callback)
 		{
-			channel = data[4] | (data[5] << 8);
-			value.red = data[6] | (data[7] << 8);
-			value.green = data[8] | (data[9] << 8);
-			value.blue = data[10] | (data[11] << 8);
-			value.white = data[12] | (data[13] << 8);
+			channel = data[6] | (data[7] << 8);
+			value.red = data[8] | (data[9] << 8);
+			value.green = data[10] | (data[11] << 8);
+			value.blue = data[12] | (data[13] << 8);
+			value.white = data[14] | (data[15] << 8);
 		}
 
 		uint16_t
@@ -279,33 +303,36 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = channel & 0xff;
-			buffer[5] = (channel >> 8);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
 
-			buffer[6] = value.red & 0xff;
-			buffer[7] = (value.red >> 8);
+			buffer[6] = channel & 0xff;
+			buffer[7] = (channel >> 8);
 
-			buffer[8] = value.green & 0xff;
-			buffer[9] = (value.green >> 8);
+			buffer[8] = value.red & 0xff;
+			buffer[9] = (value.red >> 8);
 
-			buffer[10] = value.blue & 0xff;
-			buffer[11] = (value.blue >> 8);
+			buffer[10] = value.green & 0xff;
+			buffer[11] = (value.green >> 8);
 
-			buffer[12] = value.white & 0xff;
-			buffer[13] = (value.white >> 8);
+			buffer[12] = value.blue & 0xff;
+			buffer[13] = (value.blue >> 8);
+
+			buffer[14] = value.white & 0xff;
+			buffer[15] = (value.white >> 8);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		PwmUpdateRgbwChannelEvent::PwmUpdateRgbwChannelEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmUpdateRgbwChannelEvent>(causeId, callback)
+		PwmUpdateRgbwChannelEvent::PwmUpdateRgbwChannelEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmUpdateRgbwChannelEvent>(data[4] | (data[5] << 8), callback)
 		{
-			channel = data[4] | (data[5] << 8);
-			value.red = data[6] | (data[7] << 8);
-			value.green = data[8] | (data[9] << 8);
-			value.blue = data[10] | (data[11] << 8);
-			value.white = data[12] | (data[13] << 8);
+			channel = data[6] | (data[7] << 8);
+			value.red = data[8] | (data[9] << 8);
+			value.green = data[10] | (data[11] << 8);
+			value.blue = data[12] | (data[13] << 8);
+			value.white = data[14] | (data[15] << 8);
 		}
 
 		uint16_t
@@ -331,27 +358,30 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = channel & 0xff;
-			buffer[5] = (channel >> 8);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
 
-			buffer[6] = value.red & 0xff;
-			buffer[7] = (value.red >> 8);
+			buffer[6] = channel & 0xff;
+			buffer[7] = (channel >> 8);
 
-			buffer[8] = value.green & 0xff;
-			buffer[9] = (value.green >> 8);
+			buffer[8] = value.red & 0xff;
+			buffer[9] = (value.red >> 8);
 
-			buffer[10] = value.blue & 0xff;
-			buffer[11] = (value.blue >> 8);
+			buffer[10] = value.green & 0xff;
+			buffer[11] = (value.green >> 8);
 
-			buffer[12] = value.white & 0xff;
-			buffer[13] = (value.white >> 8);
+			buffer[12] = value.blue & 0xff;
+			buffer[13] = (value.blue >> 8);
+
+			buffer[14] = value.white & 0xff;
+			buffer[15] = (value.white >> 8);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		PwmUpdateSuccessEvent::PwmUpdateSuccessEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmUpdateSuccessEvent>(causeId, callback)
+		PwmUpdateSuccessEvent::PwmUpdateSuccessEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmUpdateSuccessEvent>(data[4] | (data[5] << 8), callback)
 		{
 			static_cast< void >(data);
 		}
@@ -367,14 +397,17 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
+
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		PwmErrorEvent::PwmErrorEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<PwmErrorEvent>(causeId, callback)
+		PwmErrorEvent::PwmErrorEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<PwmErrorEvent>(data[4] | (data[5] << 8), callback)
 		{
-			error = static_cast< PwmError >(data[4]);
+			error = static_cast< PwmError >(data[6]);
 		}
 
 		PwmError
@@ -394,7 +427,10 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = static_cast< uint8_t >(error);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
+
+			buffer[6] = static_cast< uint8_t >(error);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}

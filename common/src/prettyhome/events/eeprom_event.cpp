@@ -14,11 +14,11 @@ namespace prettyhome
 {
 	namespace events
 	{
-		EepromRequestDataEvent::EepromRequestDataEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<EepromRequestDataEvent>(causeId, callback)
+		EepromRequestDataEvent::EepromRequestDataEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<EepromRequestDataEvent>(data[4] | (data[5] << 8), callback)
 		{
-			address = data[4] | (data[5] << 8);
-			dataLen = data[6] | (data[7] << 8);
+			address = data[6] | (data[7] << 8);
+			dataLen = data[8] | (data[9] << 8);
 		}
 
 		uint16_t
@@ -44,26 +44,29 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = address & 0xff;
-			buffer[5] = (address >> 8);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
 
-			buffer[6] = dataLen & 0xff;
-			buffer[7] = (dataLen >> 8);
+			buffer[6] = address & 0xff;
+			buffer[7] = (address >> 8);
+
+			buffer[8] = dataLen & 0xff;
+			buffer[9] = (dataLen >> 8);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		EepromDataReadyEvent::EepromDataReadyEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<EepromDataReadyEvent>(causeId, callback)
+		EepromDataReadyEvent::EepromDataReadyEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<EepromDataReadyEvent>(data[4] | (data[5] << 8), callback)
 		{
-			dataLen = data[4] | (data[5] << 8);
+			dataLen = data[6] | (data[7] << 8);
 
-			if (6 + dataLen == (data[0] | (data[1] << 8)))
+			if (8 + dataLen == (data[0] | (data[1] << 8)))
 			{
 				for (uint16_t i = 0; i < dataLen; i++)
 				{
-					this->data[i] = data[6 + i];
+					this->data[i] = data[8 + i];
 				}
 			}
 			else
@@ -86,7 +89,7 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		EepromDataReadyEvent::serialize() const
 		{
-			uint16_t EVENT_LENGTH = 6 + dataLen;
+			uint16_t EVENT_LENGTH = 8 + dataLen;
 			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -95,29 +98,32 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = dataLen & 0xff;
-			buffer[5] = (dataLen >> 8);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
+
+			buffer[6] = dataLen & 0xff;
+			buffer[7] = (dataLen >> 8);
 
 			for (uint16_t i = 0; i < dataLen; i++)
 			{
-				buffer[6 + i] = data[i];
+				buffer[8 + i] = data[i];
 			}
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		EepromUpdateDataEvent::EepromUpdateDataEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<EepromUpdateDataEvent>(causeId, callback)
+		EepromUpdateDataEvent::EepromUpdateDataEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<EepromUpdateDataEvent>(data[4] | (data[5] << 8), callback)
 		{
-			address = data[4] | (data[5] << 8);
-			dataLen = data[6] | (data[7] << 8);
+			address = data[6] | (data[7] << 8);
+			dataLen = data[8] | (data[9] << 8);
 
-			if (8 + dataLen == (data[0] | (data[1] << 8)))
+			if (10 + dataLen == (data[0] | (data[1] << 8)))
 			{
 				for (uint16_t i = 0; i < dataLen; i++)
 				{
-					this->data[i] = data[8 + i];
+					this->data[i] = data[10 + i];
 				}
 			}
 			else
@@ -155,23 +161,26 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = address & 0xff;
-			buffer[5] = (address >> 8);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
 
-			buffer[6] = dataLen & 0xff;
-			buffer[7] = (dataLen >> 8);
+			buffer[6] = address & 0xff;
+			buffer[7] = (address >> 8);
+
+			buffer[8] = dataLen & 0xff;
+			buffer[9] = (dataLen >> 8);
 
 			for (uint16_t i = 0; i < dataLen; i++)
 			{
-				buffer[8 + i] = data[i];
+				buffer[10 + i] = data[i];
 			}
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		EepromUpdateSuccessEvent::EepromUpdateSuccessEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<EepromUpdateSuccessEvent>(causeId, callback)
+		EepromUpdateSuccessEvent::EepromUpdateSuccessEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<EepromUpdateSuccessEvent>(data[4] | (data[5] << 8), callback)
 		{
 			static_cast< void >(data);
 		}
@@ -187,14 +196,17 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
+
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
 
 
-		EepromErrorEvent::EepromErrorEvent(std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
-			: EventRegistrar<EepromErrorEvent>(causeId, callback)
+		EepromErrorEvent::EepromErrorEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+			: EventRegistrar<EepromErrorEvent>(data[4] | (data[5] << 8), callback)
 		{
-			error = static_cast< EepromError >(data[4]);
+			error = static_cast< EepromError >(data[6]);
 		}
 
 		EepromError
@@ -214,7 +226,10 @@ namespace prettyhome
 			buffer[2] = TYPE & 0xff;
 			buffer[3] = (TYPE >> 8);
 
-			buffer[4] = static_cast< uint8_t >(error);
+			buffer[4] = causeId & 0xff;
+			buffer[5] = (causeId >> 8);
+
+			buffer[6] = static_cast< uint8_t >(error);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}

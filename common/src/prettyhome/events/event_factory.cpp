@@ -15,9 +15,9 @@ namespace prettyhome
 	namespace events
 	{
 		std::shared_ptr< Event >
-		EventFactory::make(uint16_t type, std::unique_ptr< const uint8_t[] > data, uint16_t causeId, EventCallback callback)
+		EventFactory::make(uint16_t type, std::unique_ptr< const uint8_t[] > data, EventCallback callback)
 		{
-			return Event::eventRegister().at(type)(std::move(data), causeId, callback);
+			return Event::eventRegister().at(type)(std::move(data), callback);
 		}
 	}
 }

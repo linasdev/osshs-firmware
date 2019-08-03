@@ -21,7 +21,7 @@ namespace prettyhome
 		{
 		public:
 			static std::shared_ptr< Event >
-			make(uint16_t type, std::unique_ptr< const uint8_t[] > data, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr);
+			make(uint16_t type, std::unique_ptr< const uint8_t[] > data, EventCallback callback = nullptr);
 		};
 	}
 }
