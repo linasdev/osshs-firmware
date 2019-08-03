@@ -13,11 +13,9 @@
 
 #include <cstdint>
 #include <queue>
-
 #include <modm/processing/protothread.hpp>
 #include <modm/processing/resumable.hpp>
 #include <prettyhome/events/event.hpp>
-#include <prettyhome/events/event_selector.hpp>
 
 namespace prettyhome
 {
@@ -34,7 +32,6 @@ namespace prettyhome
 			getInterfaceTypeId() const = 0;
 		protected:
 			std::queue< std::shared_ptr< events::Event > > eventQueue;
-			std::unordered_map< events::EventSelector, std::vector< events::EventCallback > > eventSubscriptions;
 
 			virtual bool
 			run() = 0;
@@ -46,9 +43,6 @@ namespace prettyhome
 
 			Interface&
 			operator=(const Interface&) = delete;
-
-			void
-			subscribeEvent(events::EventSelector selector, events::EventCallback subscription);
 
 			virtual void
 			initialize() = 0;

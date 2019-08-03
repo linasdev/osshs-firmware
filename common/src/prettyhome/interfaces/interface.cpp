@@ -15,12 +15,6 @@ namespace prettyhome
 	namespace interfaces
 	{
 		void
-		Interface::subscribeEvent(events::EventSelector selector, events::EventCallback subscription)
-		{
-			eventSubscriptions[selector].push_back(subscription);
-		}
-
-		void
 		Interface::reportEvent(std::shared_ptr< events::Event > event)
 		{
 			eventQueue.push(event);

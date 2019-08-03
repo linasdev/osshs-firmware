@@ -84,10 +84,7 @@ namespace prettyhome
 									}
 								);
 
-								for(auto const &[selector, subscriptions] : eventSubscriptions)
-									if (selector.match(event->getType()))
-										for (auto const &subscription : subscriptions)
-											subscription(event);
+								System::reportEvent(event);
 							}
 							else
 							{
@@ -108,10 +105,7 @@ namespace prettyhome
 									}
 								);
 
-								for(auto const &[selector, subscriptions] : eventSubscriptions)
-									if (selector.match(event->getType()))
-										for (auto const &subscription : subscriptions)
-											subscription(event);
+								System::reportEvent(event);
 							}
 						}
 						else
