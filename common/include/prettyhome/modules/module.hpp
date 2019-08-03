@@ -37,7 +37,7 @@ namespace prettyhome
 			std::queue< std::shared_ptr< events::Event > > eventQueue;
 
 			virtual void
-			subscribeEvents();
+			initialize();
 
 			virtual bool
 			run() = 0;

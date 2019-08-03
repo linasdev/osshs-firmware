@@ -27,7 +27,7 @@ namespace prettyhome
 	System::registerModule(modules::Module *module)
 	{
 		modules.push_back(module);
-		module->subscribeEvents();
+		module->initialize();
 	}
 
 	void
