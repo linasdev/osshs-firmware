@@ -21,23 +21,18 @@ namespace prettyhome
 {
 	namespace interfaces
 	{
-		static constexpr uint8_t BASE_INTERFACE_ID = 0x00;
-
 		class Interface : public modm::pt::Protothread
 		{
 		public:
 			Interface() = default;
-
-			virtual uint8_t
-			getInterfaceTypeId() const = 0;
 		protected:
-			std::queue< std::shared_ptr< events::Event > > eventQueue;
+			std::queue< std::shared_ptr< EventPacket > > eventPacketQueue;
 
 			virtual bool
 			run() = 0;
 
 			void
-			reportEvent(std::shared_ptr< events::Event > event);
+			reportEventPacket(std::shared_ptr< EventPacket > eventPacket);
 		private:
 			Interface(const Interface&) = delete;
 

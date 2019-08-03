@@ -15,9 +15,9 @@ namespace prettyhome
 	namespace interfaces
 	{
 		void
-		Interface::reportEvent(std::shared_ptr< events::Event > event)
+		Interface::reportEventPacket(std::shared_ptr< EventPacket > eventPacket)
 		{
-			eventQueue.push(event);
+			eventPacketQueue.push(eventPacket);
 		}
 	}
 }

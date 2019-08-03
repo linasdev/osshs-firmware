@@ -17,21 +17,16 @@ namespace prettyhome
 {
 	namespace interfaces
 	{
-		static constexpr uint8_t CAN_INTERFACE_ID = 0x01;
-
 		template< typename Can >
 		class CanInterface : public Interface, private modm::NestedResumable<1>
 		{
 		public:
 			CanInterface() = default;
-
-			uint8_t
-			getInterfaceTypeId() const;
 		protected:
 			bool
 			run();
 		private:
-			std::shared_ptr< events::Event > currentEvent;
+			std::shared_ptr< events::EventPacket > currentEventPacket;
 			std::unique_ptr< const uint8_t[] > currentBuffer;
 			uint16_t currentBufferLength;
 			uint16_t currentFrameCount;
@@ -43,8 +38,11 @@ namespace prettyhome
 			uint32_t
 			generateCurrentFrameIdentifier();
 
-			modm::ResumableResult<void>
-			transferEvent(std::shared_ptr< events::Event > event);
+			modm::ResumableResult< void >
+			readEventPacket();
+
+			modm::ResumableResult< void >
+			writeEventPacket(std::shared_ptr< events::EventPacket > eventPacket);
 	  };
 	}
 }

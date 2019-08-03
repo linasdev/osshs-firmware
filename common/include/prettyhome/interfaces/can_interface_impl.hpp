@@ -21,13 +21,6 @@ namespace prettyhome
 	namespace interfaces
 	{
 			template< typename Can >
-			uint8_t
-			CanInterface< Can >::getInterfaceTypeId() const
-			{
-				return CAN_INTERFACE_ID;
-			}
-
-			template< typename Can >
 			bool
 			CanInterface< Can >::run()
 			{
@@ -35,86 +28,23 @@ namespace prettyhome
 
 				do
 				{
-					PT_WAIT_WHILE(eventQueue.empty() & !Can::isMessageAvailable());
+					PT_WAIT_UNTIL(Can::isMessageAvailable() | !eventPacketQueue.empty());
 
-					if (!eventQueue.empty())
+					if (Can::isMessageAvailable())
 					{
-						currentEvent = eventQueue.front();
-						eventQueue.pop();
-
-						PT_CALL(transferEvent(currentEvent));
-
-						currentEvent.reset();
-
-						PT_WAIT_UNTIL(ResourceLock< Can >::tryLock());
+						PT_CALL(readEventPacket(currentEventPacket));
 					}
 					else
 					{
-						modm::can::Message frame;
-						if (Can::getMessage(frame))
-						{
-							if (frame.getIdentifier() & (0b1 << 26))
-							{
-								uint16_t frameCount = (frame.getIdentifier() >> 8) & 0xf00;
-								frameCount |= frame.data[0];
+						currentEventPacket = eventPacketQueue.front();
+						eventPacketQueue.pop();
 
-								uint16_t bufferLength = frame.data[1] | (frame.data[2] << 8);
-								uint8_t *buffer = new uint8_t[bufferLength];
+						PT_CALL(writeEventPacket(currentEventPacket));
 
-								for (uint16_t frameId = 0; frameId < frameCount; frameId++)
-								{
-									if (frameId)
-									{
-										while (!Can::isMessageAvailable());
-										Can::getMessage(frame);
-									}
+						currentEventPacket.reset();
 
-									for (uint16_t i = 1; i < 8; i++)
-									{
-										buffer[frameId * 7 + i - 1] = frame.data[i];
-									}
-								}
-
-								uint16_t eventType = buffer[2] | (buffer[3] << 8);
-
-								std::shared_ptr< events::Event > event = events::EventFactory::make(eventType, std::unique_ptr< const uint8_t[] >(buffer), events::Event::CAUSE_ID_GENERATE,
-									[=](std::shared_ptr< events::Event > event) -> void
-									{
-											this->reportEvent(event);
-									}
-								);
-
-								System::reportEvent(event);
-							}
-							else
-							{
-								uint16_t bufferLength = frame.data[0] | (frame.data[1] << 8);
-								uint8_t *buffer = new uint8_t[bufferLength];
-
-								for (uint16_t i = 0; i < bufferLength; i++)
-								{
-									buffer[i] = frame.data[i];
-								}
-
-								uint16_t eventType = buffer[2] | (buffer[3] << 8);
-
-								std::shared_ptr< events::Event > event = events::EventFactory::make(eventType, std::unique_ptr< const uint8_t[] >(buffer), events::Event::CAUSE_ID_GENERATE,
-									[=](std::shared_ptr< events::Event > event) -> void
-									{
-										this->reportEvent(event);
-									}
-								);
-
-								System::reportEvent(event);
-							}
-						}
-						else
-						{
-
-						}
+						PT_WAIT_UNTIL(ResourceLock< Can >::tryLock());
 					}
-
-					ResourceLock< Can >::unlock();
 				}
 				while (true);
 
@@ -156,12 +86,83 @@ namespace prettyhome
 		}
 
 		template< typename Can >
-		modm::ResumableResult<void>
-		CanInterface< Can >::transferEvent(std::shared_ptr< events::Event > event)
+		modm::ResumableResult< void >
+		CanInterface< Can >::readEventPacket()
 		{
 			RF_BEGIN();
 
-			currentBuffer = event->serialize();
+			RF_WAIT_UNTIL(ResourceLock< Can >::tryLock());
+
+			modm::can::Message frame;
+			if (Can::getMessage(frame))
+			{
+				if (frame.getIdentifier() & (0b1 << 26))
+				{
+					uint16_t frameCount = (frame.getIdentifier() >> 8) & 0xf00;
+					frameCount |= frame.data[0];
+
+					uint16_t bufferLength = frame.data[1] | (frame.data[2] << 8);
+					uint8_t *buffer = new uint8_t[bufferLength];
+
+					for (uint16_t frameId = 0; frameId < frameCount; frameId++)
+					{
+						if (frameId)
+						{
+							while (!Can::isMessageAvailable());
+							Can::getMessage(frame);
+						}
+
+						for (uint16_t i = 1; i < 8; i++)
+						{
+							buffer[frameId * 7 + i - 1] = frame.data[i];
+						}
+					}
+
+					std::shared_ptr< EventPacket > eventPacket(new EventPacket(buffer,
+						[=](std::shared_ptr< EventPacket > eventPacket) -> void
+						{
+								this->reportEventPacket(eventPacket);
+						}
+					));
+
+					InterfaceManager::reportEventPacket(eventPacket));
+				}
+				else
+				{
+					uint16_t bufferLength = frame.data[0] | (frame.data[1] << 8);
+					uint8_t *buffer = new uint8_t[bufferLength];
+
+					for (uint16_t i = 0; i < bufferLength; i++)
+					{
+						buffer[i] = frame.data[i];
+					}
+
+					std::shared_ptr< EventPacket > eventPacket(new EventPacket(buffer,
+						[=](std::shared_ptr< EventPacket > eventPacket) -> void
+						{
+								this->reportEventPacket(eventPacket);
+						}
+					));
+
+					InterfaceManager::reportEventPacket(eventPacket));
+				}
+			}
+			else
+			{
+			}
+
+			ResourceLock< Can >::unlock();
+
+			RF_END();
+		}
+
+		template< typename Can >
+		modm::ResumableResult< void >
+		CanInterface< Can >::writeEventPacket(std::shared_ptr< EventPacket > eventPacket)
+		{
+			RF_BEGIN();
+
+			currentBuffer = eventPacket->serialize();
 			currentBufferLength = currentBuffer[0] | (currentBuffer[1] << 8);
 			if (!((currentBufferLength - 1) / 8))
 			{
@@ -184,7 +185,6 @@ namespace prettyhome
 				}
 
 				Can::sendMessage(frame);
-				for (uint32_t i = 0; i < 100000; i++) __asm__("nop");
 			}
 			else
 			{
@@ -206,7 +206,6 @@ namespace prettyhome
 					}
 
 					Can::sendMessage(frame);
-					for (uint32_t i = 0; i < 100000; i++) __asm__("nop");
 				}
 			}
 

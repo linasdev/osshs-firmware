@@ -13,11 +13,9 @@
 
 #include <vector>
 #include <memory>
-
 #include <modm/processing/protothread.hpp>
-#include <prettyhome/modules/interface.hpp>
-#include <prettyhome/events/event.hpp>
-#include <prettyhome/events/event_selector.hpp>
+#include <prettyhome/interfaces/interface.hpp>
+#include <prettyhome/interfaces/event_packet.hpp>
 
 namespace prettyhome
 {
@@ -31,6 +29,9 @@ namespace prettyhome
 
 			static void
 			registerInterface(Interface *interface);
+
+			static void
+			reportEventPacket(std::shared_ptr< EventPacket > eventPacket, Interface *sourceInterface = nullptr);
 
 			static bool
 			run();

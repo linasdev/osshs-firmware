@@ -28,6 +28,18 @@ namespace prettyhome
 			interface->initialize();
 		}
 
+		void
+		InterfaceManager::reportEventPacket(std::shared_ptr< EventPacket > eventPacket, Interface *sourceInterface)
+		{
+			for (Interface *interface : interfaces)
+			{
+				if (interface == sourceInterface)
+					continue;
+
+				interface->reportEventPacket(eventPacket);
+			}
+		}
+
 		bool
 		InterfaceManager::run()
 		{

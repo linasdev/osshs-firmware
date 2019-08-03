@@ -20,13 +20,6 @@ namespace prettyhome
 {
 	namespace interfaces
 	{
-		template< typename Uart >
-		uint8_t
-		UartInterface< Uart >::getInterfaceTypeId() const
-		{
-			return UART_INTERFACE_ID;
-		}
-
     template< typename Uart >
 		bool
 		UartInterface< Uart >::run()
@@ -35,55 +28,14 @@ namespace prettyhome
 
 			do
 			{
-				PT_WAIT_WHILE(eventQueue.empty());
+				PT_WAIT_WHILE(eventPacketQueue.empty());
 
-				currentEvent = eventQueue.front();
-				eventQueue.pop();
+				currentEventPacket = eventPacketQueue.front();
+				eventPacketQueue.pop();
 
-				PT_CALL(transferEvent(currentEvent));
+				PT_CALL(transferEventPacket(currentEventPacket));
 
-				currentEvent.reset();
-
-    		PT_WAIT_UNTIL(ResourceLock< Uart >::tryLock());
-
-        {
-          uint8_t byte0 = 0x00;
-          uint8_t byte1 = 0x00;
-
-          if (Uart::read(byte0))
-          {
-            if (Uart::read(byte1))
-            {
-              uint16_t bufferLength = byte0 | (byte1 << 8);
-              uint8_t *buffer = new uint8_t[bufferLength];
-
-              buffer[0] = byte0;
-              buffer[1] = byte1;
-
-              for (uint16_t i = 2; i < bufferLength; i++)
-              {
-                uint8_t temp = 0x00;
-
-                while(!Uart::read(temp));
-
-                buffer[i] = temp;
-              }
-
-              uint16_t eventType = buffer[2] | (buffer[3] << 8);
-
-              std::shared_ptr< events::Event > event = events::EventFactory::make(eventType, std::unique_ptr< const uint8_t[] >(buffer), events::Event::CAUSE_ID_GENERATE,
-      					[=](std::shared_ptr< events::Event > event) -> void
-      					{
-      							this->reportEvent(event);
-      					}
-              );
-
-							System::reportEvent(event);
-            }
-          }
-        }
-
-    		ResourceLock< Uart >::unlock();
+				currentEventPacket.reset();
 			}
 			while (true);
 
@@ -98,14 +50,14 @@ namespace prettyhome
 
     template< typename Uart >
     modm::ResumableResult<void>
-    UartInterface< Uart >::transferEvent(std::shared_ptr< events::Event > event)
+    UartInterface< Uart >::transferEventPacket(std::shared_ptr< events::EventPacket > eventPacket)
     {
       RF_BEGIN();
 
   		RF_WAIT_UNTIL(ResourceLock< Uart >::tryLock());
 
       {
-        std::unique_ptr< const uint8_t[] > buffer = event->serialize();
+        std::unique_ptr< const uint8_t[] > buffer = eventPacket->serialize();
         uint16_t bufferLength = buffer[0] | (buffer[1] << 8);
 
         Uart::writeBlocking(buffer.get(), bufferLength);
