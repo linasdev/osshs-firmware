@@ -6,7 +6,7 @@
 	</repositories>
 
 	<options>
-		<option name="modm:target">stm32f103c8t</option>
+		<option name="modm:target">stm32f103cbt</option>
 
 		<option name="modm:build:openocd.cfg">./openocd.cfg</option>
 		<option name="modm:build:project.name">PrettyHome</option>
@@ -17,6 +17,7 @@
 		<module>modm:architecture:clock</module>
 		<module>modm:build:scons</module>
 		<module>modm:debug</module>
+		<module>modm:docs</module>
 		<module>modm:driver:i2c.eeprom</module>
 		<module>modm:driver:tlc594x</module>
 		<module>modm:platform:core</module>
