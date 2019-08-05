@@ -22,7 +22,7 @@ namespace prettyhome
 		public:
 			template< modm::log::Level level, uint32_t line >
 			static modm::IOStream&
-			writePrefix(modm::IOStream &stream, const char *file, const char *function);
+			writePrefix(modm::IOStream &stream, const char *file);
 		};
 	}
 }

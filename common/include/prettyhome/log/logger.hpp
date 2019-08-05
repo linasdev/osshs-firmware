@@ -27,7 +27,7 @@ namespace prettyhome
 	modm::IODeviceWrapper< device, behavior > loggerDevice; \
 	modm::log::Logger prettyhome::log::logger(loggerDevice);
 
-#define PRETTYHOME_PREFIXED_LOGGER(level) prettyhome::log::LogPrefixer::writePrefix< level, __LINE__ >(prettyhome::log::logger, __FILENAME__, __PRETTY_FUNCTION__)
+#define PRETTYHOME_PREFIXED_LOGGER(level) prettyhome::log::LogPrefixer::writePrefix< level, __LINE__ >(prettyhome::log::logger, __FILENAME__)
 
 #define PRETTYHOME_LOGGER \
 	if ( false ){} \

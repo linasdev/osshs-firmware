@@ -20,7 +20,7 @@ namespace prettyhome
 	{
 		template< modm::log::Level level, uint32_t line >
 		modm::IOStream&
-		LogPrefixer::writePrefix(modm::IOStream &stream, const char* file, const char *function)
+		LogPrefixer::writePrefix(modm::IOStream &stream, const char* file)
 		{
 			stream << '[';
 			stream << prettyhome::Time::getSystemTime< float, prettyhome::Time::Precision::Seconds >();
@@ -41,10 +41,6 @@ namespace prettyhome
 			stream << file;
 			stream << ':';
 			stream << line;
-			stream << ']';
-
-			stream << '[';
-			stream << function;
 			stream << ']';
 
 			return stream;
