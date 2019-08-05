@@ -124,7 +124,7 @@ namespace prettyhome
 							std::unique_ptr< const uint8_t[] >(buffer),
 							&InterfaceManager::reportEvent
 						));
-						InterfaceManager::reportEventPacket(eventPacket);
+						InterfaceManager::reportEventPacket(eventPacket, this);
 					}
 					else
 					{
@@ -138,7 +138,7 @@ namespace prettyhome
 							std::unique_ptr< const uint8_t[] >(buffer),
 							&InterfaceManager::reportEvent
 						));
-						InterfaceManager::reportEventPacket(eventPacket);
+						InterfaceManager::reportEventPacket(eventPacket, this);
 					}
 				}
 				else
