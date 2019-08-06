@@ -11,13 +11,19 @@
 import os
 from os.path import join, abspath
 
-project_name = "PrettyHome_PROG_module"
-build_path = "../build/PrettyHome_PROG_module"
-profile = ARGUMENTS.get("profile", "release")
-generated_paths = ['modm']
+Import('project_name')
+
+build_path = "../build/" + project_name
+profile = ARGUMENTS.get("profile")
+
+generated_paths = [
+    'modm'
+]
+
 CacheDir("../build/cache")
 
 env = DefaultEnvironment(tools=[], ENV=os.environ)
+
 env["CONFIG_BUILD_BASE"] = abspath(build_path)
 env["CONFIG_PROJECT_NAME"] = project_name
 
@@ -27,7 +33,8 @@ env.Append(CPPPATH=".")
 ignored = ["cmake-*", ".lbuild_cache", build_path] + generated_paths
 sources = []
 
-sources += env.FindSourceFiles(".", ignorePaths=ignored)
+sources += env.FindSourceFiles('.', ignorePaths=ignored)
+sources += env.FindSourceFiles('../common/src', ignorePaths=ignored)
 
 env.Append(CPPPATH = [
     "../common/include/"
@@ -41,7 +48,5 @@ if profile == "debug":
     env.Append(CCFLAGS = [
         "-O0",
     ])
-
-sources += env.FindSourceFiles("../common/src/", ignorePaths=ignored)
 
 env.BuildTarget(sources)
