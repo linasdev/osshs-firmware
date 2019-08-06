@@ -124,6 +124,13 @@ namespace prettyhome
 							std::unique_ptr< const uint8_t[] >(buffer),
 							&InterfaceManager::reportEvent
 						));
+
+						if (eventPacket->isMalformed())
+						{
+							PRETTYHOME_LOG_WARNING("Discarding malformed event packet.");
+							RF_RETURN();
+						}
+
 						InterfaceManager::reportEventPacket(eventPacket, this);
 					}
 					else
@@ -138,6 +145,13 @@ namespace prettyhome
 							std::unique_ptr< const uint8_t[] >(buffer),
 							&InterfaceManager::reportEvent
 						));
+
+						if (eventPacket->isMalformed())
+						{
+							PRETTYHOME_LOG_WARNING("Discarding malformed event packet.");
+							RF_RETURN();
+						}
+						
 						InterfaceManager::reportEventPacket(eventPacket, this);
 					}
 				}

@@ -22,16 +22,21 @@ namespace prettyhome
 
 			transmitterMac = data[3] | (data[4] << 8) | (data[5] << 16) | (data[6] << 24);
 
-			const uint8_t *serializedEvent;
+			uint8_t *serializedEvent;
 
 			if (multiTarget)
 			{
-				serializedEvent = &data[7];
+				uint16_t eventLength = data[7] | (data[8] << 8);
+				serializedEvent = new uint8_t[eventLength];
+				std::copy(&data[7], &data[7 + eventLength - 1], &serializedEvent[0]);
 			}
 			else
 			{
 				transmitterMac = data[7] | (data[8] << 8) | (data[9] << 16) | (data[10] << 24);
-				serializedEvent = &data[11];
+
+				uint16_t eventLength = data[11] | (data[12] << 8);
+				serializedEvent = new uint8_t[eventLength];
+				std::copy(&data[11], &data[11 + eventLength - 1], &serializedEvent[0]);
 			}
 
 			uint16_t eventType = serializedEvent[2] | (serializedEvent[3] << 8);
@@ -66,6 +71,12 @@ namespace prettyhome
 		EventPacket::getEvent() const
 		{
 			return event;
+		}
+
+		bool
+		EventPacket::isMalformed() const
+		{
+			return event == nullptr;
 		}
 
 		std::unique_ptr< const uint8_t[] >

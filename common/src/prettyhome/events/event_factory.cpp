@@ -20,6 +20,12 @@ namespace prettyhome
 		{
 			PRETTYHOME_LOG_DEBUG_STREAM << "Making event(type = " << type << ").\r\n";
 
+			if (Event::eventRegister().find(type) == Event::eventRegister().end())
+			{
+				PRETTYHOME_LOG_WARNING_STREAM << "Could not make event(type = " << type << ").\r\n";
+				return std::shared_ptr< Event >();
+			}
+
 			return Event::eventRegister().at(type)(std::move(data), callback);
 		}
 	}

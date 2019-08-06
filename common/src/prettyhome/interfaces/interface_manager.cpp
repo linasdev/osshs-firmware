@@ -44,11 +44,17 @@ namespace prettyhome
 				<< ", event_type = " << eventPacket->getEvent()->getType()
 				<< ").\r\n";
 
+			if (eventPacket->isMalformed())
+			{
+				PRETTYHOME_LOG_WARNING("Discarding malformed event packet.");
+				return;
+			}
+
 			for (Interface *interface : interfaces)
 			{
 				if (interface == sourceInterface)
 					continue;
-
+					
 				interface->reportEventPacket(eventPacket);
 			}
 
@@ -64,6 +70,12 @@ namespace prettyhome
 				event,
 				0x00000000
 			));
+
+			if (eventPacket->isMalformed())
+			{
+				PRETTYHOME_LOG_WARNING("Discarding malformed event packet.");
+				return;
+			}
 
 			for (Interface *interface : interfaces)
 			{
