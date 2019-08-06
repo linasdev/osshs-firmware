@@ -29,7 +29,13 @@ sources = []
 
 sources += env.FindSourceFiles(".", ignorePaths=ignored)
 
-env.Append(CPPPATH="../common/include/")
+env.Append(CPPPATH = [
+    "../common/include/"
+])
+
+env.Append(CCFLAGS = [
+    "-fno-exceptions"
+])
 
 if profile == "debug":
     env.Append(CCFLAGS = [
