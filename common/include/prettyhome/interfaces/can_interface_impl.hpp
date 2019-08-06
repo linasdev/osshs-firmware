@@ -159,7 +159,7 @@ namespace prettyhome
 				}
 				else
 				{
-					PRETTYHOME_LOG_ERROR("Could not read CAN frame.");
+					PRETTYHOME_LOG_WARNING("Could not read CAN frame.");
 				}
 			}
 
