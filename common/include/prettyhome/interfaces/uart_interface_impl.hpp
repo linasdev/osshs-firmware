@@ -36,6 +36,8 @@ namespace prettyhome
 				PT_CALL(writeEventPacket(currentEventPacket));
 
 				currentEventPacket.reset();
+
+				PT_YIELD();
 			}
 			while (true);
 

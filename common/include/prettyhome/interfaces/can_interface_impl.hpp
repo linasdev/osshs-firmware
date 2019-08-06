@@ -44,6 +44,8 @@ namespace prettyhome
 
 						currentEventPacket.reset();
 					}
+
+					PT_YIELD();
 				}
 				while (true);
 
