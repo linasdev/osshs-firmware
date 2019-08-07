@@ -215,6 +215,13 @@ namespace prettyhome
 			RF_WAIT_UNTIL(ResourceLock< Can >::tryLock());
 
 			currentBuffer = eventPacket->serialize();
+
+			if (currentBuffer == nullptr)
+			{
+				PRETTYHOME_LOG_WARNING("Failed to serialize event packet.");
+				RF_RETURN();
+			}
+
 			currentBufferLength = currentBuffer[0] | (currentBuffer[1] << 8);
 			if (!((currentBufferLength - 1) / 8))
 			{

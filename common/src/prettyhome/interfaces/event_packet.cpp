@@ -104,6 +104,13 @@ namespace prettyhome
 		EventPacket::serialize() const
 		{
 			std::unique_ptr< const uint8_t[] > serializedEvent = event->serialize();
+
+			if (serializedEvent == nullptr)
+			{
+				PRETTYHOME_LOG_WARNING("Failed to serialize event.");
+				return std::unique_ptr< const uint8_t[] >();
+			}
+
 			uint16_t eventLength = serializedEvent[0] | (serializedEvent[1] << 8);
 
 			uint16_t packetLength = multiTarget ? (eventLength + 7) : (eventLength + 11);

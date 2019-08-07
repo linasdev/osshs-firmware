@@ -69,6 +69,13 @@ namespace prettyhome
 
 			{
 				std::unique_ptr< const uint8_t[] > buffer = eventPacket->serialize();
+
+				if (buffer == nullptr)
+				{
+					PRETTYHOME_LOG_WARNING("Failed to serialize event packet.");
+					RF_RETURN();
+				}
+
 				uint16_t bufferLength = buffer[0] | (buffer[1] << 8);
 
 				Uart::writeBlocking(buffer.get(), bufferLength);
