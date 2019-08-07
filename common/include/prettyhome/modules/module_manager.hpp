@@ -21,14 +21,27 @@ namespace prettyhome
 		class ModuleManager
 		{
 		public:
+			/**
+			 * @brief Initialize the module manager.
+			 * 
+			 */
 			static void
 			initialize();
 
+			/**
+			 * @brief Register a module.
+			 * 
+			 * @param module module to register.
+			 */
 			static void
 			registerModule(modules::Module *module);
 
+			/**
+			 * @brief Update all registered modules.
+			 * 
+			 */
 			static void
-			run();
+			update();
 		private:
 			static std::vector< modules::Module* > modules;
 		};

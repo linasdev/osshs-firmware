@@ -69,7 +69,7 @@ namespace prettyhome
 		do
 		{
 			interfaces::InterfaceManager::run();
-			modules::ModuleManager::run();
+			modules::ModuleManager::update();
 		}
 		while (true);
 	}

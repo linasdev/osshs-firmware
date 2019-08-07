@@ -28,17 +28,44 @@ namespace prettyhome
 		public:
 			static constexpr uint16_t CAUSE_ID_GENERATE = static_cast< uint16_t >(-1);
 
+			/**
+			 * @brief Construct event.
+			 * 
+			 * @param type event type id.
+			 * @param causeId event cause id.
+			 * @param callback event callback.
+			 */
 			Event(uint16_t type, uint16_t causeId = CAUSE_ID_GENERATE, EventCallback callback = nullptr);
 
+			/**
+			 * @brief Type id getter.
+			 * 
+			 * @return uint16_t event type id.
+			 */
 			uint16_t
 			getType() const;
 
+			/**
+			 * @brief Cause id getter.
+			 * 
+			 * @return uint16_t event cause id.
+			 */
 			uint16_t
 			getCauseId() const;
 
+			/**
+			 * @brief Callback getter.
+			 * 
+			 * @return EventCallback event callback.
+			 */
 			EventCallback
 			getCallback() const;
 
+			/**
+			 * @brief Serialize this event.
+			 * 
+			 * @return std::unique_ptr< const uint8_t[] > serialized event or nullptr if serialization failed.
+			 */
 			virtual std::unique_ptr< const uint8_t[] >
 			serialize() const = 0;
 		protected:

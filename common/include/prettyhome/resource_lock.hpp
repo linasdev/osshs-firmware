@@ -17,9 +17,19 @@ namespace prettyhome
 	class ResourceLock
 	{
 	public:
+		/**
+		 * @brief Try to acquire a lock on the resource specified in the template.
+		 * 
+		 * @return true lock was acquired.
+		 * @return false lock was not acquired.
+		 */
 		static bool
 		tryLock();
 
+		/**
+		 * @brief Release a previously acquired lock.
+		 * 
+		 */
 		static void
 		unlock();
 	private:

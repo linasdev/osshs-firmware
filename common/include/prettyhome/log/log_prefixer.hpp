@@ -20,6 +20,15 @@ namespace prettyhome
 		class LogPrefixer
 		{
 		public:
+			/**
+			 * @brief Write a log message prefix to a stream.
+			 * 
+			 * @tparam level severity level. One of: modm::log::DISABLED, modm::log::DEBUG, modm::log::INFO, modm::log::WARNING or modm::log::ERROR.
+			 * @tparam line line from which the message was logged. Usually __LINE__.
+			 * @param stream stream to which the prefix should be written.
+			 * @param file File file from which the message was logged. Usually __FILENAME__.
+			 * @return modm::IOStream& stream to which the prefix was written.
+			 */
 			template< modm::log::Level level, uint32_t line >
 			static modm::IOStream&
 			writePrefix(modm::IOStream &stream, const char *file);

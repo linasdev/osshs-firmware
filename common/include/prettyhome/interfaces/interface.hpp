@@ -28,9 +28,18 @@ namespace prettyhome
 		protected:
 			std::queue< std::shared_ptr< EventPacket > > eventPacketQueue;
 
+			/**
+			 * @brief Run interface protothread.
+			 * 
+			 */
 			virtual bool
 			run() = 0;
 
+			/**
+			 * @brief Report an event packet to be transmitted.
+			 * 
+			 * @param eventPacket event packet to transmit.
+			 */
 			void
 			reportEventPacket(std::shared_ptr< EventPacket > eventPacket);
 		private:
@@ -39,6 +48,10 @@ namespace prettyhome
 			Interface&
 			operator=(const Interface&) = delete;
 
+			/**
+			 * @brief Initialize the interface. Should only be called from InterfaceManager.
+			 * 
+			 */
 			virtual void
 			initialize() = 0;
 

@@ -25,15 +25,30 @@ namespace prettyhome
 			Seconds
 		};
 
+		/**
+		 * @brief Initialize system time.
+		 * 
+		 */
 		static void
 		initialize();
 
+		/**
+		 * @brief System time getter.
+		 * 
+		 * @tparam T return type.
+		 * @tparam precision Either Precision::Milliseconds or Precision::Seconds.
+		 * @return T system time.
+		 */
 		template< typename T, Precision precision >
 		static T
 		getSystemTime();
 	private:
 		static uint64_t systemTime;
 
+		/**
+		 * @brief Increment system time. Called from interrupt.
+		 * 
+		 */
 		static void
 		tick();
 	};

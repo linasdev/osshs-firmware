@@ -24,18 +24,42 @@ namespace prettyhome
 		class InterfaceManager
 		{
 		public:
+			/**
+			 * @brief Initialize the interface manager.
+			 * 
+			 */
 			static void
 			initialize();
 
+			/**
+			 * @brief Register an interface.
+			 * 
+			 * @param interface interface to register.
+			 */
 			static void
 			registerInterface(Interface *interface);
 
+			/**
+			 * @brief Report event packet. Should be called from within interfaces.
+			 * 
+			 * @param eventPacket event packet to report.
+			 * @param sourceInterface pointer to the source interface.
+			 */
 			static void
 			reportEventPacket(std::shared_ptr< EventPacket > eventPacket, Interface *sourceInterface = nullptr);
 
+			/**
+			 * @brief Report event. Should be called from System.
+			 * 
+			 * @param event event to report.
+			 */
 			static void
 			reportEvent(std::shared_ptr< events::Event > event);
 
+			/**
+			 * @brief Update all registered interfaces.
+			 * 
+			 */
 			static void
 			run();
 		private:

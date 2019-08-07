@@ -33,7 +33,7 @@ namespace prettyhome
 		}
 
 		void
-		ModuleManager::run()
+		ModuleManager::update()
 		{
 			for (modules::Module *module : modules)
 			{
