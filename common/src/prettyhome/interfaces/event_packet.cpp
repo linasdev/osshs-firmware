@@ -10,6 +10,7 @@
 
 #include <prettyhome/interfaces/event_packet.hpp>
 #include <prettyhome/events/event_factory.hpp>
+#include <prettyhome/log/logger.hpp>
 
 namespace prettyhome
 {
@@ -27,7 +28,17 @@ namespace prettyhome
 			if (multiTarget)
 			{
 				uint16_t eventLength = data[7] | (data[8] << 8);
-				serializedEvent = new uint8_t[eventLength];
+				serializedEvent = new (std::nothrow) uint8_t[eventLength];
+
+				if (serializedEvent == nullptr)
+				{
+					PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+						<< "(buffer_length = " << eventLength
+						<< ").\r\n";
+
+					return;
+				}
+
 				std::copy(&data[7], &data[7 + eventLength - 1], &serializedEvent[0]);
 			}
 			else
@@ -35,7 +46,17 @@ namespace prettyhome
 				transmitterMac = data[7] | (data[8] << 8) | (data[9] << 16) | (data[10] << 24);
 
 				uint16_t eventLength = data[11] | (data[12] << 8);
-				serializedEvent = new uint8_t[eventLength];
+				serializedEvent = new (std::nothrow) uint8_t[eventLength];
+
+				if (serializedEvent == nullptr)
+				{
+					PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+						<< "(buffer_length = " << eventLength
+						<< ").\r\n";
+
+					return;
+				}
+
 				std::copy(&data[11], &data[11 + eventLength - 1], &serializedEvent[0]);
 			}
 
@@ -87,7 +108,16 @@ namespace prettyhome
 
 			uint16_t packetLength = multiTarget ? (eventLength + 7) : (eventLength + 11);
 
-			uint8_t *buffer = new uint8_t[packetLength];
+			uint8_t *buffer = new (std::nothrow) uint8_t[packetLength];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << packetLength
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = packetLength & 0xff;
 			buffer[1] = (packetLength >> 8);

@@ -92,14 +92,20 @@ namespace prettyhome
 			PRETTYHOME_LOG_DEBUG("Handling request status event.");
 
 			{
-				std::shared_ptr< events::Event > responseEvent(static_cast< events::Event* > (new events::PwmStatusReadyEvent(
+				std::shared_ptr< events::Event > responseEvent(static_cast< events::Event* > (new (std::nothrow) events::PwmStatusReadyEvent(
 					tlc594x.isEnabled() ? events::PwmStatus::ENABLED : events::PwmStatus::DISABLED,
 					event->getCauseId(),
 					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 					{
-							this->handleEvent(event);
+						this->handleEvent(event);
 					}
 				)));
+
+				if (responseEvent == nullptr)
+				{
+					PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm status ready event.");
+					RF_RETURN();
+				}
 
 				if (event->getCallback() != nullptr)
 				{
@@ -125,14 +131,20 @@ namespace prettyhome
 			tlc594x.enable();
 
 			{
-				std::shared_ptr< events::Event > responseEvent(static_cast< events::Event* > (new events::PwmStatusReadyEvent(
+				std::shared_ptr< events::Event > responseEvent(static_cast< events::Event* > (new (std::nothrow) events::PwmStatusReadyEvent(
 					tlc594x.isEnabled() ? events::PwmStatus::ENABLED : events::PwmStatus::DISABLED,
 					event->getCauseId(),
 					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 					{
-							this->handleEvent(event);
+						this->handleEvent(event);
 					}
 				)));
+
+				if (responseEvent == nullptr)
+				{
+					PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm status ready event.");
+					RF_RETURN();
+				}
 
 				if (event->getCallback() != nullptr)
 				{
@@ -158,14 +170,20 @@ namespace prettyhome
 			tlc594x.disable();
 
 			{
-				std::shared_ptr< events::Event > responseEvent(static_cast< events::Event* > (new events::PwmStatusReadyEvent(
+				std::shared_ptr< events::Event > responseEvent(static_cast< events::Event* > (new (std::nothrow) events::PwmStatusReadyEvent(
 					tlc594x.isEnabled() ? events::PwmStatus::ENABLED : events::PwmStatus::DISABLED,
 					event->getCauseId(),
 					[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 					{
-							this->handleEvent(event);
+						this->handleEvent(event);
 					}
 				)));
+
+				if (responseEvent == nullptr)
+				{
+					PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm status ready event.");
+					RF_RETURN();
+				}
 
 				if (event->getCallback() != nullptr)
 				{
@@ -194,28 +212,40 @@ namespace prettyhome
 
 				if (channel < channels)
 				{
-					events::PwmChannelReadyEvent *successEvent = new events::PwmChannelReadyEvent(
+					events::PwmChannelReadyEvent *successEvent = new (std::nothrow) events::PwmChannelReadyEvent(
 						channel,
 						tlc594x.getChannel(channel),
 						event->getCauseId(),
 						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 						{
-								this->handleEvent(event);
+							this->handleEvent(event);
 						}
 					);
+
+					if (successEvent == nullptr)
+					{
+						PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm channel ready event.");
+						RF_RETURN();
+					}
 
 					responseEvent.reset(static_cast< events::Event* > (successEvent));
 				}
 				else
 				{
-					events::PwmErrorEvent *errorEvent = new events::PwmErrorEvent(
+					events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 						events::PwmError::CHANNEL_OUT_OF_BOUNDS,
 						event->getCauseId(),
 						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 						{
-								this->handleEvent(event);
+							this->handleEvent(event);
 						}
 					);
+
+					if (errorEvent == nullptr)
+					{
+						PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm error event.");
+						RF_RETURN();
+					}
 
 					responseEvent.reset(static_cast< events::Event* > (errorEvent));
 				}
@@ -260,40 +290,58 @@ namespace prettyhome
 				{
 					if (event->getValue() <= 0xfff)
 					{
-						events::PwmUpdateSuccessEvent *successEvent = new events::PwmUpdateSuccessEvent(
+						events::PwmUpdateSuccessEvent *successEvent = new (std::nothrow) events::PwmUpdateSuccessEvent(
 							event->getCauseId(),
 							[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 							{
-									this->handleEvent(event);
+								this->handleEvent(event);
 							}
 						);
+
+						if (successEvent == nullptr)
+						{
+							PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm udpate success event.");
+							RF_RETURN();
+						}
 
 						responseEvent.reset(static_cast< events::Event* > (successEvent));
 					}
 					else
 					{
-						events::PwmErrorEvent *errorEvent = new events::PwmErrorEvent(
+						events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 							events::PwmError::VALUE_OUT_OF_BOUNDS,
 							event->getCauseId(),
 							[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 							{
-									this->handleEvent(event);
+								this->handleEvent(event);
 							}
 						);
+
+						if (errorEvent == nullptr)
+						{
+							PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm error event.");
+							RF_RETURN();
+						}
 
 						responseEvent.reset(static_cast< events::Event* > (errorEvent));
 					}
 				}
 				else
 				{
-					events::PwmErrorEvent *errorEvent = new events::PwmErrorEvent(
+					events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 						events::PwmError::CHANNEL_OUT_OF_BOUNDS,
 						event->getCauseId(),
 						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 						{
-								this->handleEvent(event);
+							this->handleEvent(event);
 						}
 					);
+
+					if (errorEvent == nullptr)
+					{
+						PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm error event.");
+						RF_RETURN();
+					}
 
 					responseEvent.reset(static_cast< events::Event* > (errorEvent));
 				}
@@ -332,28 +380,40 @@ namespace prettyhome
 						tlc594x.getChannel(channel + 3)
 					);
 
-					events::PwmRgbwChannelReadyEvent *successEvent = new events::PwmRgbwChannelReadyEvent(
+					events::PwmRgbwChannelReadyEvent *successEvent = new (std::nothrow) events::PwmRgbwChannelReadyEvent(
 						event->getChannel(),
 						value,
 						event->getCauseId(),
 						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 						{
-								this->handleEvent(event);
+							this->handleEvent(event);
 						}
 					);
+
+					if (successEvent == nullptr)
+					{
+						PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm rgbw channel ready event.");
+						RF_RETURN();
+					}
 
 					responseEvent.reset(static_cast< events::Event* > (successEvent));
 				}
 				else
 				{
-					events::PwmErrorEvent *errorEvent = new events::PwmErrorEvent(
+					events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 						events::PwmError::CHANNEL_OUT_OF_BOUNDS,
 						event->getCauseId(),
 						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 						{
-								this->handleEvent(event);
+							this->handleEvent(event);
 						}
 					);
+
+					if (errorEvent == nullptr)
+					{
+						PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm error event.");
+						RF_RETURN();
+					}
 
 					responseEvent.reset(static_cast< events::Event* > (errorEvent));
 				}
@@ -414,40 +474,58 @@ namespace prettyhome
 					events::PwmRgbwValue value = event->getValue();
 					if (value.red <= 0xfff && value.green <= 0xfff && value.blue <= 0xfff && value.white <= 0xfff)
 					{
-						events::PwmUpdateSuccessEvent *successEvent = new events::PwmUpdateSuccessEvent(
+						events::PwmUpdateSuccessEvent *successEvent = new (std::nothrow) events::PwmUpdateSuccessEvent(
 							event->getCauseId(),
 							[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 							{
-									this->handleEvent(event);
+								this->handleEvent(event);
 							}
 						);
+
+						if (successEvent == nullptr)
+						{
+							PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm update success event.");
+							RF_RETURN();
+						}
 
 						responseEvent.reset(static_cast< events::Event* > (successEvent));
 					}
 					else
 					{
-						events::PwmErrorEvent *errorEvent = new events::PwmErrorEvent(
+						events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 							events::PwmError::VALUE_OUT_OF_BOUNDS,
 							event->getCauseId(),
 							[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 							{
-									this->handleEvent(event);
+								this->handleEvent(event);
 							}
 						);
+
+						if (errorEvent == nullptr)
+						{
+							PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm error event.");
+							RF_RETURN();
+						}
 
 						responseEvent.reset(static_cast< events::Event* > (errorEvent));
 					}
 				}
 				else
 				{
-					events::PwmErrorEvent *errorEvent = new events::PwmErrorEvent(
+					events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 						events::PwmError::CHANNEL_OUT_OF_BOUNDS,
 						event->getCauseId(),
 						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 						{
-								this->handleEvent(event);
+							this->handleEvent(event);
 						}
 					);
+
+					if (errorEvent == nullptr)
+					{
+						PRETTYHOME_LOG_ERROR("Failed to allocate memory for a pwm error event.");
+						RF_RETURN();
+					}
 
 					responseEvent.reset(static_cast< events::Event* > (errorEvent));
 				}

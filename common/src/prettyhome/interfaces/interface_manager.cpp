@@ -66,10 +66,16 @@ namespace prettyhome
 		{
 			PRETTYHOME_LOG_DEBUG_STREAM << "Handling event(type = " << event->getType() << ").\r\n";
 
-			std::shared_ptr< EventPacket > eventPacket(new EventPacket(
+			std::shared_ptr< EventPacket > eventPacket(new (std::nothrow) EventPacket(
 				event,
 				0x00000000
 			));
+
+			if (eventPacket == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR("Failed to allocate memory for an event packet.");
+				return;
+			}
 
 			if (eventPacket->isMalformed())
 			{

@@ -108,7 +108,16 @@ namespace prettyhome
 						frameCount |= frame.data[0];
 
 						uint16_t bufferLength = frame.data[1] | (frame.data[2] << 8);
-						uint8_t *buffer = new uint8_t[bufferLength];
+						uint8_t *buffer = new (std::nothrow) uint8_t[bufferLength];
+
+						if (buffer == nullptr)
+						{
+							PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+								<< "(buffer_length = " << bufferLength
+								<< ").\r\n";
+
+							RF_RETURN();
+						}
 
 						for (uint16_t frameId = 0; frameId < frameCount; frameId++)
 						{
@@ -122,10 +131,16 @@ namespace prettyhome
 								buffer[frameId * 7 + i - 1] = frame.data[i];
 						}
 
-						std::shared_ptr< EventPacket > eventPacket(new EventPacket(
+						std::shared_ptr< EventPacket > eventPacket(new (std::nothrow) EventPacket(
 							std::unique_ptr< const uint8_t[] >(buffer),
 							&InterfaceManager::reportEvent
 						));
+
+						if (eventPacket == nullptr)
+						{
+							PRETTYHOME_LOG_ERROR("Failed to allocate memory for an event packet.");
+							RF_RETURN();
+						}
 
 						if (eventPacket->isMalformed())
 						{
@@ -138,15 +153,30 @@ namespace prettyhome
 					else
 					{
 						uint16_t bufferLength = frame.data[0] | (frame.data[1] << 8);
-						uint8_t *buffer = new uint8_t[bufferLength];
+						uint8_t *buffer = new (std::nothrow) uint8_t[bufferLength];
+
+						if (buffer == nullptr)
+						{
+							PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+								<< "(buffer_length = " << bufferLength
+								<< ").\r\n";
+
+							RF_RETURN();
+						}
 
 						for (uint16_t i = 0; i < bufferLength; i++)
 							buffer[i] = frame.data[i];
 
-						std::shared_ptr< EventPacket > eventPacket(new EventPacket(
+						std::shared_ptr< EventPacket > eventPacket(new (std::nothrow) EventPacket(
 							std::unique_ptr< const uint8_t[] >(buffer),
 							&InterfaceManager::reportEvent
 						));
+
+						if (eventPacket == nullptr)
+						{
+							PRETTYHOME_LOG_ERROR("Failed to allocate memory for an event packet.");
+							RF_RETURN();
+						}
 
 						if (eventPacket->isMalformed())
 						{

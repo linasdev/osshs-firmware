@@ -9,6 +9,7 @@
  */
 
 #include <prettyhome/events/eeprom_event.hpp>
+#include <prettyhome/log/logger.hpp>
 
 namespace prettyhome
 {
@@ -36,7 +37,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		EepromRequestDataEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -90,7 +100,16 @@ namespace prettyhome
 		EepromDataReadyEvent::serialize() const
 		{
 			uint16_t EVENT_LENGTH = 8 + dataLen;
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -153,7 +172,16 @@ namespace prettyhome
 		EepromUpdateDataEvent::serialize() const
 		{
 			uint16_t EVENT_LENGTH = 8 + dataLen;
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -188,7 +216,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		EepromUpdateSuccessEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -218,7 +255,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		EepromErrorEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);

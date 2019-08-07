@@ -9,6 +9,7 @@
  */
 
 #include <prettyhome/events/pwm_event.hpp>
+#include <prettyhome/log/logger.hpp>
 
 namespace prettyhome
 {
@@ -23,7 +24,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmRequestStatusEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -53,7 +63,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmStatusReadyEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -79,7 +98,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmEnableEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -103,7 +131,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmDisableEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -133,7 +170,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmRequestChannelEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -173,7 +219,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmChannelReadyEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -216,7 +271,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmUpdateChannelEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -252,7 +316,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmRequestRgbwChannelEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -295,7 +368,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmRgbwChannelReadyEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -350,7 +432,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmUpdateRgbwChannelEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -389,7 +480,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmUpdateSuccessEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);
@@ -419,7 +519,16 @@ namespace prettyhome
 		std::unique_ptr< const uint8_t[] >
 		PwmErrorEvent::serialize() const
 		{
-			uint8_t *buffer = new uint8_t[EVENT_LENGTH];
+			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
+
+			if (buffer == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << EVENT_LENGTH
+					<< ").\r\n";
+
+				return std::unique_ptr< const uint8_t[] >();
+			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
 			buffer[1] = (EVENT_LENGTH >> 8);

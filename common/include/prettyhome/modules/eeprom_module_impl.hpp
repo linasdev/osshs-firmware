@@ -66,7 +66,16 @@ namespace prettyhome
 				<< ", data_len = " << event->getDataLen()
 				<< ").\r\n";
 
-			currentData.reset(new uint8_t[event->getDataLen()]);
+			currentData.reset(new (std::nothrow) uint8_t[event->getDataLen()]);
+
+			if (currentData == nullptr)
+			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << event->getDataLen()
+					<< ").\r\n";
+
+				RF_RETURN();
+			}
 
 			RF_WAIT_UNTIL(ResourceLock< I2cMaster >::tryLock());
 			currentSuccess = RF_CALL(i2cEeprom.read(event->getAddress(), currentData.get(), event->getDataLen()));
@@ -77,7 +86,7 @@ namespace prettyhome
 
 				if (currentSuccess)
 				{
-					events::EepromDataReadyEvent *successEvent = new events::EepromDataReadyEvent(
+					events::EepromDataReadyEvent *successEvent = new (std::nothrow) events::EepromDataReadyEvent(
 						currentData,
 						event->getDataLen(),
 						event->getCauseId(),
@@ -87,11 +96,17 @@ namespace prettyhome
 						}
 					);
 
+					if (successEvent == nullptr)
+					{
+						PRETTYHOME_LOG_ERROR("Failed to allocate memory for an eeprom data ready event.");
+						RF_RETURN();
+					}
+
 					responseEvent.reset(static_cast< events::Event* > (successEvent));
 				}
 				else
 				{
-					events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(
+					events::EepromErrorEvent *errorEvent = new (std::nothrow) events::EepromErrorEvent(
 						events::EepromError::READ_FAILED,
 						event->getCauseId(),
 						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
@@ -99,6 +114,12 @@ namespace prettyhome
 								this->handleEvent(event);
 						}
 					);
+
+					if (errorEvent == nullptr)
+					{
+						PRETTYHOME_LOG_ERROR("Failed to allocate memory for an eeprom error event.");
+						RF_RETURN();
+					}
 
 					responseEvent.reset(static_cast< events::Event* > (errorEvent));
 				}
@@ -140,7 +161,7 @@ namespace prettyhome
 
 				if (currentSuccess)
 				{
-					events::EepromUpdateSuccessEvent *successEvent = new events::EepromUpdateSuccessEvent(
+					events::EepromUpdateSuccessEvent *successEvent = new (std::nothrow) events::EepromUpdateSuccessEvent(
 						event->getCauseId(),
 						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
 						{
@@ -148,11 +169,17 @@ namespace prettyhome
 						}
 					);
 
+					if (successEvent == nullptr)
+					{
+						PRETTYHOME_LOG_ERROR("Failed to allocate memory for an eeprom update success event.");
+						RF_RETURN();
+					}
+
 					responseEvent.reset(static_cast< events::Event* > (successEvent));
 				}
 				else
 				{
-					events::EepromErrorEvent *errorEvent = new events::EepromErrorEvent(
+					events::EepromErrorEvent *errorEvent = new (std::nothrow) events::EepromErrorEvent(
 						events::EepromError::WRITE_FAILED,
 						event->getCauseId(),
 						[=](std::shared_ptr< prettyhome::events::Event > event) -> void
@@ -160,6 +187,12 @@ namespace prettyhome
 								this->handleEvent(event);
 						}
 					);
+
+					if (errorEvent == nullptr)
+					{
+						PRETTYHOME_LOG_ERROR("Failed to allocate memory for an eeprom error event.");
+						RF_RETURN();
+					}
 
 					responseEvent.reset(static_cast< events::Event* > (errorEvent));
 				}
