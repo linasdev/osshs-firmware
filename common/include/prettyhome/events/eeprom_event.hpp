@@ -84,7 +84,7 @@ namespace prettyhome
 			std::unique_ptr< const uint8_t[] >
 			serialize() const;
 		private:
-			const std::shared_ptr< uint8_t[] > data;
+			std::shared_ptr< uint8_t[] > data;
 			uint16_t dataLen;
 		};
 
@@ -114,7 +114,7 @@ namespace prettyhome
 			serialize() const;
 		private:
 			uint16_t address;
-			const std::shared_ptr< uint8_t[] > data;
+			std::shared_ptr< uint8_t[] > data;
 			uint16_t dataLen;
 		};
 

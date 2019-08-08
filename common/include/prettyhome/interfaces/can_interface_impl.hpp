@@ -70,7 +70,7 @@ namespace prettyhome
 			uint32_t
 			CanInterface< Can >::generateCurrentFrameIdentifier()
 			{
-				constexpr uint32_t temp_mac = 0x01234567;
+				constexpr uint32_t temp_mac = 0x00000000;
 				uint32_t identifier = temp_mac & 0xffff;
 
 				identifier |= (0b1 << 28);
@@ -127,8 +127,7 @@ namespace prettyhome
 								Can::getMessage(frame);
 							}
 
-							for (uint16_t i = 1; i < 8; i++)
-								buffer[frameId * 7 + i - 1] = frame.data[i];
+							std::copy(&frame.data[1], &frame.data[8], &buffer[frameId * 7]);
 						}
 
 						std::shared_ptr< EventPacket > eventPacket(new (std::nothrow) EventPacket(
@@ -164,8 +163,7 @@ namespace prettyhome
 							RF_RETURN();
 						}
 
-						for (uint16_t i = 0; i < bufferLength; i++)
-							buffer[i] = frame.data[i];
+						std::copy(&frame.data[0], &frame.data[bufferLength], &buffer[0]);
 
 						std::shared_ptr< EventPacket > eventPacket(new (std::nothrow) EventPacket(
 							std::unique_ptr< const uint8_t[] >(buffer),
@@ -238,10 +236,7 @@ namespace prettyhome
 				modm::can::Message frame(generateCurrentFrameIdentifier(), currentBufferLength);
 				frame.setExtended(true);
 
-				for (uint16_t i = 0; i < currentBufferLength; i++)
-				{
-					frame.data[i] = currentBuffer[i];
-				}
+				std::copy(&currentBuffer[0], &currentBuffer[currentBufferLength], &frame.data[0]);
 
 				Can::sendMessage(frame);
 			}
@@ -259,10 +254,7 @@ namespace prettyhome
 					frame.setExtended(true);
 					frame.data[0] = currentFrameId ? currentFrameId & 0xff : currentFrameCount & 0xff;
 
-					for (uint16_t i = 1; i < len; i++)
-					{
-						frame.data[i] = currentBuffer[currentFrameId * 7 + i - 1];
-					}
+					std::copy(&currentBuffer[0], &currentBuffer[currentFrameId * 7], &frame.data[1]);
 
 					Can::sendMessage(frame);
 				}

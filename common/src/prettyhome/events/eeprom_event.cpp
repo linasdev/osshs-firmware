@@ -70,18 +70,31 @@ namespace prettyhome
 		EepromDataReadyEvent::EepromDataReadyEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
 			: EventRegistrar<EepromDataReadyEvent>(data[4] | (data[5] << 8), callback)
 		{
+			uint16_t eventLength = data[0] | (data[1] << 8);
 			dataLen = data[6] | (data[7] << 8);
 
-			if (8 + dataLen == (data[0] | (data[1] << 8)))
+			if (8 + dataLen != eventLength)
 			{
-				for (uint16_t i = 0; i < dataLen; i++)
-				{
-					this->data[i] = data[8 + i];
-				}
+				PRETTYHOME_LOG_WARNING_STREAM << "Failed to construct an eeprom data ready event"
+					<< "(event_length = " << eventLength
+					<< ", data_length = " << dataLen
+					<< ").\r\n";
+
+				return;
 			}
-			else
+
+			this->data.reset(new (std::nothrow) uint8_t[dataLen]);
+
+			if (this->data == nullptr)
 			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << dataLen
+					<< ").\r\n";
+
+				return;
 			}
+
+			std::copy(&data[8], &data[8 + dataLen], &this->data[0]);
 		}
 
 		const std::shared_ptr< uint8_t[] >
@@ -123,10 +136,7 @@ namespace prettyhome
 			buffer[6] = dataLen & 0xff;
 			buffer[7] = (dataLen >> 8);
 
-			for (uint16_t i = 0; i < dataLen; i++)
-			{
-				buffer[8 + i] = data[i];
-			}
+			std::copy(&data[0], &data[dataLen], &buffer[8]);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}
@@ -135,19 +145,32 @@ namespace prettyhome
 		EepromUpdateDataEvent::EepromUpdateDataEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
 			: EventRegistrar<EepromUpdateDataEvent>(data[4] | (data[5] << 8), callback)
 		{
+			uint16_t eventLength = data[0] | (data[1] << 8);
 			address = data[6] | (data[7] << 8);
 			dataLen = data[8] | (data[9] << 8);
 
-			if (10 + dataLen == (data[0] | (data[1] << 8)))
+			if (10 + dataLen != eventLength)
 			{
-				for (uint16_t i = 0; i < dataLen; i++)
-				{
-					this->data[i] = data[10 + i];
-				}
+				PRETTYHOME_LOG_WARNING_STREAM << "Failed to construct an eeprom update data event"
+					<< "(event_length = " << eventLength
+					<< ", data_length = " << dataLen
+					<< ").\r\n";
+
+				return;
 			}
-			else
+
+			this->data.reset(new (std::nothrow) uint8_t[dataLen]);
+
+			if (this->data == nullptr)
 			{
+				PRETTYHOME_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
+					<< "(buffer_length = " << dataLen
+					<< ").\r\n";
+
+				return;
 			}
+
+			std::copy(&data[10], &data[10 + dataLen], &this->data[0]);
 		}
 
 		uint16_t
@@ -198,10 +221,7 @@ namespace prettyhome
 			buffer[8] = dataLen & 0xff;
 			buffer[9] = (dataLen >> 8);
 
-			for (uint16_t i = 0; i < dataLen; i++)
-			{
-				buffer[10 + i] = data[i];
-			}
+			std::copy(&data[0], &data[dataLen], &buffer[10]);
 
 			return std::unique_ptr< const uint8_t[] >(buffer);
 		}

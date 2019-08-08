@@ -39,7 +39,7 @@ namespace prettyhome
 					return;
 				}
 
-				std::copy(&data[7], &data[7 + eventLength - 1], &serializedEvent[0]);
+				std::copy(&data[7], &data[7 + eventLength], &serializedEvent[0]);
 			}
 			else
 			{
@@ -57,7 +57,7 @@ namespace prettyhome
 					return;
 				}
 
-				std::copy(&data[11], &data[11 + eventLength - 1], &serializedEvent[0]);
+				std::copy(&data[11], &data[11 + eventLength], &serializedEvent[0]);
 			}
 
 			uint16_t eventType = serializedEvent[2] | (serializedEvent[3] << 8);
