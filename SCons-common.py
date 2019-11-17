@@ -15,7 +15,7 @@ from os.path import join, abspath
 Import('project_name')
 
 build_path = "../build/" + project_name
-profile = ARGUMENTS.get("profile")
+profile = ARGUMENTS.get("profile", "release")
 
 generated_paths = [
     'modm'
@@ -27,6 +27,7 @@ env = DefaultEnvironment(tools=[], ENV=os.environ)
 
 env["CONFIG_BUILD_BASE"] = abspath(build_path)
 env["CONFIG_PROJECT_NAME"] = project_name
+env["CONFIG_PROFILE"] = profile
 
 env.SConscript(dirs=generated_paths, exports="env")
 
