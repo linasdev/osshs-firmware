@@ -22,47 +22,37 @@
  * SOFTWARE.
  */
 
-#include <osshs/system.hpp>
-#include <osshs/interfaces/uart_interface.hpp>
-#include <osshs/interfaces/can_interface.hpp>
+#include <osshs/modules/module_manager.hpp>
 #include <osshs/log/logger.hpp>
 
-#include "./board.hpp"
-
-using namespace modm::literals;
-
-#undef	MODM_LOG_LEVEL
-#define	MODM_LOG_LEVEL modm::log::DEBUG
-
-OSSHS_ENABLE_LOGGER(modm::platform::Usart1, modm::IOBuffer::BlockIfFull);
-
-int
-main()
+namespace osshs
 {
-	osshs::board::initialize();
+	namespace modules
+	{
+		std::vector< modules::Module* > ModuleManager::modules;
 
-	modm::platform::Usart1::connect< modm::platform::GpioA9::Tx >();
-	modm::platform::Usart1::initialize< osshs::board::SystemClock, 115200_Bd >();
+		void
+		ModuleManager::initialize()
+		{
+			OSSHS_LOG_INFO("Initializing module manager.");
+		}
 
-	modm::platform::Usart2::connect< modm::platform::GpioA2::Tx, modm::platform::GpioA3::Rx >();
-	modm::platform::Usart2::initialize< osshs::board::SystemClock, 115200_Bd >();
+		void
+		ModuleManager::registerModule(modules::Module *module)
+		{
+			OSSHS_LOG_INFO_STREAM << "Registering module(type = " << module->getModuleTypeId() << ").\r\n";
 
-	modm::platform::Can::connect< modm::platform::GpioA11::Rx, modm::platform::GpioA12::Tx > ();
-	modm::platform::Can::initialize< osshs::board::SystemClock, 50_kbps > (0);
+			modules.push_back(module);
+			module->initialize();
+		}
 
-	OSSHS_LOG_CLEAN();
-
-	osshs::System::initialize();
-
-	osshs::System::registerInterface(
-		new osshs::interfaces::UartInterface< modm::platform::Usart2 > ()
-	);
-
-	osshs::System::registerInterface(
-		new osshs::interfaces::CanInterface< modm::platform::Can > ()
-	);
-
-	osshs::System::loop();
-
-	return 0;
+		void
+		ModuleManager::update()
+		{
+			for (modules::Module *module : modules)
+			{
+				module->run();
+			}
+		}
+	}
 }

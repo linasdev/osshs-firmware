@@ -1,8 +1,8 @@
 <library>
 	<options>
 		<option name="modm:build:scons:include_sconstruct">False</option>
-		<option name="modm:build:project.name">PrettyHome_PROG_module</option>
-		<option name="modm:build:build.path">../build/PrettyHome_PROG_module</option>
+		<option name="modm:build:project.name">osshs-prog-module</option>
+		<option name="modm:build:build.path">../build/osshs-prog-module</option>
 	</options>
 
   <modules>

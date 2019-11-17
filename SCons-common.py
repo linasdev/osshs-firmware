@@ -1,4 +1,5 @@
 # Copyright (c) 2017-2018, Niklas Hauser
+# Copyright (c) 2019, Linas Nikiperavicius
 #
 # This file is part of the modm project.
 #

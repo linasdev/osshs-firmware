@@ -22,47 +22,33 @@
  * SOFTWARE.
  */
 
+#include <osshs/modules/module.hpp>
 #include <osshs/system.hpp>
-#include <osshs/interfaces/uart_interface.hpp>
-#include <osshs/interfaces/can_interface.hpp>
 #include <osshs/log/logger.hpp>
 
-#include "./board.hpp"
-
-using namespace modm::literals;
-
-#undef	MODM_LOG_LEVEL
-#define	MODM_LOG_LEVEL modm::log::DEBUG
-
-OSSHS_ENABLE_LOGGER(modm::platform::Usart1, modm::IOBuffer::BlockIfFull);
-
-int
-main()
+namespace osshs
 {
-	osshs::board::initialize();
+	namespace modules
+	{
+		void
+		Module::initialize()
+		{
+			OSSHS_LOG_INFO("Initializing module.");
 
-	modm::platform::Usart1::connect< modm::platform::GpioA9::Tx >();
-	modm::platform::Usart1::initialize< osshs::board::SystemClock, 115200_Bd >();
+			System::subscribeEvent(events::EventSelector(0xff00, static_cast< uint16_t >(getModuleTypeId()) << 8),
+				[=](std::shared_ptr< events::Event > event) -> void
+				{
+					this->handleEvent(event);
+				}
+			);
+		}
 
-	modm::platform::Usart2::connect< modm::platform::GpioA2::Tx, modm::platform::GpioA3::Rx >();
-	modm::platform::Usart2::initialize< osshs::board::SystemClock, 115200_Bd >();
+		void
+		Module::handleEvent(std::shared_ptr< events::Event > event)
+		{
+			OSSHS_LOG_DEBUG_STREAM << "Handling event(type = " << event->getType() << ").\r\n";
 
-	modm::platform::Can::connect< modm::platform::GpioA11::Rx, modm::platform::GpioA12::Tx > ();
-	modm::platform::Can::initialize< osshs::board::SystemClock, 50_kbps > (0);
-
-	OSSHS_LOG_CLEAN();
-
-	osshs::System::initialize();
-
-	osshs::System::registerInterface(
-		new osshs::interfaces::UartInterface< modm::platform::Usart2 > ()
-	);
-
-	osshs::System::registerInterface(
-		new osshs::interfaces::CanInterface< modm::platform::Can > ()
-	);
-
-	osshs::System::loop();
-
-	return 0;
+			eventQueue.push(event);
+		}
+	}
 }

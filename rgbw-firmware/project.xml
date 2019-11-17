@@ -1,8 +1,8 @@
 <library>
 	<options>
 		<option name="modm:build:scons:include_sconstruct">False</option>
-		<option name="modm:build:project.name">PrettyHome_RGBW_module</option>
-		<option name="modm:build:build.path">../build/PrettyHome_RGBW_module</option>
+		<option name="modm:build:project.name">osshs-rgbw-module</option>
+		<option name="modm:build:build.path">../build/osshs-rgbw-module</option>
 	</options>
 
   <modules>

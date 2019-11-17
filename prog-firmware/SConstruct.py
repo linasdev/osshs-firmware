@@ -1,4 +1,5 @@
 # Copyright (c) 2017-2018, Niklas Hauser
+# Copyright (c) 2019, Linas Nikiperavicius
 #
 # This file is part of the modm project.
 #
@@ -11,7 +12,7 @@
 import os
 from os.path import join, abspath
 
-project_name = "PrettyHome_PROG_module"
+project_name = "osshs-prog-module"
 
 SConscript('../SCons-common.py', src_dir = './', exports = [
     'project_name'
