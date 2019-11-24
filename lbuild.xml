@@ -1,7 +1,7 @@
 <library>
 	<repositories>
 		<repository>
-			<path>./modm/repo.lb</path>
+			<path>./ext/modm/repo.lb</path>
 		</repository>
 	</repositories>
 
@@ -11,6 +11,7 @@
 		<option name="modm:build:openocd.cfg">./openocd.cfg</option>
 		<option name="modm:build:project.name">osshs</option>
 		<option name="modm:build:scons:cache_dir">$cache</option>
+		<option name="modm:platform:cortex-m:linkerscript.flash_offset">0x4000</option>
 	</options>
 
 	<modules>
