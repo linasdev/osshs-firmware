@@ -22,32 +22,28 @@
  * SOFTWARE.
  */
 
-#ifndef OSSHS_LOG_PREFIXER_HPP
-	#error "Don't include this file directly, use 'log_prefixer.hpp' instead!"
-#endif
-
+#include <osshs/log/log_prefixer.hpp>
 #include <osshs/time.hpp>
 
 namespace osshs
 {
 	namespace log
 	{
-		template< modm::log::Level level, uint32_t line >
 		modm::IOStream&
-		LogPrefixer::writePrefix(modm::IOStream &stream, const char* file)
+		LogPrefixer::writePrefix(modm::IOStream &stream, modm::log::Level level, const char* file, uint32_t line)
 		{
 			stream << '[';
-			stream << osshs::Time::getSystemTime< float, osshs::Time::Precision::Seconds >();
+			stream << osshs::Time::getSystemTime<float, osshs::Time::Precision::Seconds>();
 			stream << ']';
 
 			stream << '[';
-			if constexpr(level == modm::log::DEBUG)
+			if (level == modm::log::DEBUG)
 				stream << "DEBUG";
-			if constexpr(level == modm::log::INFO)
+			if (level == modm::log::INFO)
 				stream << "INFO";
-			if constexpr(level == modm::log::WARNING)
+			if (level == modm::log::WARNING)
 				stream << "WARNING";
-			if constexpr(level == modm::log::ERROR)
+			if (level == modm::log::ERROR)
 				stream << "ERROR";
 			stream << ']';
 

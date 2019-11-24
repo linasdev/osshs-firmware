@@ -37,19 +37,16 @@ namespace osshs
 			/**
 			 * @brief Write a log message prefix to a stream.
 			 * 
-			 * @tparam level severity level. One of: modm::log::DISABLED, modm::log::DEBUG, modm::log::INFO, modm::log::WARNING or modm::log::ERROR.
-			 * @tparam line line from which the message was logged. Usually __LINE__.
 			 * @param stream stream to which the prefix should be written.
-			 * @param file File file from which the message was logged. Usually __FILENAME__.
+			 * @param level severity level. One of: modm::log::DISABLED, modm::log::DEBUG, modm::log::INFO, modm::log::WARNING or modm::log::ERROR.
+			 * @param file file from which the message was logged. Usually __FILENAME__.
+			 * @param line line from which the message was logged. Usually __LINE__.
 			 * @return modm::IOStream& stream to which the prefix was written.
 			 */
-			template< modm::log::Level level, uint32_t line >
 			static modm::IOStream&
-			writePrefix(modm::IOStream &stream, const char *file);
+			writePrefix(modm::IOStream &stream, modm::log::Level level, const char *file, uint32_t line);
 		};
 	}
 }
-
-#include <osshs/log/log_prefixer_impl.hpp>
 
 #endif  // OSSHS_LOG_PREFIXER_HPP

@@ -41,7 +41,7 @@ namespace osshs
 	modm::IODeviceWrapper< device, behavior > loggerDevice; \
 	modm::log::Logger osshs::log::logger(loggerDevice);
 
-#define OSSHS_PREFIXED_LOGGER(level) osshs::log::LogPrefixer::writePrefix< level, __LINE__ >(osshs::log::logger, __FILENAME__)
+#define OSSHS_PREFIXED_LOGGER(level) osshs::log::LogPrefixer::writePrefix(osshs::log::logger, level, __FILENAME__, __LINE__)
 
 #define OSSHS_LOGGER \
 	if ( false ){} \
