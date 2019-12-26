@@ -1,4 +1,4 @@
-# Open-source Smart House System
+# Firmware for the Open-source Smart House System
 TODO: Add project description.
 
 ## Getting Started
