@@ -12,7 +12,7 @@
 import os
 from os.path import join, abspath
 
-project_name = "osshs-prog-module"
+project_name = 'osshs-prog-module'
 
 SConscript('../SCons-common.py', src_dir = './', exports = [
     'project_name'

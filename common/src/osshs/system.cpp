@@ -24,7 +24,7 @@
 
 #include <osshs/system.hpp>
 #include <osshs/time.hpp>
-#include <osshs/interfaces/interface_manager.hpp>
+#include <osshs/protocol/interfaces/interface_manager.hpp>
 #include <osshs/modules/module_manager.hpp>
 #include <osshs/log/logger.hpp>
 
@@ -38,16 +38,16 @@ namespace osshs
 		OSSHS_LOG_INFO("Initializing system.");
 
 		Time::initialize();
-		interfaces::InterfaceManager::initialize();
+		protocol::interfaces::InterfaceManager::initialize();
 		modules::ModuleManager::initialize();
 	}
 
 	void
-	System::registerInterface(interfaces::Interface *interface)
+	System::registerInterface(protocol::interfaces::Interface *interface)
 	{
 		OSSHS_LOG_INFO("Registering interface.");
 
-		interfaces::InterfaceManager::registerInterface(interface);
+		protocol::interfaces::InterfaceManager::registerInterface(interface);
 	}
 
 	void
@@ -82,7 +82,7 @@ namespace osshs
 	{
 		do
 		{
-			interfaces::InterfaceManager::run();
+			protocol::interfaces::InterfaceManager::run();
 			modules::ModuleManager::update();
 		}
 		while (true);

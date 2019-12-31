@@ -23,8 +23,8 @@
  */
 
 #include <osshs/system.hpp>
-#include <osshs/interfaces/uart_interface.hpp>
-#include <osshs/interfaces/can_interface.hpp>
+#include <osshs/protocol/interfaces/uart_interface.hpp>
+#include <osshs/protocol/interfaces/can_interface.hpp>
 #include <osshs/log/logger.hpp>
 
 #include "./board.hpp"
@@ -41,25 +41,25 @@ main()
 {
 	osshs::board::initialize();
 
-	modm::platform::Usart1::connect< modm::platform::GpioA9::Tx >();
-	modm::platform::Usart1::initialize< osshs::board::SystemClock, 115200_Bd >();
+	modm::platform::Usart1::connect<modm::platform::GpioA9::Tx>();
+	modm::platform::Usart1::initialize<osshs::board::SystemClock, 115200_Bd>();
 
-	modm::platform::Usart2::connect< modm::platform::GpioA2::Tx, modm::platform::GpioA3::Rx >();
-	modm::platform::Usart2::initialize< osshs::board::SystemClock, 115200_Bd >();
+	modm::platform::Usart2::connect<modm::platform::GpioA2::Tx, modm::platform::GpioA3::Rx >();
+	modm::platform::Usart2::initialize<osshs::board::SystemClock, 115200_Bd>();
 
-	modm::platform::Can::connect< modm::platform::GpioA11::Rx, modm::platform::GpioA12::Tx > ();
-	modm::platform::Can::initialize< osshs::board::SystemClock, 50_kbps > (0);
+	modm::platform::Can::connect<modm::platform::GpioA11::Rx, modm::platform::GpioA12::Tx > ();
+	modm::platform::Can::initialize<osshs::board::SystemClock, 50_kbps> (0);
 
 	OSSHS_LOG_CLEAN();
 
 	osshs::System::initialize();
 
 	osshs::System::registerInterface(
-		new osshs::interfaces::UartInterface< modm::platform::Usart2 > ()
+		new osshs::protocol::interfaces::UartInterface<modm::platform::Usart2> ()
 	);
 
 	osshs::System::registerInterface(
-		new osshs::interfaces::CanInterface< modm::platform::Can > ()
+		new osshs::protocol::interfaces::CanInterface<modm::platform::Can> ()
 	);
 
 	osshs::System::loop();

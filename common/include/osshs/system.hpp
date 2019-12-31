@@ -25,7 +25,7 @@
 #ifndef OSSHS_SYSTEM_HPP
 #define OSSHS_SYSTEM_HPP
 
-#include <osshs/interfaces/interface.hpp>
+#include <osshs/protocol/interfaces/interface.hpp>
 #include <osshs/modules/module.hpp>
 #include <osshs/events/event_selector.hpp>
 
@@ -47,7 +47,7 @@ namespace osshs
 		 * @param interface interface to register.
 		 */
 		static void
-		registerInterface(interfaces::Interface *interface);
+		registerInterface(protocol::interfaces::Interface *interface);
 
 		/**
 		 * @brief Register a module to ModuleManager.

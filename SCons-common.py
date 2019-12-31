@@ -14,41 +14,43 @@ from os.path import join, abspath
 
 Import('project_name')
 
-build_path = "../build/" + project_name
-profile = ARGUMENTS.get("profile", "release")
+build_path = '../build/' + project_name
+profile = ARGUMENTS.get('profile', 'debug')
 
 generated_paths = [
     'modm'
 ]
 
-CacheDir("../build/cache")
+CacheDir('../build/cache')
 
 env = DefaultEnvironment(tools=[], ENV=os.environ)
 
-env["CONFIG_BUILD_BASE"] = abspath(build_path)
-env["CONFIG_PROJECT_NAME"] = project_name
-env["CONFIG_PROFILE"] = profile
+env['CONFIG_BUILD_BASE'] = abspath(build_path)
+env['CONFIG_PROJECT_NAME'] = project_name
+env['CONFIG_PROFILE'] = profile
 
-env.SConscript(dirs=generated_paths, exports="env")
+env.SConscript(dirs=generated_paths, exports='env')
 
-env.Append(CPPPATH=".")
-ignored = ["cmake-*", ".lbuild_cache", build_path] + generated_paths
+env.Append(CPPPATH='.')
+ignored = ['cmake-*', '.lbuild_cache', build_path] + generated_paths
 sources = []
 
 sources += env.FindSourceFiles('.', ignorePaths=ignored)
 sources += env.FindSourceFiles('../common/src', ignorePaths=ignored)
+sources += env.FindSourceFiles('../ext/osshs-protocol/src', ignorePaths=ignored)
 
 env.Append(CPPPATH = [
-    "../common/include/"
+    '../common/include',
+    '../ext/osshs-protocol/include'
 ])
 
 env.Append(CCFLAGS = [
-    "-fno-exceptions"
+    '-fno-exceptions'
 ])
 
-if profile == "debug":
+if profile == 'debug':
     env.Append(CCFLAGS = [
-        "-O0",
+        '-O0',
     ])
 
 env.BuildTarget(sources)

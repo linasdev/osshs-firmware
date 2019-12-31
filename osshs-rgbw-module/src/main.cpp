@@ -23,7 +23,7 @@
  */
 
 #include <osshs/system.hpp>
-#include <osshs/interfaces/can_interface.hpp>
+#include <osshs/protocol/interfaces/can_interface.hpp>
 #include <osshs/modules/eeprom_module.hpp>
 #include <osshs/modules/pwm_module.hpp>
 #include <osshs/log/logger.hpp>
@@ -42,41 +42,41 @@ main()
 {
 	osshs::board::initialize();
 
-	modm::platform::Usart1::connect< modm::platform::GpioA9::Tx >();
-	modm::platform::Usart1::initialize< osshs::board::SystemClock, 115200_Bd >();
+	modm::platform::Usart1::connect<modm::platform::GpioA9::Tx>();
+	modm::platform::Usart1::initialize<osshs::board::SystemClock, 115200_Bd>();
 
-	modm::platform::Can::connect< modm::platform::GpioA11::Rx, modm::platform::GpioA12::Tx > ();
-	modm::platform::Can::initialize< osshs::board::SystemClock, 50_kbps > (0);
+	modm::platform::Can::connect<modm::platform::GpioA11::Rx, modm::platform::GpioA12::Tx> ();
+	modm::platform::Can::initialize<osshs::board::SystemClock, 50_kbps> (0);
 
-	modm::platform::I2cMaster1::connect< modm::platform::GpioB6::Scl, modm::platform::GpioB7::Sda >();
-	modm::platform::I2cMaster1::initialize< osshs::board::SystemClock, 360_kBd >();
+	modm::platform::I2cMaster1::connect<modm::platform::GpioB6::Scl, modm::platform::GpioB7::Sda>();
+	modm::platform::I2cMaster1::initialize<osshs::board::SystemClock, 360_kBd>();
 
-	modm::platform::SpiMaster1::connect< modm::platform::GpioA5::Sck, modm::platform::GpioA7::Mosi >();
-	modm::platform::SpiMaster1::initialize< osshs::board::SystemClock, 1125_kBd >();
+	modm::platform::SpiMaster1::connect<modm::platform::GpioA5::Sck, modm::platform::GpioA7::Mosi>();
+	modm::platform::SpiMaster1::initialize<osshs::board::SystemClock, 1125_kBd>();
 
 	OSSHS_LOG_CLEAN();
 
 	osshs::System::initialize();
 
 	osshs::System::registerInterface(
-		new osshs::interfaces::CanInterface< modm::platform::Can > ()
+		new osshs::protocol::interfaces::CanInterface<modm::platform::Can> ()
 	);
 
-	std::shared_ptr< osshs::events::Event > event(new osshs::events::EepromRequestDataEvent(0x01, 0x02));
-	osshs::interfaces::InterfaceManager::reportEvent(event);
+	std::shared_ptr<osshs::events::Event> event(new osshs::events::EepromRequestDataEvent(0x01, 0x02));
+	osshs::protocol::interfaces::InterfaceManager::reportEvent(event);
 
 	event.reset(new osshs::events::EepromUpdateSuccessEvent());
-	osshs::interfaces::InterfaceManager::reportEvent(event);
+	osshs::protocol::interfaces::InterfaceManager::reportEvent(event);
 
 	event.reset(new osshs::events::PwmRgbwChannelReadyEvent(0x00, osshs::events::PwmRgbwValue(0x01, 0x02, 0x03, 0x04)));
-	osshs::interfaces::InterfaceManager::reportEvent(event);
+	osshs::protocol::interfaces::InterfaceManager::reportEvent(event);
 
 	osshs::System::registerModule(
-		new osshs::modules::EepromModule< modm::platform::I2cMaster1 >()
+		new osshs::modules::EepromModule<modm::platform::I2cMaster1>()
 	);
 
 	osshs::System::registerModule(
-		new osshs::modules::PwmModule< 24, modm::platform::SpiMaster1, modm::platform::GpioA4, modm::platform::GpioA3 >()
+		new osshs::modules::PwmModule<24, modm::platform::SpiMaster1, modm::platform::GpioA4, modm::platform::GpioA3>()
 	);
 
 	osshs::System::loop();
