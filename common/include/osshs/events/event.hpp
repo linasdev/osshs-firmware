@@ -35,12 +35,12 @@ namespace osshs
 	{
 		class Event;
 
-		typedef std::function< void (std::shared_ptr< Event >) > EventCallback;
+		typedef std::function<void (std::shared_ptr<Event>)> EventCallback;
 
 		class Event
 		{
 		public:
-			static constexpr uint16_t CAUSE_ID_GENERATE = static_cast< uint16_t >(-1);
+			static constexpr uint16_t CAUSE_ID_GENERATE = static_cast<uint16_t>(-1);
 
 			/**
 			 * @brief Construct event.
@@ -78,14 +78,14 @@ namespace osshs
 			/**
 			 * @brief Serialize this event.
 			 * 
-			 * @return std::unique_ptr< const uint8_t[] > serialized event or nullptr if serialization failed.
+			 * @return Serialized event or nullptr if serialization failed.
 			 */
-			virtual std::unique_ptr< const uint8_t[] >
+			virtual std::unique_ptr<const uint8_t[]>
 			serialize() const = 0;
 		protected:
 			uint16_t causeId;
 		private:
-			typedef std::function< std::shared_ptr< Event > (std::unique_ptr< const uint8_t[] >, EventCallback) > EventMaker;
+			typedef std::function<std::shared_ptr<Event> (std::unique_ptr<const uint8_t[]>, EventCallback)> EventMaker;
 			static uint16_t nextCauseId;
 			uint16_t type;
 			EventCallback callback;
@@ -95,10 +95,10 @@ namespace osshs
 			Event&
 			operator=(const Event&) = delete;
 
-			static std::unordered_map< uint16_t, EventMaker >&
+			static std::unordered_map<uint16_t, EventMaker>&
 			eventRegister();
 
-			template< typename DerivedEvent >
+			template<typename DerivedEvent>
 			friend class EventRegistrar;
 
 			friend class EventFactory;

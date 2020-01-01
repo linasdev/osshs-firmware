@@ -72,7 +72,7 @@ namespace osshs
 		 * @param event event to report.
 		 */
 		static void
-		reportEvent(std::shared_ptr< events::Event > event);
+		reportEvent(std::shared_ptr<events::Event> event);
 
 		/**
 		 * @brief Enter main system loop. Does not return.
@@ -81,7 +81,7 @@ namespace osshs
 		static void
 		loop();
 	private:
-		static std::unordered_map< events::EventSelector, std::vector< events::EventCallback > > eventSubscriptions;
+		static std::unordered_map<events::EventSelector, std::vector<events::EventCallback>> eventSubscriptions;
 	};
 }
 

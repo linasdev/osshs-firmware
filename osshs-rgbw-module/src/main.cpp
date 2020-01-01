@@ -54,8 +54,6 @@ main()
 	modm::platform::SpiMaster1::connect<modm::platform::GpioA5::Sck, modm::platform::GpioA7::Mosi>();
 	modm::platform::SpiMaster1::initialize<osshs::board::SystemClock, 1125_kBd>();
 
-	OSSHS_LOG_CLEAN();
-
 	osshs::System::initialize();
 
 	osshs::System::registerInterface(

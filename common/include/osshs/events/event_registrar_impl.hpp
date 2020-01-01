@@ -30,27 +30,27 @@ namespace osshs
 {
 	namespace events
 	{
-		template< typename DerivedEvent >
-		bool EventRegistrar< DerivedEvent >::registered = EventRegistrar< DerivedEvent >::registerDerivedEvent();
+		template<typename DerivedEvent>
+		bool EventRegistrar<DerivedEvent>::registered = EventRegistrar<DerivedEvent>::registerDerivedEvent();
 
-		template< typename DerivedEvent >
+		template<typename DerivedEvent>
 		bool
-		EventRegistrar< DerivedEvent >::registerDerivedEvent()
+		EventRegistrar<DerivedEvent>::registerDerivedEvent()
 		{
 			Event::eventRegister()[DerivedEvent::TYPE] =
-				[](std::unique_ptr< const uint8_t[] > data, EventCallback callback) -> std::shared_ptr< Event >
+				[](std::unique_ptr<const uint8_t[]> data, EventCallback callback) -> std::shared_ptr<Event>
 			{
-				return std::make_shared< DerivedEvent >(std::move(data), callback);
+				return std::make_shared<DerivedEvent>(std::move(data), callback);
 			};
 
 			return true;
 		}
 
-		template< typename DerivedEvent >
-		EventRegistrar< DerivedEvent >::EventRegistrar(uint16_t causeId, EventCallback callback)
+		template<typename DerivedEvent>
+		EventRegistrar<DerivedEvent>::EventRegistrar(uint16_t causeId, EventCallback callback)
 			: Event(DerivedEvent::TYPE, causeId, callback)
 		{
-			static_cast< void >(registered);
+			static_cast<void>(registered);
 		}
 	}
 }

@@ -27,7 +27,7 @@
 
 namespace osshs
 {
-	template< typename Resource >
+	template<typename Resource>
 	class ResourceLock
 	{
 	public:

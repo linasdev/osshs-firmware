@@ -35,8 +35,8 @@ namespace osshs
 		{
 			OSSHS_LOG_INFO("Initializing module.");
 
-			System::subscribeEvent(events::EventSelector(0xff00, static_cast< uint16_t >(getModuleTypeId()) << 8),
-				[=](std::shared_ptr< events::Event > event) -> void
+			System::subscribeEvent(events::EventSelector(0xff00, static_cast<uint16_t>(getModuleTypeId()) << 8),
+				[=](std::shared_ptr<events::Event> event) -> void
 				{
 					this->handleEvent(event);
 				}
@@ -44,9 +44,9 @@ namespace osshs
 		}
 
 		void
-		Module::handleEvent(std::shared_ptr< events::Event > event)
+		Module::handleEvent(std::shared_ptr<events::Event> event)
 		{
-			OSSHS_LOG_DEBUG_STREAM << "Handling event(type = " << event->getType() << ").\r\n";
+			OSSHS_LOG_DEBUG("Handling event(type = 0x%04x).", event->getType());
 
 			eventQueue.push(event);
 		}

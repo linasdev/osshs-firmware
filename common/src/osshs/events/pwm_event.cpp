@@ -29,24 +29,21 @@ namespace osshs
 {
 	namespace events
 	{
-		PwmRequestStatusEvent::PwmRequestStatusEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmRequestStatusEvent::PwmRequestStatusEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmRequestStatusEvent>(data[4] | (data[5] << 8), callback)
 		{
-			static_cast< void >(data);
+			static_cast<void>(data);
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmRequestStatusEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -58,14 +55,14 @@ namespace osshs
 			buffer[4] = causeId & 0xff;
 			buffer[5] = (causeId >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		PwmStatusReadyEvent::PwmStatusReadyEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmStatusReadyEvent::PwmStatusReadyEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmStatusReadyEvent>(data[4] | (data[5] << 8), callback)
 		{
-			status = static_cast< PwmStatus >(data[6]);
+			status = static_cast<PwmStatus>(data[6]);
 		}
 
 		PwmStatus
@@ -74,18 +71,15 @@ namespace osshs
 			return status;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmStatusReadyEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -97,30 +91,27 @@ namespace osshs
 			buffer[4] = causeId & 0xff;
 			buffer[5] = (causeId >> 8);
 
-			buffer[6] = static_cast< uint8_t >(status);
+			buffer[6] = static_cast<uint8_t>(status);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		PwmEnableEvent::PwmEnableEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmEnableEvent::PwmEnableEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmEnableEvent>(data[4] | (data[5] << 8), callback)
 		{
-			static_cast< void >(data);
+			static_cast<void>(data);
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmEnableEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -132,28 +123,25 @@ namespace osshs
 			buffer[4] = causeId & 0xff;
 			buffer[5] = (causeId >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		PwmDisableEvent::PwmDisableEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmDisableEvent::PwmDisableEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmDisableEvent>(data[4] | (data[5] << 8), callback)
 		{
-			static_cast< void >(data);
+			static_cast<void>(data);
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmDisableEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -165,11 +153,11 @@ namespace osshs
 			buffer[4] = causeId & 0xff;
 			buffer[5] = (causeId >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		PwmRequestChannelEvent::PwmRequestChannelEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmRequestChannelEvent::PwmRequestChannelEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmRequestChannelEvent>(data[4] | (data[5] << 8), callback)
 		{
 			channel = data[6] | (data[7] << 8);
@@ -181,18 +169,15 @@ namespace osshs
 			return channel;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmRequestChannelEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -207,11 +192,11 @@ namespace osshs
 			buffer[6] = channel & 0xff;
 			buffer[7] = (channel >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		PwmChannelReadyEvent::PwmChannelReadyEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmChannelReadyEvent::PwmChannelReadyEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmChannelReadyEvent>(data[4] | (data[5] << 8), callback)
 		{
 			channel = data[6] | (data[7] << 8);
@@ -230,18 +215,15 @@ namespace osshs
 			return value;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmChannelReadyEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -259,11 +241,11 @@ namespace osshs
 			buffer[8] = value & 0xff;
 			buffer[9] = (value >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		PwmUpdateChannelEvent::PwmUpdateChannelEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmUpdateChannelEvent::PwmUpdateChannelEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmUpdateChannelEvent>(data[4] | (data[5] << 8), callback)
 		{
 			channel = data[6] | (data[7] << 8);
@@ -282,18 +264,15 @@ namespace osshs
 			return value;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmUpdateChannelEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -311,11 +290,11 @@ namespace osshs
 			buffer[8] = value & 0xff;
 			buffer[9] = (value >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		PwmRequestRgbwChannelEvent::PwmRequestRgbwChannelEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmRequestRgbwChannelEvent::PwmRequestRgbwChannelEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmRequestRgbwChannelEvent>(data[4] | (data[5] << 8), callback)
 		{
 			channel = data[6] | (data[7] << 8);
@@ -327,18 +306,15 @@ namespace osshs
 			return channel;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmRequestRgbwChannelEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -353,11 +329,11 @@ namespace osshs
 			buffer[6] = channel & 0xff;
 			buffer[7] = (channel >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		PwmRgbwChannelReadyEvent::PwmRgbwChannelReadyEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmRgbwChannelReadyEvent::PwmRgbwChannelReadyEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmRgbwChannelReadyEvent>(data[4] | (data[5] << 8), callback)
 		{
 			channel = data[6] | (data[7] << 8);
@@ -379,18 +355,15 @@ namespace osshs
 			return value;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmRgbwChannelReadyEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -417,11 +390,11 @@ namespace osshs
 			buffer[14] = value.white & 0xff;
 			buffer[15] = (value.white >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		PwmUpdateRgbwChannelEvent::PwmUpdateRgbwChannelEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmUpdateRgbwChannelEvent::PwmUpdateRgbwChannelEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmUpdateRgbwChannelEvent>(data[4] | (data[5] << 8), callback)
 		{
 			channel = data[6] | (data[7] << 8);
@@ -443,18 +416,15 @@ namespace osshs
 			return value;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmUpdateRgbwChannelEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -481,28 +451,25 @@ namespace osshs
 			buffer[14] = value.white & 0xff;
 			buffer[15] = (value.white >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		PwmUpdateSuccessEvent::PwmUpdateSuccessEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmUpdateSuccessEvent::PwmUpdateSuccessEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmUpdateSuccessEvent>(data[4] | (data[5] << 8), callback)
 		{
-			static_cast< void >(data);
+			static_cast<void>(data);
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmUpdateSuccessEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -514,14 +481,14 @@ namespace osshs
 			buffer[4] = causeId & 0xff;
 			buffer[5] = (causeId >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		PwmErrorEvent::PwmErrorEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		PwmErrorEvent::PwmErrorEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<PwmErrorEvent>(data[4] | (data[5] << 8), callback)
 		{
-			error = static_cast< PwmError >(data[6]);
+			error = static_cast<PwmError>(data[6]);
 		}
 
 		PwmError
@@ -530,18 +497,15 @@ namespace osshs
 			return error;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		PwmErrorEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -553,9 +517,9 @@ namespace osshs
 			buffer[4] = causeId & 0xff;
 			buffer[5] = (causeId >> 8);
 
-			buffer[6] = static_cast< uint8_t >(error);
+			buffer[6] = static_cast<uint8_t>(error);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 	}
 }

@@ -28,24 +28,24 @@
 
 namespace osshs
 {
-	template< typename Resource >
-	bool ResourceLock< Resource >::locked = false;
+	template<typename Resource>
+	bool ResourceLock<Resource>::locked = false;
 
-	template< typename Resource >
+	template<typename Resource>
 	bool
-	ResourceLock< Resource >::tryLock()
+	ResourceLock<Resource>::tryLock()
 	{
-		if (ResourceLock< Resource >::locked)
+		if (ResourceLock<Resource>::locked)
 			return false;
 
-		ResourceLock< Resource >::locked = true;
+		ResourceLock<Resource>::locked = true;
 		return true;
 	}
 
-	template< typename Resource >
+	template<typename Resource>
 	void
-	ResourceLock< Resource >::unlock()
+	ResourceLock<Resource>::unlock()
 	{
-		ResourceLock< Resource >::locked = false;
+		ResourceLock<Resource>::locked = false;
 	}
 }

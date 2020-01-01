@@ -31,7 +31,7 @@ namespace osshs
 {
 	namespace events
 	{
-		template< typename DerivedEvent >
+		template<typename DerivedEvent>
 		class EventRegistrar : public Event
 		{
 		public:

@@ -33,18 +33,18 @@ namespace osshs
 {
 	namespace modules
 	{
-		template < typename I2cMaster, uint16_t writeCycleTime >
+		template <typename I2cMaster, uint16_t writeCycleTime>
 		uint8_t
-		EepromModule< I2cMaster, writeCycleTime >::getModuleTypeId() const
+		EepromModule<I2cMaster, writeCycleTime>::getModuleTypeId() const
 		{
-			return static_cast< uint8_t >(static_cast< uint16_t > (events::EepromEvent::BASE) >> 8);
+			return static_cast<uint8_t>(static_cast<uint16_t> (events::EepromEvent::BASE) >> 8);
 		}
 
-		template < typename I2cMaster, uint16_t writeCycleTime >
+		template <typename I2cMaster, uint16_t writeCycleTime>
 		bool
-		EepromModule< I2cMaster, writeCycleTime >::run()
+		EepromModule<I2cMaster, writeCycleTime>::run()
 		{
-      		PT_BEGIN();
+			PT_BEGIN();
 
 			do
 			{
@@ -53,50 +53,44 @@ namespace osshs
 				currentEvent = eventQueue.front();
 				eventQueue.pop();
 
-				if (currentEvent->getType() == static_cast< uint16_t >(events::EepromEvent::REQUEST_DATA))
+				if (currentEvent->getType() == static_cast<uint16_t>(events::EepromEvent::REQUEST_DATA))
 				{
-					PT_CALL(handleRequestDataEvent(std::static_pointer_cast< events::EepromRequestDataEvent >(currentEvent)));
+					PT_CALL(handleRequestDataEvent(std::static_pointer_cast<events::EepromRequestDataEvent>(currentEvent)));
 				}
-				else if (currentEvent->getType() == static_cast< uint16_t >(events::EepromEvent::UPDATE_DATA))
+				else if (currentEvent->getType() == static_cast<uint16_t>(events::EepromEvent::UPDATE_DATA))
 				{
-					PT_CALL(handleUpdateDataEvent(std::static_pointer_cast< events::EepromUpdateDataEvent >(currentEvent)));
+					PT_CALL(handleUpdateDataEvent(std::static_pointer_cast<events::EepromUpdateDataEvent>(currentEvent)));
 				}
 
 				currentEvent.reset();
 			}
 			while (true);
 
-      		PT_END();
+			PT_END();
 		}
 
-		template < typename I2cMaster, uint16_t writeCycleTime >
+		template <typename I2cMaster, uint16_t writeCycleTime>
 		modm::ResumableResult<void>
-		EepromModule< I2cMaster, writeCycleTime >::handleRequestDataEvent(std::shared_ptr< events::EepromRequestDataEvent > event)
+		EepromModule<I2cMaster, writeCycleTime>::handleRequestDataEvent(std::shared_ptr<events::EepromRequestDataEvent> event)
 		{
 			RF_BEGIN();
 
-			OSSHS_LOG_DEBUG_STREAM << "Handling request data event"
-				<< "(address = " << event->getAddress()
-				<< ", data_len = " << event->getDataLen()
-				<< ").\r\n";
+			OSSHS_LOG_DEBUG("Handling eeprom request data event(address = 0x%04x, dataLength = 0x%04x).", event->getAddress(), event->getDataLen());
 
 			currentData.reset(new (std::nothrow) uint8_t[event->getDataLen()]);
 
 			if (currentData == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << event->getDataLen()
-					<< ").\r\n";
-
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", event->getDataLen());
 				RF_RETURN();
 			}
 
-			RF_WAIT_UNTIL(ResourceLock< I2cMaster >::tryLock());
+			RF_WAIT_UNTIL(ResourceLock<I2cMaster>::tryLock());
 			currentSuccess = RF_CALL(i2cEeprom.read(event->getAddress(), currentData.get(), event->getDataLen()));
-			ResourceLock< I2cMaster >::unlock();
+			ResourceLock<I2cMaster>::unlock();
 
 			{
-				std::shared_ptr< events::Event > responseEvent;
+				std::shared_ptr<events::Event> responseEvent;
 
 				if (currentSuccess)
 				{
@@ -104,7 +98,7 @@ namespace osshs
 						currentData,
 						event->getDataLen(),
 						event->getCauseId(),
-						[=](std::shared_ptr< osshs::events::Event > event) -> void
+						[=](std::shared_ptr<osshs::events::Event> event) -> void
 						{
 								this->handleEvent(event);
 						}
@@ -116,14 +110,14 @@ namespace osshs
 						RF_RETURN();
 					}
 
-					responseEvent.reset(static_cast< events::Event* > (successEvent));
+					responseEvent.reset(static_cast<events::Event*> (successEvent));
 				}
 				else
 				{
 					events::EepromErrorEvent *errorEvent = new (std::nothrow) events::EepromErrorEvent(
 						events::EepromError::READ_FAILED,
 						event->getCauseId(),
-						[=](std::shared_ptr< osshs::events::Event > event) -> void
+						[=](std::shared_ptr<osshs::events::Event> event) -> void
 						{
 								this->handleEvent(event);
 						}
@@ -135,7 +129,7 @@ namespace osshs
 						RF_RETURN();
 					}
 
-					responseEvent.reset(static_cast< events::Event* > (errorEvent));
+					responseEvent.reset(static_cast<events::Event*> (errorEvent));
 				}
 
 				currentData.reset();
@@ -153,31 +147,28 @@ namespace osshs
 			RF_END();
 		}
 
-		template < typename I2cMaster, uint16_t writeCycleTime >
+		template <typename I2cMaster, uint16_t writeCycleTime>
 		modm::ResumableResult<void>
-		EepromModule< I2cMaster, writeCycleTime >::handleUpdateDataEvent(std::shared_ptr< events::EepromUpdateDataEvent > event)
+		EepromModule<I2cMaster, writeCycleTime>::handleUpdateDataEvent(std::shared_ptr<events::EepromUpdateDataEvent> event)
 		{
 			RF_BEGIN();
 
-			OSSHS_LOG_DEBUG_STREAM << "Handling update data event"
-				<< "(address = " << event->getAddress()
-				<< ", data_len = " << event->getDataLen()
-				<< ").\r\n";
+			OSSHS_LOG_DEBUG("Handling eeprom update data event(address = 0x%04x, dataLength = 0x%04x).", event->getAddress(), event->getDataLen());
 
 			currentData = event->getData();
 
-			RF_WAIT_UNTIL(ResourceLock< I2cMaster >::tryLock());
+			RF_WAIT_UNTIL(ResourceLock<I2cMaster>::tryLock());
 			currentSuccess = RF_CALL(i2cEeprom.write(event->getAddress(), currentData.get(), event->getDataLen()));
 			writeCycleTimeout.restart(writeCycleTime);
 
 			{
-				std::shared_ptr< events::Event > responseEvent;
+				std::shared_ptr<events::Event> responseEvent;
 
 				if (currentSuccess)
 				{
 					events::EepromUpdateSuccessEvent *successEvent = new (std::nothrow) events::EepromUpdateSuccessEvent(
 						event->getCauseId(),
-						[=](std::shared_ptr< osshs::events::Event > event) -> void
+						[=](std::shared_ptr<osshs::events::Event> event) -> void
 						{
 								this->handleEvent(event);
 						}
@@ -189,14 +180,14 @@ namespace osshs
 						RF_RETURN();
 					}
 
-					responseEvent.reset(static_cast< events::Event* > (successEvent));
+					responseEvent.reset(static_cast<events::Event*> (successEvent));
 				}
 				else
 				{
 					events::EepromErrorEvent *errorEvent = new (std::nothrow) events::EepromErrorEvent(
 						events::EepromError::WRITE_FAILED,
 						event->getCauseId(),
-						[=](std::shared_ptr< osshs::events::Event > event) -> void
+						[=](std::shared_ptr<osshs::events::Event> event) -> void
 						{
 								this->handleEvent(event);
 						}
@@ -208,7 +199,7 @@ namespace osshs
 						RF_RETURN();
 					}
 
-					responseEvent.reset(static_cast< events::Event* > (errorEvent));
+					responseEvent.reset(static_cast<events::Event*> (errorEvent));
 				}
 
 				currentData.reset();
@@ -225,7 +216,7 @@ namespace osshs
 
 			RF_WAIT_UNTIL(writeCycleTimeout.isExpired());
 			writeCycleTimeout.stop();
-			ResourceLock< I2cMaster >::unlock();
+			ResourceLock<I2cMaster>::unlock();
 
 			RF_END();
 		}

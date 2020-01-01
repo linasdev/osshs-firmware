@@ -22,31 +22,26 @@
  * SOFTWARE.
  */
 
-#ifndef OSSHS_LOG_PREFIXER_HPP
-#define OSSHS_LOG_PREFIXER_HPP
+#include <osshs/log/logger.hpp>
 
-#include <modm/debug/logger.hpp>
-
-namespace osshs
-{
-	namespace log
+#ifndef DISABLE_LOGGING
+	namespace osshs
 	{
-		class LogPrefixer
+		namespace log
 		{
-		public:
-			/**
-			 * @brief Write a log message prefix to a stream.
-			 * 
-			 * @param stream stream to which the prefix should be written.
-			 * @param level severity level. One of: modm::log::DISABLED, modm::log::DEBUG, modm::log::INFO, modm::log::WARNING or modm::log::ERROR.
-			 * @param file file from which the message was logged. Usually __FILENAME__.
-			 * @param line line from which the message was logged. Usually __LINE__.
-			 * @return modm::IOStream& stream to which the prefix was written.
-			 */
-			static modm::IOStream&
-			writePrefix(modm::IOStream &stream, modm::log::Level level, const char *file, uint32_t line);
-		};
-	}
-}
+			Level Logger::level = Level::DEBUG;
 
-#endif  // OSSHS_LOG_PREFIXER_HPP
+			void
+			Logger::setLevel(Level level)
+			{
+				Logger::level = level;
+			}
+			
+			void
+			Logger::flush()
+			{
+				logger.flush();
+			}
+		}
+	}
+#endif  // DISABLE_LOGGING

@@ -25,54 +25,83 @@
 #ifndef OSSHS_LOGGER_HPP
 #define OSSHS_LOGGER_HPP
 
-#include <osshs/log/log_prefixer.hpp>
+#include <modm/debug/logger.hpp>
 
-namespace osshs
-{
-	namespace log
+#ifndef DISABLE_LOGGING
+	#define __FILENAME__ (__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1 : __FILE__)
+
+	#define OSSHS_ENABLE_LOGGER(device, behavior) \
+		modm::IODeviceWrapper<device, behavior> loggerDevice; \
+		modm::log::Logger osshs::log::logger(loggerDevice);
+
+	#define OSSHS_LOG_ERROR(format, args...)   osshs::log::Logger::log(osshs::log::Level::ERROR  , __FILENAME__, __LINE__, format, ##args);
+	#define OSSHS_LOG_WARNING(format, args...) osshs::log::Logger::log(osshs::log::Level::WARNING, __FILENAME__, __LINE__, format, ##args);
+	#define OSSHS_LOG_INFO(format, args...)    osshs::log::Logger::log(osshs::log::Level::INFO   , __FILENAME__, __LINE__, format, ##args);
+	#define OSSHS_LOG_DEBUG(format, args...)   osshs::log::Logger::log(osshs::log::Level::DEBUG  , __FILENAME__, __LINE__, format, ##args);
+
+	#define OSSHS_LOG_FLUSH() osshs::log::Logger::flush();
+	#define OSSHS_LOG_SET_LEVEL(level) osshs::log::Logger::setLevel(level);
+
+	namespace osshs
 	{
-		extern modm::log::Logger logger;
+		namespace log
+		{
+			extern modm::log::Logger logger;
+
+			enum class Level : uint8_t
+			{
+				DISABLED,
+				ERROR,
+				WARNING,
+				INFO,
+				DEBUG
+			};
+
+			class Logger
+			{
+				public:
+					/**
+					 * @brief Set current logger level.
+					 * @param level One of: osshs::log::DEBUG, osshs::log::INFO, osshs::log::WARNING, osshs::log::ERROR or osshs::log::DISABLED.
+					 */
+					static void
+					setLevel(Level level);
+
+					/**
+					 * @brief Write a log message.
+					 * @note Should not be called directly, instead use the predefined macros.
+					 * @param level One of: osshs::log::DEBUG, osshs::log::INFO, osshs::log::WARNING, osshs::log::ERROR or osshs::log::DISABLED.
+					 * @param file File from which the message was logged. Usually __FILENAME__.
+					 * @param line Line from which the message was logged. Usually __LINE__.
+					 * @param format Log message format.
+					 * @param args Log message format arguments.
+					 */
+					template<typename... ARGS>
+					static void
+					log(Level level, const char *filename, uint32_t line, const char *format, ARGS... args);
+
+					/**
+					 * @brief Flush the underlying stream.
+					 */
+					static void
+					flush();
+				private:
+					static Level level;
+			};
+		}
 	}
-}
 
-#define __FILENAME__ (__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1 : __FILE__)
+	#include <osshs/log/logger_impl.hpp>
+#else  // DISABLE_LOGGING
+	#define OSSHS_ENABLE_LOGGER(device, behavior)
 
-#define OSSHS_ENABLE_LOGGER(device, behavior) \
-	modm::IODeviceWrapper< device, behavior > loggerDevice; \
-	modm::log::Logger osshs::log::logger(loggerDevice);
+	#define OSSHS_LOG_ERROR(format, args...)
+	#define OSSHS_LOG_WARNING(format, args...)
+	#define OSSHS_LOG_INFO(format, args...)
+	#define OSSHS_LOG_DEBUG(format, args...)
 
-#define OSSHS_PREFIXED_LOGGER(level) osshs::log::LogPrefixer::writePrefix(osshs::log::logger, level, __FILENAME__, __LINE__)
+	#define OSSHS_LOG_FLUSH()
+	#define OSSHS_LOG_SET_LEVEL(level)
+#endif  // DISABLE_LOGGING
 
-#define OSSHS_LOGGER \
-	if ( false ){} \
-	else osshs::log::logger
-
-#define OSSHS_LOG_OFF_STREAM \
-	if ( true ){}	\
-	else OSSHS_PREFIXED_LOGGER(modm::log::DISABLED)
-
-#define OSSHS_LOG_DEBUG_STREAM \
-	if (MODM_LOG_LEVEL > modm::log::DEBUG){} \
-	else OSSHS_PREFIXED_LOGGER(modm::log::DEBUG)
-
-#define OSSHS_LOG_INFO_STREAM \
-	if (MODM_LOG_LEVEL > modm::log::INFO){}	\
-	else OSSHS_PREFIXED_LOGGER(modm::log::INFO)
-
-#define OSSHS_LOG_WARNING_STREAM \
-	if (MODM_LOG_LEVEL > modm::log::WARNING){}	\
-	else OSSHS_PREFIXED_LOGGER(modm::log::WARNING)
-
-#define OSSHS_LOG_ERROR_STREAM \
-	if (MODM_LOG_LEVEL > modm::log::ERROR){}	\
-	else OSSHS_PREFIXED_LOGGER(modm::log::ERROR)
-
-#define OSSHS_LOG_OFF(str) OSSHS_LOG_OFF_STREAM << str << "\r\n";
-#define OSSHS_LOG_DEBUG(str) OSSHS_LOG_DEBUG_STREAM << str << "\r\n";
-#define OSSHS_LOG_INFO(str) OSSHS_LOG_INFO_STREAM << str << "\r\n";
-#define OSSHS_LOG_WARNING(str) OSSHS_LOG_WARNING_STREAM << str << "\r\n";
-#define OSSHS_LOG_ERROR(str) OSSHS_LOG_ERROR_STREAM << str << "\r\n";
-
-#define OSSHS_LOG_CLEAN() OSSHS_LOGGER << "\033[2J\033[H";
-
-#endif
+#endif  // OSSHS_LOGGER_HPP

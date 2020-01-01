@@ -34,7 +34,7 @@ namespace osshs
 {
 	namespace modules
 	{
- 		template < typename I2cMaster, uint16_t writeCycleTime = 5 >
+ 		template <typename I2cMaster, uint16_t writeCycleTime = 5>
 		class EepromModule : public Module, private modm::NestedResumable<1>
 		{
 		public:
@@ -50,17 +50,17 @@ namespace osshs
 			run();
 		private:
     	modm::ShortTimeout writeCycleTimeout;
-			modm::I2cEeprom< I2cMaster > i2cEeprom;
+			modm::I2cEeprom<I2cMaster> i2cEeprom;
 
-			std::shared_ptr< events::Event > currentEvent;
-			std::shared_ptr< uint8_t[] > currentData;
+			std::shared_ptr<events::Event> currentEvent;
+			std::shared_ptr<uint8_t[]> currentData;
 			bool currentSuccess;
 
 			modm::ResumableResult<void>
-			handleRequestDataEvent(std::shared_ptr< events::EepromRequestDataEvent > event);
+			handleRequestDataEvent(std::shared_ptr<events::EepromRequestDataEvent> event);
 
 			modm::ResumableResult<void>
-			handleUpdateDataEvent(std::shared_ptr< events::EepromUpdateDataEvent > event);
+			handleUpdateDataEvent(std::shared_ptr<events::EepromUpdateDataEvent> event);
 	  };
 	}
 }

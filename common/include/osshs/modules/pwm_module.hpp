@@ -33,7 +33,7 @@ namespace osshs
 {
 	namespace modules
 	{
- 		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
+ 		template <uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank>
 		class PwmModule : public Module, private modm::NestedResumable<1>
 		{
 		public:
@@ -45,30 +45,30 @@ namespace osshs
 			bool
 			run();
 		private:
-			modm::TLC594X< channels, SpiMaster, Xlat, Xblank > tlc594x;
+			modm::TLC594X<channels, SpiMaster, Xlat, Xblank> tlc594x;
 
-			std::shared_ptr< events::Event > currentEvent;
-
-			modm::ResumableResult<void>
-			handleRequestStatusEvent(std::shared_ptr< events::PwmRequestStatusEvent > event);
+			std::shared_ptr<events::Event> currentEvent;
 
 			modm::ResumableResult<void>
-			handleEnableEvent(std::shared_ptr< events::PwmEnableEvent > event);
+			handleRequestStatusEvent(std::shared_ptr<events::PwmRequestStatusEvent> event);
 
 			modm::ResumableResult<void>
-			handleDisableEvent(std::shared_ptr< events::PwmDisableEvent > event);
+			handleEnableEvent(std::shared_ptr<events::PwmEnableEvent> event);
 
 			modm::ResumableResult<void>
-			handleRequestChannelEvent(std::shared_ptr< events::PwmRequestChannelEvent > event);
+			handleDisableEvent(std::shared_ptr<events::PwmDisableEvent> event);
 
 			modm::ResumableResult<void>
-			handleUpdateChannelEvent(std::shared_ptr< events::PwmUpdateChannelEvent > event);
+			handleRequestChannelEvent(std::shared_ptr<events::PwmRequestChannelEvent> event);
 
 			modm::ResumableResult<void>
-			handleRequestRgbwChannelEvent(std::shared_ptr< events::PwmRequestRgbwChannelEvent > event);
+			handleUpdateChannelEvent(std::shared_ptr<events::PwmUpdateChannelEvent> event);
 
 			modm::ResumableResult<void>
-			handleUpdateRgbwChannelEvent(std::shared_ptr< events::PwmUpdateRgbwChannelEvent > event);
+			handleRequestRgbwChannelEvent(std::shared_ptr<events::PwmRequestRgbwChannelEvent> event);
+
+			modm::ResumableResult<void>
+			handleUpdateRgbwChannelEvent(std::shared_ptr<events::PwmUpdateRgbwChannelEvent> event);
 	  };
 	}
 }

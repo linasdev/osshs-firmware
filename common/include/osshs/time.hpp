@@ -53,7 +53,7 @@ namespace osshs
 		 * @tparam precision Either Precision::Milliseconds or Precision::Seconds.
 		 * @return T system time.
 		 */
-		template< typename T, Precision precision >
+		template<typename T, Precision precision>
 		static T
 		getSystemTime();
 	private:

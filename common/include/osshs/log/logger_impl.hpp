@@ -22,38 +22,34 @@
  * SOFTWARE.
  */
 
-#include <osshs/log/log_prefixer.hpp>
-#include <osshs/time.hpp>
+#ifndef OSSHS_LOGGER_HPP
+	#error "Don't include this file directly, use 'logger.hpp' instead!"
+#endif
+
+#include <modm/platform.hpp>
+#include <magic_enum.hpp>
 
 namespace osshs
 {
 	namespace log
 	{
-		modm::IOStream&
-		LogPrefixer::writePrefix(modm::IOStream &stream, modm::log::Level level, const char* file, uint32_t line)
+		template<typename... ARGS>
+		void
+		Logger::log(Level level, const char *filename, uint32_t line, const char *format, ARGS... args)
 		{
-			stream << '[';
-			stream << osshs::Time::getSystemTime<float, osshs::Time::Precision::Seconds>();
-			stream << ']';
+			if (level > Logger::level)
+				return;
 
-			stream << '[';
-			if (level == modm::log::DEBUG)
-				stream << "DEBUG";
-			if (level == modm::log::INFO)
-				stream << "INFO";
-			if (level == modm::log::WARNING)
-				stream << "WARNING";
-			if (level == modm::log::ERROR)
-				stream << "ERROR";
-			stream << ']';
+			logger.printf(
+				"[%.3f][%s][%s:%lu] ",
+				static_cast<double>(modm::Clock::now().getTime() / 1000.0),
+				std::string(magic_enum::enum_name(level)).c_str(),
+				filename,
+				line
+			);
 
-			stream << '[';
-			stream << file;
-			stream << ':';
-			stream << line;
-			stream << ']';
-
-			return stream;
+			logger.printf(format, args...);
+			logger.printf("\r\n");
 		}
 	}
 }

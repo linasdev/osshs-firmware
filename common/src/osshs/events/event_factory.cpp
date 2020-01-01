@@ -29,15 +29,15 @@ namespace osshs
 {
 	namespace events
 	{
-		std::shared_ptr< Event >
-		EventFactory::make(uint16_t type, std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		std::shared_ptr<Event>
+		EventFactory::make(uint16_t type, std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 		{
-			OSSHS_LOG_DEBUG_STREAM << "Making event(type = " << type << ").\r\n";
+			OSSHS_LOG_DEBUG("Making event(type = 0x%04x).", type);
 
 			if (Event::eventRegister().find(type) == Event::eventRegister().end())
 			{
-				OSSHS_LOG_WARNING_STREAM << "Could not make event(type = " << type << ").\r\n";
-				return std::shared_ptr< Event >();
+				OSSHS_LOG_WARNING("Could not make event(type = 0x%04x).", type);
+				return std::shared_ptr<Event>();
 			}
 
 			return Event::eventRegister().at(type)(std::move(data), callback);

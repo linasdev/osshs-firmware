@@ -58,7 +58,7 @@ namespace osshs
 namespace std
 {
 	template<>
-	struct hash< osshs::events::EventSelector >
+	struct hash<osshs::events::EventSelector>
 	{
 		size_t
 		operator()(const osshs::events::EventSelector &eventSelector) const

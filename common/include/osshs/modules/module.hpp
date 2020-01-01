@@ -53,7 +53,7 @@ namespace osshs
 			virtual uint8_t
 			getModuleTypeId() const = 0;
 		protected:
-			std::queue< std::shared_ptr< events::Event > > eventQueue;
+			std::queue<std::shared_ptr<events::Event>> eventQueue;
 
 			/**
 			 * @brief Initialize the module. Should only be called from ModuleManager.
@@ -75,7 +75,7 @@ namespace osshs
 			 * @param event event to handle.
 			 */
 			void
-			handleEvent(std::shared_ptr< events::Event > event);
+			handleEvent(std::shared_ptr<events::Event> event);
 		private:
 			Module(const Module&) = delete;
 

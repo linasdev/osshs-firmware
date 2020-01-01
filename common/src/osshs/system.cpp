@@ -30,7 +30,7 @@
 
 namespace osshs
 {
-	std::unordered_map< events::EventSelector, std::vector< events::EventCallback > > System::eventSubscriptions;
+	std::unordered_map<events::EventSelector, std::vector<events::EventCallback>> System::eventSubscriptions;
 
 	void
 	System::initialize()
@@ -53,7 +53,7 @@ namespace osshs
 	void
 	System::registerModule(modules::Module *module)
 	{
-		OSSHS_LOG_INFO_STREAM << "Registering module(type = " << module->getModuleTypeId() << ").\r\n";
+		OSSHS_LOG_INFO("Registering module(type = 0x%02x).", module->getModuleTypeId());
 
 		modules::ModuleManager::registerModule(module);
 	}
@@ -61,15 +61,15 @@ namespace osshs
 	void
 	System::subscribeEvent(events::EventSelector selector, events::EventCallback subscription)
 	{
-		OSSHS_LOG_INFO_STREAM << "Subscribing to event(mask = " << selector.mask << ", identifier = " << selector.identifier << ").\r\n";
+		OSSHS_LOG_INFO("Subscribing to event(mask = 0x%04x, identifier = 0x%04x).", selector.mask, selector.identifier);
 
 		eventSubscriptions[selector].push_back(subscription);
 	}
 
 	void
-	System::reportEvent(std::shared_ptr< events::Event > event)
+	System::reportEvent(std::shared_ptr<events::Event> event)
 	{
-		OSSHS_LOG_DEBUG_STREAM << "Handling event(type = " << event->getType() << ").\r\n";
+		OSSHS_LOG_DEBUG("Handling event(type = 0x%04x)", event->getType());
 		
 		for(auto const &[selector, subscriptions] : eventSubscriptions)
 			if (selector.match(event->getType()))

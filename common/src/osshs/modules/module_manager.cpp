@@ -29,7 +29,7 @@ namespace osshs
 {
 	namespace modules
 	{
-		std::vector< modules::Module* > ModuleManager::modules;
+		std::vector<modules::Module*> ModuleManager::modules;
 
 		void
 		ModuleManager::initialize()
@@ -40,8 +40,8 @@ namespace osshs
 		void
 		ModuleManager::registerModule(modules::Module *module)
 		{
-			OSSHS_LOG_INFO_STREAM << "Registering module(type = " << module->getModuleTypeId() << ").\r\n";
-
+			OSSHS_LOG_INFO("Registering module(type = 0x%02x).", module->getModuleTypeId());
+			
 			modules.push_back(module);
 			module->initialize();
 		}

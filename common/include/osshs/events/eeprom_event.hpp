@@ -54,9 +54,9 @@ namespace osshs
 		{
 		public:
 			static constexpr uint16_t EVENT_LENGTH = 10;
-			static constexpr uint16_t TYPE = static_cast< uint16_t > (EepromEvent::REQUEST_DATA);
+			static constexpr uint16_t TYPE = static_cast<uint16_t> (EepromEvent::REQUEST_DATA);
 
-			EepromRequestDataEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback = nullptr);
+			EepromRequestDataEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback = nullptr);
 
 			EepromRequestDataEvent(uint16_t address, uint16_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
 				: EventRegistrar<EepromRequestDataEvent>(causeId, callback), address(address), dataLen(dataLen)
@@ -69,7 +69,7 @@ namespace osshs
 			uint16_t
 			getDataLen() const;
 
-			std::unique_ptr< const uint8_t[] >
+			std::unique_ptr<const uint8_t[]>
 			serialize() const;
 		private:
 			uint16_t address;
@@ -80,25 +80,25 @@ namespace osshs
 		{
 		public:
 			static constexpr uint16_t EVENT_LENGTH = 0;
-			static constexpr uint16_t TYPE = static_cast< uint16_t > (EepromEvent::DATA_READY);
+			static constexpr uint16_t TYPE = static_cast<uint16_t> (EepromEvent::DATA_READY);
 
-			EepromDataReadyEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback = nullptr);
+			EepromDataReadyEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback = nullptr);
 
-			EepromDataReadyEvent(const std::shared_ptr< uint8_t[] > data, uint16_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+			EepromDataReadyEvent(const std::shared_ptr<uint8_t[]> data, uint16_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
 				: EventRegistrar<EepromDataReadyEvent>(causeId, callback), data(data), dataLen(dataLen)
 			{
 			}
 
-			const std::shared_ptr< uint8_t[] >
+			const std::shared_ptr<uint8_t[]>
 			getData() const;
 
 			uint16_t
 			getDataLen() const;
 
-			std::unique_ptr< const uint8_t[] >
+			std::unique_ptr<const uint8_t[]>
 			serialize() const;
 		private:
-			std::shared_ptr< uint8_t[] > data;
+			std::shared_ptr<uint8_t[]> data;
 			uint16_t dataLen;
 		};
 
@@ -106,11 +106,11 @@ namespace osshs
 		{
 		public:
 			static constexpr uint16_t EVENT_LENGTH = 0;
-			static constexpr uint16_t TYPE = static_cast< uint16_t > (EepromEvent::UPDATE_DATA);
+			static constexpr uint16_t TYPE = static_cast<uint16_t> (EepromEvent::UPDATE_DATA);
 
-			EepromUpdateDataEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback = nullptr);
+			EepromUpdateDataEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback = nullptr);
 
-			EepromUpdateDataEvent(uint16_t address, const std::shared_ptr< uint8_t[] > data, uint16_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
+			EepromUpdateDataEvent(uint16_t address, const std::shared_ptr<uint8_t[]> data, uint16_t dataLen, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
 				: EventRegistrar<EepromUpdateDataEvent>(causeId, callback), address(address), data(data), dataLen(dataLen)
 			{
 			}
@@ -118,17 +118,17 @@ namespace osshs
 			uint16_t
 			getAddress() const;
 
-			const std::shared_ptr< uint8_t[] >
+			const std::shared_ptr<uint8_t[]>
 			getData() const;
 
 			uint16_t
 			getDataLen() const;
 
-			std::unique_ptr< const uint8_t[] >
+			std::unique_ptr<const uint8_t[]>
 			serialize() const;
 		private:
 			uint16_t address;
-			std::shared_ptr< uint8_t[] > data;
+			std::shared_ptr<uint8_t[]> data;
 			uint16_t dataLen;
 		};
 
@@ -136,16 +136,16 @@ namespace osshs
 		{
 		public:
 			static constexpr uint16_t EVENT_LENGTH = 6;
-			static constexpr uint16_t TYPE = static_cast< uint16_t > (EepromEvent::UPDATE_SUCCESS);
+			static constexpr uint16_t TYPE = static_cast<uint16_t> (EepromEvent::UPDATE_SUCCESS);
 
-			EepromUpdateSuccessEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback = nullptr);
+			EepromUpdateSuccessEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback = nullptr);
 
 			EepromUpdateSuccessEvent(uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
 				: EventRegistrar<EepromUpdateSuccessEvent>(causeId, callback)
 			{
 			}
 
-			std::unique_ptr< const uint8_t[] >
+			std::unique_ptr<const uint8_t[]>
 			serialize() const;
 		};
 
@@ -153,9 +153,9 @@ namespace osshs
 		{
 		public:
 			static constexpr uint16_t EVENT_LENGTH = 7;
-			static constexpr uint16_t TYPE = static_cast< uint16_t > (EepromEvent::ERROR);
+			static constexpr uint16_t TYPE = static_cast<uint16_t> (EepromEvent::ERROR);
 
-			EepromErrorEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback = nullptr);
+			EepromErrorEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback = nullptr);
 
 			EepromErrorEvent(EepromError error, uint16_t causeId = Event::CAUSE_ID_GENERATE, EventCallback callback = nullptr)
 				: EventRegistrar<EepromErrorEvent>(causeId, callback), error(error)
@@ -165,7 +165,7 @@ namespace osshs
 			EepromError
 			getError() const;
 
-			std::unique_ptr< const uint8_t[] >
+			std::unique_ptr<const uint8_t[]>
 			serialize() const;
 		private:
 			EepromError error;

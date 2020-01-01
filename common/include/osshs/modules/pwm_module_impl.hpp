@@ -33,26 +33,26 @@ namespace osshs
 {
 	namespace modules
 	{
- 		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
-		PwmModule< channels, SpiMaster, Xlat, Xblank >::PwmModule()
+ 		template <uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank>
+		PwmModule<channels, SpiMaster, Xlat, Xblank>::PwmModule()
 		{
 			OSSHS_LOG_INFO("Initializing PWM module.");
 
 			tlc594x.initialize(0x000, -1, true, false, true);
 		}
 
-		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
+		template <uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank>
 		uint8_t
-		PwmModule< channels, SpiMaster, Xlat, Xblank >::getModuleTypeId() const
+		PwmModule<channels, SpiMaster, Xlat, Xblank>::getModuleTypeId() const
 		{
-			return static_cast< uint8_t >(static_cast< uint16_t > (events::PwmEvent::BASE) >> 8);
+			return static_cast<uint8_t>(static_cast<uint16_t> (events::PwmEvent::BASE) >> 8);
 		}
 
- 		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
+ 		template <uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank>
 		bool
-		PwmModule< channels, SpiMaster, Xlat, Xblank >::run()
+		PwmModule<channels, SpiMaster, Xlat, Xblank>::run()
 		{
-     		PT_BEGIN();
+			PT_BEGIN();
 
 			do
 			{
@@ -61,33 +61,33 @@ namespace osshs
 				currentEvent = eventQueue.front();
 				eventQueue.pop();
 
-				if (currentEvent->getType() == static_cast< uint16_t >(events::PwmEvent::REQUEST_STATUS))
+				if (currentEvent->getType() == static_cast<uint16_t>(events::PwmEvent::REQUEST_STATUS))
 				{
-					PT_CALL(handleRequestStatusEvent(std::static_pointer_cast< events::PwmRequestStatusEvent >(currentEvent)));
+					PT_CALL(handleRequestStatusEvent(std::static_pointer_cast<events::PwmRequestStatusEvent>(currentEvent)));
 				}
-				else if (currentEvent->getType() == static_cast< uint16_t >(events::PwmEvent::ENABLE))
+				else if (currentEvent->getType() == static_cast<uint16_t>(events::PwmEvent::ENABLE))
 				{
-					PT_CALL(handleEnableEvent(std::static_pointer_cast< events::PwmEnableEvent >(currentEvent)));
+					PT_CALL(handleEnableEvent(std::static_pointer_cast<events::PwmEnableEvent>(currentEvent)));
 				}
-				else if (currentEvent->getType() == static_cast< uint16_t >(events::PwmEvent::DISABLE))
+				else if (currentEvent->getType() == static_cast<uint16_t>(events::PwmEvent::DISABLE))
 				{
-					PT_CALL(handleDisableEvent(std::static_pointer_cast< events::PwmDisableEvent >(currentEvent)));
+					PT_CALL(handleDisableEvent(std::static_pointer_cast<events::PwmDisableEvent>(currentEvent)));
 				}
-				else if (currentEvent->getType() == static_cast< uint16_t >(events::PwmEvent::REQUEST_CHANNEL))
+				else if (currentEvent->getType() == static_cast<uint16_t>(events::PwmEvent::REQUEST_CHANNEL))
 				{
-					PT_CALL(handleRequestChannelEvent(std::static_pointer_cast< events::PwmRequestChannelEvent >(currentEvent)));
+					PT_CALL(handleRequestChannelEvent(std::static_pointer_cast<events::PwmRequestChannelEvent>(currentEvent)));
 				}
-				else if (currentEvent->getType() == static_cast< uint16_t >(events::PwmEvent::UPDATE_CHANNEL))
+				else if (currentEvent->getType() == static_cast<uint16_t>(events::PwmEvent::UPDATE_CHANNEL))
 				{
-					PT_CALL(handleUpdateChannelEvent(std::static_pointer_cast< events::PwmUpdateChannelEvent >(currentEvent)));
+					PT_CALL(handleUpdateChannelEvent(std::static_pointer_cast<events::PwmUpdateChannelEvent>(currentEvent)));
 				}
-				else if (currentEvent->getType() == static_cast< uint16_t >(events::PwmEvent::REQUEST_RGBW_CHANNEL))
+				else if (currentEvent->getType() == static_cast<uint16_t>(events::PwmEvent::REQUEST_RGBW_CHANNEL))
 				{
-					PT_CALL(handleRequestRgbwChannelEvent(std::static_pointer_cast< events::PwmRequestRgbwChannelEvent >(currentEvent)));
+					PT_CALL(handleRequestRgbwChannelEvent(std::static_pointer_cast<events::PwmRequestRgbwChannelEvent>(currentEvent)));
 				}
-				else if (currentEvent->getType() == static_cast< uint16_t >(events::PwmEvent::UPDATE_RGBW_CHANNEL))
+				else if (currentEvent->getType() == static_cast<uint16_t>(events::PwmEvent::UPDATE_RGBW_CHANNEL))
 				{
-					PT_CALL(handleUpdateRgbwChannelEvent(std::static_pointer_cast< events::PwmUpdateRgbwChannelEvent >(currentEvent)));
+					PT_CALL(handleUpdateRgbwChannelEvent(std::static_pointer_cast<events::PwmUpdateRgbwChannelEvent>(currentEvent)));
 				}
 
 				currentEvent.reset();
@@ -97,19 +97,19 @@ namespace osshs
       		PT_END();
 		}
 
- 		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
+ 		template <uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank>
 		modm::ResumableResult<void>
-		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleRequestStatusEvent(std::shared_ptr< events::PwmRequestStatusEvent > event)
+		PwmModule<channels, SpiMaster, Xlat, Xblank>::handleRequestStatusEvent(std::shared_ptr<events::PwmRequestStatusEvent> event)
 		{
 			RF_BEGIN();
 
-			OSSHS_LOG_DEBUG("Handling request status event.");
+			OSSHS_LOG_DEBUG("Handling pwm request status event.");
 
 			{
-				std::shared_ptr< events::Event > responseEvent(static_cast< events::Event* > (new (std::nothrow) events::PwmStatusReadyEvent(
+				std::shared_ptr<events::Event> responseEvent(static_cast<events::Event*> (new (std::nothrow) events::PwmStatusReadyEvent(
 					tlc594x.isEnabled() ? events::PwmStatus::ENABLED : events::PwmStatus::DISABLED,
 					event->getCauseId(),
-					[=](std::shared_ptr< osshs::events::Event > event) -> void
+					[=](std::shared_ptr<osshs::events::Event> event) -> void
 					{
 						this->handleEvent(event);
 					}
@@ -134,21 +134,21 @@ namespace osshs
 			RF_END();
 		}
 
- 		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
+ 		template <uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank>
 		modm::ResumableResult<void>
-		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleEnableEvent(std::shared_ptr< events::PwmEnableEvent > event)
+		PwmModule<channels, SpiMaster, Xlat, Xblank>::handleEnableEvent(std::shared_ptr<events::PwmEnableEvent> event)
 		{
 			RF_BEGIN();
 
-			OSSHS_LOG_DEBUG("Handling enable event.");
+			OSSHS_LOG_DEBUG("Handling pwm enable event.");
 
 			tlc594x.enable();
 
 			{
-				std::shared_ptr< events::Event > responseEvent(static_cast< events::Event* > (new (std::nothrow) events::PwmStatusReadyEvent(
+				std::shared_ptr<events::Event> responseEvent(static_cast<events::Event*> (new (std::nothrow) events::PwmStatusReadyEvent(
 					tlc594x.isEnabled() ? events::PwmStatus::ENABLED : events::PwmStatus::DISABLED,
 					event->getCauseId(),
-					[=](std::shared_ptr< osshs::events::Event > event) -> void
+					[=](std::shared_ptr<osshs::events::Event> event) -> void
 					{
 						this->handleEvent(event);
 					}
@@ -173,21 +173,21 @@ namespace osshs
 			RF_END();
 		}
 
- 		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
+ 		template <uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank>
 		modm::ResumableResult<void>
-		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleDisableEvent(std::shared_ptr< events::PwmDisableEvent > event)
+		PwmModule<channels, SpiMaster, Xlat, Xblank>::handleDisableEvent(std::shared_ptr<events::PwmDisableEvent> event)
 		{
 			RF_BEGIN();
 
-			OSSHS_LOG_DEBUG("Handling disable event.");
+			OSSHS_LOG_DEBUG("Handling pwm disable event.");
 
 			tlc594x.disable();
 
 			{
-				std::shared_ptr< events::Event > responseEvent(static_cast< events::Event* > (new (std::nothrow) events::PwmStatusReadyEvent(
+				std::shared_ptr<events::Event> responseEvent(static_cast<events::Event*> (new (std::nothrow) events::PwmStatusReadyEvent(
 					tlc594x.isEnabled() ? events::PwmStatus::ENABLED : events::PwmStatus::DISABLED,
 					event->getCauseId(),
-					[=](std::shared_ptr< osshs::events::Event > event) -> void
+					[=](std::shared_ptr<osshs::events::Event> event) -> void
 					{
 						this->handleEvent(event);
 					}
@@ -212,25 +212,25 @@ namespace osshs
 			RF_END();
 		}
 
- 		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
+ 		template <uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank>
 		modm::ResumableResult<void>
-		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleRequestChannelEvent(std::shared_ptr< events::PwmRequestChannelEvent > event)
+		PwmModule<channels, SpiMaster, Xlat, Xblank>::handleRequestChannelEvent(std::shared_ptr<events::PwmRequestChannelEvent> event)
 		{
 			RF_BEGIN();
 
-			OSSHS_LOG_DEBUG_STREAM << "Handling request channel event(channel = " << event->getChannel() << ").\r\n";
+			OSSHS_LOG_DEBUG("Handling pwm request channel event(channel = 0x%04x).", event->getChannel());
 
 			{
-				std::shared_ptr< events::Event > responseEvent;
+				std::shared_ptr<events::Event> responseEvent;
 				uint16_t channel = event->getChannel();
 
-				if (channel < channels)
+				if (channel <channels)
 				{
 					events::PwmChannelReadyEvent *successEvent = new (std::nothrow) events::PwmChannelReadyEvent(
 						channel,
 						tlc594x.getChannel(channel),
 						event->getCauseId(),
-						[=](std::shared_ptr< osshs::events::Event > event) -> void
+						[=](std::shared_ptr<osshs::events::Event> event) -> void
 						{
 							this->handleEvent(event);
 						}
@@ -242,14 +242,14 @@ namespace osshs
 						RF_RETURN();
 					}
 
-					responseEvent.reset(static_cast< events::Event* > (successEvent));
+					responseEvent.reset(static_cast<events::Event*> (successEvent));
 				}
 				else
 				{
 					events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 						events::PwmError::CHANNEL_OUT_OF_BOUNDS,
 						event->getCauseId(),
-						[=](std::shared_ptr< osshs::events::Event > event) -> void
+						[=](std::shared_ptr<osshs::events::Event> event) -> void
 						{
 							this->handleEvent(event);
 						}
@@ -261,7 +261,7 @@ namespace osshs
 						RF_RETURN();
 					}
 
-					responseEvent.reset(static_cast< events::Event* > (errorEvent));
+					responseEvent.reset(static_cast<events::Event*> (errorEvent));
 				}
 
 				if (event->getCallback() != nullptr)
@@ -277,36 +277,33 @@ namespace osshs
 			RF_END();
 		}
 
- 		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
+ 		template <uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank>
 		modm::ResumableResult<void>
-		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleUpdateChannelEvent(std::shared_ptr< events::PwmUpdateChannelEvent > event)
+		PwmModule<channels, SpiMaster, Xlat, Xblank>::handleUpdateChannelEvent(std::shared_ptr<events::PwmUpdateChannelEvent> event)
 		{
 			RF_BEGIN();
 
-			OSSHS_LOG_DEBUG_STREAM << "Handling update channel event"
-				<< "(channel = " << event->getChannel()
-				<< ", value = " << event->getValue()
-				<< ").\r\n";
+			OSSHS_LOG_DEBUG("Handling pwm update channel event(channel = 0x%04x, value = 0x%04x).", event->getChannel(), event->getValue());
 
-			if (event->getChannel() < channels && event->getValue() <= 0xfff)
+			if (event->getChannel() <channels && event->getValue() <= 0xfff)
 			{
 				tlc594x.setChannel(event->getChannel(), event->getValue());
 
-				RF_WAIT_UNTIL(ResourceLock< SpiMaster >::tryLock());
+				RF_WAIT_UNTIL(ResourceLock<SpiMaster>::tryLock());
 				RF_CALL(tlc594x.writeChannels());
-				ResourceLock< SpiMaster >::unlock();
+				ResourceLock<SpiMaster>::unlock();
 			}
 
 			{
-				std::shared_ptr< events::Event > responseEvent;
+				std::shared_ptr<events::Event> responseEvent;
 
-				if (event->getChannel() < channels)
+				if (event->getChannel() <channels)
 				{
 					if (event->getValue() <= 0xfff)
 					{
 						events::PwmUpdateSuccessEvent *successEvent = new (std::nothrow) events::PwmUpdateSuccessEvent(
 							event->getCauseId(),
-							[=](std::shared_ptr< osshs::events::Event > event) -> void
+							[=](std::shared_ptr<osshs::events::Event> event) -> void
 							{
 								this->handleEvent(event);
 							}
@@ -318,14 +315,14 @@ namespace osshs
 							RF_RETURN();
 						}
 
-						responseEvent.reset(static_cast< events::Event* > (successEvent));
+						responseEvent.reset(static_cast<events::Event*> (successEvent));
 					}
 					else
 					{
 						events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 							events::PwmError::VALUE_OUT_OF_BOUNDS,
 							event->getCauseId(),
-							[=](std::shared_ptr< osshs::events::Event > event) -> void
+							[=](std::shared_ptr<osshs::events::Event> event) -> void
 							{
 								this->handleEvent(event);
 							}
@@ -337,7 +334,7 @@ namespace osshs
 							RF_RETURN();
 						}
 
-						responseEvent.reset(static_cast< events::Event* > (errorEvent));
+						responseEvent.reset(static_cast<events::Event*> (errorEvent));
 					}
 				}
 				else
@@ -345,7 +342,7 @@ namespace osshs
 					events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 						events::PwmError::CHANNEL_OUT_OF_BOUNDS,
 						event->getCauseId(),
-						[=](std::shared_ptr< osshs::events::Event > event) -> void
+						[=](std::shared_ptr<osshs::events::Event> event) -> void
 						{
 							this->handleEvent(event);
 						}
@@ -357,7 +354,7 @@ namespace osshs
 						RF_RETURN();
 					}
 
-					responseEvent.reset(static_cast< events::Event* > (errorEvent));
+					responseEvent.reset(static_cast<events::Event*> (errorEvent));
 				}
 
 				if (event->getCallback() != nullptr)
@@ -373,16 +370,16 @@ namespace osshs
 			RF_END();
 		}
 
- 		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
+ 		template <uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank>
 		modm::ResumableResult<void>
-		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleRequestRgbwChannelEvent(std::shared_ptr< events::PwmRequestRgbwChannelEvent > event)
+		PwmModule<channels, SpiMaster, Xlat, Xblank>::handleRequestRgbwChannelEvent(std::shared_ptr<events::PwmRequestRgbwChannelEvent> event)
 		{
 			RF_BEGIN();
 
-			OSSHS_LOG_DEBUG_STREAM << "Handling request rgbw channel event(channel = " << event->getChannel() << ").\r\n";
+			OSSHS_LOG_DEBUG("Handling pwm request rgbw channel event(channel = 0x%04x).", event->getChannel());
 
 			{
-				std::shared_ptr< events::Event > responseEvent;
+				std::shared_ptr<events::Event> responseEvent;
 				uint16_t channel = event->getChannel() * 4;
 
 				if (channel < channels)
@@ -398,7 +395,7 @@ namespace osshs
 						event->getChannel(),
 						value,
 						event->getCauseId(),
-						[=](std::shared_ptr< osshs::events::Event > event) -> void
+						[=](std::shared_ptr<osshs::events::Event> event) -> void
 						{
 							this->handleEvent(event);
 						}
@@ -410,14 +407,14 @@ namespace osshs
 						RF_RETURN();
 					}
 
-					responseEvent.reset(static_cast< events::Event* > (successEvent));
+					responseEvent.reset(static_cast<events::Event*> (successEvent));
 				}
 				else
 				{
 					events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 						events::PwmError::CHANNEL_OUT_OF_BOUNDS,
 						event->getCauseId(),
-						[=](std::shared_ptr< osshs::events::Event > event) -> void
+						[=](std::shared_ptr<osshs::events::Event> event) -> void
 						{
 							this->handleEvent(event);
 						}
@@ -429,7 +426,7 @@ namespace osshs
 						RF_RETURN();
 					}
 
-					responseEvent.reset(static_cast< events::Event* > (errorEvent));
+					responseEvent.reset(static_cast<events::Event*> (errorEvent));
 				}
 
 				if (event->getCallback() != nullptr)
@@ -445,21 +442,22 @@ namespace osshs
 			RF_END();
 		}
 
- 		template < uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank >
+ 		template <uint16_t channels, typename SpiMaster, typename Xlat, typename Xblank>
 		modm::ResumableResult<void>
-		PwmModule< channels, SpiMaster, Xlat, Xblank >::handleUpdateRgbwChannelEvent(std::shared_ptr< events::PwmUpdateRgbwChannelEvent > event)
+		PwmModule<channels, SpiMaster, Xlat, Xblank>::handleUpdateRgbwChannelEvent(std::shared_ptr<events::PwmUpdateRgbwChannelEvent> event)
 		{
 			RF_BEGIN();
 
-			OSSHS_LOG_DEBUG_STREAM << "Handling update rgbw channel event"
-				<< "(channel = " << event->getChannel()
-				<< ", red = " << event->getValue().red
-				<< ", green = " << event->getValue().green
-				<< ", blue = " << event->getValue().blue
-				<< ", white = " << event->getValue().white
-				<< ").\r\n";
+			OSSHS_LOG_DEBUG(
+				"Handling pwm update rgbw channel event(channel = 0x%04x, red = 0x%04x, green = 0x%04x, blue = 0x%04x, white = 0x%04x).",
+				event->getChannel(),
+				event->getValue().red,
+				event->getValue().green,
+				event->getValue().blue,
+				event->getValue().white
+			);
 
-			if (event->getChannel() * 4 + 3 < channels &&
+			if (event->getChannel() * 4 + 3 <channels &&
 					event->getValue().red 	<= 0xfff &&
 					event->getValue().green <= 0xfff &&
 					event->getValue().blue 	<= 0xfff &&
@@ -475,13 +473,13 @@ namespace osshs
 					tlc594x.setChannel(channel + 3, value.white);
 				}
 
-				RF_WAIT_UNTIL(ResourceLock< SpiMaster >::tryLock());
+				RF_WAIT_UNTIL(ResourceLock<SpiMaster>::tryLock());
 				RF_CALL(tlc594x.writeChannels());
-				ResourceLock< SpiMaster >::unlock();
+				ResourceLock<SpiMaster>::unlock();
 			}
 
 			{
-				std::shared_ptr< events::Event > responseEvent;
+				std::shared_ptr<events::Event> responseEvent;
 
 				if (event->getChannel() * 4 + 3 < channels)
 				{
@@ -490,7 +488,7 @@ namespace osshs
 					{
 						events::PwmUpdateSuccessEvent *successEvent = new (std::nothrow) events::PwmUpdateSuccessEvent(
 							event->getCauseId(),
-							[=](std::shared_ptr< osshs::events::Event > event) -> void
+							[=](std::shared_ptr<osshs::events::Event> event) -> void
 							{
 								this->handleEvent(event);
 							}
@@ -502,14 +500,14 @@ namespace osshs
 							RF_RETURN();
 						}
 
-						responseEvent.reset(static_cast< events::Event* > (successEvent));
+						responseEvent.reset(static_cast<events::Event*> (successEvent));
 					}
 					else
 					{
 						events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 							events::PwmError::VALUE_OUT_OF_BOUNDS,
 							event->getCauseId(),
-							[=](std::shared_ptr< osshs::events::Event > event) -> void
+							[=](std::shared_ptr<osshs::events::Event> event) -> void
 							{
 								this->handleEvent(event);
 							}
@@ -521,7 +519,7 @@ namespace osshs
 							RF_RETURN();
 						}
 
-						responseEvent.reset(static_cast< events::Event* > (errorEvent));
+						responseEvent.reset(static_cast<events::Event*> (errorEvent));
 					}
 				}
 				else
@@ -529,7 +527,7 @@ namespace osshs
 					events::PwmErrorEvent *errorEvent = new (std::nothrow) events::PwmErrorEvent(
 						events::PwmError::CHANNEL_OUT_OF_BOUNDS,
 						event->getCauseId(),
-						[=](std::shared_ptr< osshs::events::Event > event) -> void
+						[=](std::shared_ptr<osshs::events::Event> event) -> void
 						{
 							this->handleEvent(event);
 						}
@@ -541,7 +539,7 @@ namespace osshs
 						RF_RETURN();
 					}
 
-					responseEvent.reset(static_cast< events::Event* > (errorEvent));
+					responseEvent.reset(static_cast<events::Event*> (errorEvent));
 				}
 
 				if (event->getCallback() != nullptr)

@@ -31,7 +31,6 @@ env['CONFIG_PROFILE'] = profile
 
 env.SConscript(dirs=generated_paths, exports='env')
 
-env.Append(CPPPATH='.')
 ignored = ['cmake-*', '.lbuild_cache', build_path] + generated_paths
 sources = []
 
@@ -40,7 +39,9 @@ sources += env.FindSourceFiles('../common/src', ignorePaths=ignored)
 sources += env.FindSourceFiles('../ext/osshs-protocol/src', ignorePaths=ignored)
 
 env.Append(CPPPATH = [
+    '.',
     '../common/include',
+    '../ext/magic_enum/include',
     '../ext/osshs-protocol/include'
 ])
 

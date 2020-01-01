@@ -57,7 +57,7 @@ namespace osshs
 			static void
 			update();
 		private:
-			static std::vector< modules::Module* > modules;
+			static std::vector<modules::Module*> modules;
 		};
 	}
 }

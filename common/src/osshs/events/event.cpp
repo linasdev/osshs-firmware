@@ -59,10 +59,10 @@ namespace osshs
 			return callback;
 		}
 
-		std::unordered_map< uint16_t, Event::EventMaker >&
+		std::unordered_map<uint16_t, Event::EventMaker>&
 		Event::eventRegister()
 		{
-			static std::unordered_map< uint16_t, Event::EventMaker > map;
+			static std::unordered_map<uint16_t, Event::EventMaker> map;
 			return map;
 		}
 	}

@@ -29,7 +29,7 @@ namespace osshs
 {
 	namespace events
 	{
-		EepromRequestDataEvent::EepromRequestDataEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		EepromRequestDataEvent::EepromRequestDataEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<EepromRequestDataEvent>(data[4] | (data[5] << 8), callback)
 		{
 			address = data[6] | (data[7] << 8);
@@ -48,18 +48,15 @@ namespace osshs
 			return dataLen;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		EepromRequestDataEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -77,11 +74,11 @@ namespace osshs
 			buffer[8] = dataLen & 0xff;
 			buffer[9] = (dataLen >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		EepromDataReadyEvent::EepromDataReadyEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		EepromDataReadyEvent::EepromDataReadyEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<EepromDataReadyEvent>(data[4] | (data[5] << 8), callback)
 		{
 			uint16_t eventLength = data[0] | (data[1] << 8);
@@ -89,11 +86,7 @@ namespace osshs
 
 			if (8 + dataLen != eventLength)
 			{
-				OSSHS_LOG_WARNING_STREAM << "Failed to construct an eeprom data ready event"
-					<< "(event_length = " << eventLength
-					<< ", data_length = " << dataLen
-					<< ").\r\n";
-
+				OSSHS_LOG_WARNING("Failed to construct an epprom data ready event(eventLength = %u, dataLength = %u).", eventLength, dataLen);
 				return;
 			}
 
@@ -101,17 +94,14 @@ namespace osshs
 
 			if (this->data == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << dataLen
-					<< ").\r\n";
-
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", dataLen);
 				return;
 			}
 
 			std::copy(&data[8], &data[8 + dataLen], &this->data[0]);
 		}
 
-		const std::shared_ptr< uint8_t[] >
+		const std::shared_ptr<uint8_t[]>
 		EepromDataReadyEvent::getData() const
 		{
 			return data;
@@ -123,7 +113,7 @@ namespace osshs
 			return dataLen;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		EepromDataReadyEvent::serialize() const
 		{
 			uint16_t EVENT_LENGTH = 8 + dataLen;
@@ -131,11 +121,8 @@ namespace osshs
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -152,11 +139,11 @@ namespace osshs
 
 			std::copy(&data[0], &data[dataLen], &buffer[8]);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		EepromUpdateDataEvent::EepromUpdateDataEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		EepromUpdateDataEvent::EepromUpdateDataEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<EepromUpdateDataEvent>(data[4] | (data[5] << 8), callback)
 		{
 			uint16_t eventLength = data[0] | (data[1] << 8);
@@ -165,11 +152,7 @@ namespace osshs
 
 			if (10 + dataLen != eventLength)
 			{
-				OSSHS_LOG_WARNING_STREAM << "Failed to construct an eeprom update data event"
-					<< "(event_length = " << eventLength
-					<< ", data_length = " << dataLen
-					<< ").\r\n";
-
+				OSSHS_LOG_WARNING("Failed to construct an epprom update data event(eventLength = %u, dataLength = %u).", eventLength, dataLen);
 				return;
 			}
 
@@ -177,10 +160,7 @@ namespace osshs
 
 			if (this->data == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << dataLen
-					<< ").\r\n";
-
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", dataLen);
 				return;
 			}
 
@@ -193,7 +173,7 @@ namespace osshs
 			return address;
 		}
 
-		const std::shared_ptr< uint8_t[] >
+		const std::shared_ptr<uint8_t[]>
 		EepromUpdateDataEvent::getData() const
 		{
 			return data;
@@ -205,7 +185,7 @@ namespace osshs
 			return dataLen;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		EepromUpdateDataEvent::serialize() const
 		{
 			uint16_t EVENT_LENGTH = 8 + dataLen;
@@ -213,11 +193,8 @@ namespace osshs
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -237,28 +214,25 @@ namespace osshs
 
 			std::copy(&data[0], &data[dataLen], &buffer[10]);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		EepromUpdateSuccessEvent::EepromUpdateSuccessEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		EepromUpdateSuccessEvent::EepromUpdateSuccessEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<EepromUpdateSuccessEvent>(data[4] | (data[5] << 8), callback)
 		{
-			static_cast< void >(data);
+			static_cast<void>(data);
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		EepromUpdateSuccessEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -270,14 +244,14 @@ namespace osshs
 			buffer[4] = causeId & 0xff;
 			buffer[5] = (causeId >> 8);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 
 
-		EepromErrorEvent::EepromErrorEvent(std::unique_ptr< const uint8_t[] > data, EventCallback callback)
+		EepromErrorEvent::EepromErrorEvent(std::unique_ptr<const uint8_t[]> data, EventCallback callback)
 			: EventRegistrar<EepromErrorEvent>(data[4] | (data[5] << 8), callback)
 		{
-			error = static_cast< EepromError >(data[6]);
+			error = static_cast<EepromError>(data[6]);
 		}
 
 		EepromError
@@ -286,18 +260,15 @@ namespace osshs
 			return error;
 		}
 
-		std::unique_ptr< const uint8_t[] >
+		std::unique_ptr<const uint8_t[]>
 		EepromErrorEvent::serialize() const
 		{
 			uint8_t *buffer = new (std::nothrow) uint8_t[EVENT_LENGTH];
 
 			if (buffer == nullptr)
 			{
-				OSSHS_LOG_ERROR_STREAM << "Failed to allocate memory for a buffer"
-					<< "(buffer_length = " << EVENT_LENGTH
-					<< ").\r\n";
-
-				return std::unique_ptr< const uint8_t[] >();
+				OSSHS_LOG_ERROR("Failed to allocate memory for a buffer(bufferLength = %u).", EVENT_LENGTH);
+				return std::unique_ptr<const uint8_t[]>();
 			}
 
 			buffer[0] = EVENT_LENGTH & 0xff;
@@ -309,9 +280,9 @@ namespace osshs
 			buffer[4] = causeId & 0xff;
 			buffer[5] = (causeId >> 8);
 
-			buffer[6] = static_cast< uint8_t >(error);
+			buffer[6] = static_cast<uint8_t>(error);
 
-			return std::unique_ptr< const uint8_t[] >(buffer);
+			return std::unique_ptr<const uint8_t[]>(buffer);
 		}
 	}
 }

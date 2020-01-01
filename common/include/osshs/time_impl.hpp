@@ -30,16 +30,16 @@
 
 namespace osshs
 {
-	template< typename T, Time::Precision precision >
+	template<typename T, Time::Precision precision>
 	T
 	Time::getSystemTime()
 	{
 		modm::atomic::Lock lock;
 
 		if constexpr (precision == Precision::Milliseconds)
-			return static_cast< T >(systemTime);
+			return static_cast<T>(systemTime);
 
 		if constexpr (precision == Precision::Seconds)
-			return static_cast< T >(systemTime) / 1000;
+			return static_cast<T>(systemTime) / 1000;
 	}
 }
